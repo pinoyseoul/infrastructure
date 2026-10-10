@@ -10,7 +10,7 @@ Our entire tech stack is managed by an **Automated Mirror Engine** that ensures 
 | **Mirror Engine** | [![Mirror Sync](https://github.com/pinoyseoul/infrastructure/actions/workflows/mirror.yml/badge.svg)](https://github.com/pinoyseoul/infrastructure/actions/workflows/mirror.yml) |
 | **Live Catalogue** | [📊 View Public Project Board](https://github.com/orgs/pinoyseoul/projects/3) |
 | **Public Registry** | [📦 Browse GHCR Packages](https://github.com/orgs/pinoyseoul/packages) |
-
+| **Archival DOI** | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23279127.svg)](https://doi.org/10.5281/zenodo.23279127) |
 | **License** | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) |
 
 ---

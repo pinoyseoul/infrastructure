@@ -1,0 +1,24 @@
+{
+  "title": "PinoySeoul Infrastructure and Container Ecosystem",
+  "description": "Architectural specifications, container orchestration catalogue, and deployment configurations for PinoySeoul Media Enterprise. Covers distributed services across South Korea, North America, and the Philippines.",
+  "creators": [
+    {
+      "name": "Ang, Nash",
+      "affiliation": "PinoySeoul Media Enterprise"
+    },
+    {
+      "name": "Ang, Nash",
+      "affiliation": "PinoySeoul Media Enterprise"
+    }
+  ],
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "systems architecture",
+    "devops",
+    "container orchestration",
+    "media streaming",
+    "gitops"
+  ],
+  "upload_type": "software"
+}

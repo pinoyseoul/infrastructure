@@ -11,6 +11,64 @@ Our entire tech stack is managed by an **Automated Mirror Engine** that ensures 
 | **Live Catalogue** | [📊 View Public Project Board](https://github.com/orgs/pinoyseoul/projects/3) |
 | **Public Registry** | [📦 Browse GHCR Packages](https://github.com/orgs/pinoyseoul/packages) |
 
+| **License** | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) |
+
+---
+
+## 🌐 Distributed Server Environments
+
+Our operations run across three coordinated server environments connected through an encrypted Zero Trust network mesh:
+
+```mermaid
+flowchart TD
+    CF(["Cloudflare Zero Trust<br/><i>(cloudflared tunnels)</i>"])
+
+    K["<b>Korea Server (Production Stack)</b><br/>Business Operations & 24/7 Web Radio"]
+    U["<b>America Server (Media Stack)</b><br/>Streaming Delivery & Automation Pipelines"]
+    P["<b>Philippines Server (Homelab Stack)</b><br/>Master Archival Storage & Cultural Vault"]
+
+    CF -->|Secure Ingress| K
+    CF -->|Secure Ingress| U
+    CF -->|Secure Ingress| P
+
+    K <-->|Backup Sync| P
+    U <-->|Automated Transfer| P
+```
+
+### 1. Korea Server (`productionserver`)
+* **Role:** Central business services, live digital broadcasting, task management, and operational record keeping.
+* **Key Services:**
+  * **AzuraCast:** Web radio management and continuous live stream delivery.
+  * **Kimai:** Time tracking and professional attendance logging.
+  * **Planka:** Visual project management and task boards.
+  * **Postiz:** Social media scheduling and multi-channel publication.
+  * **Vaultwarden:** Lightweight, self-hosted secret and password management.
+  * **Docuseal & InvoiceShelf:** Digital document execution and billing management.
+
+### 2. America Server (`mediaserver`)
+* **Role:** Media delivery, content indexing, and digital streaming automation.
+* **Key Services:**
+  * **Jellyfin:** Primary media server for streaming video content.
+  * **Media Automation:** Radarr, Sonarr, Prowlarr, Bazarr.
+  * **Jellyseerr:** Discovery and content request pipeline.
+  * **qBittorrent & Byparr:** Automated data transmission and acquisition.
+
+### 3. Philippines Server (`homelab`)
+* **Role:** On-premise studio infrastructure, master archival storage, and local media services.
+* **Key Services:**
+  * **Audio & Reading:** Navidrome, Lidarr, Kavita, Readarr, Audiobookshelf, Suwayomi.
+  * **Photo Archival:** Photoview for self-hosted, high-resolution photo preservation.
+  * **Data Sync:** Syncthing and Rclone routines mirroring data between cloud instances and studio storage.
+  * **Studio Management:** CasaOS and Home Assistant for environment telemetry and bare-metal monitoring.
+
+---
+
+## 🛡️ Network Security & Backup Operations
+
+* **Zero Trust Ingress:** Remote communication across servers is handled through Cloudflare Zero Trust tunnels.
+* **Service Orchestration:** Stacks are declared through Docker Compose and coordinated via Portainer Server and Portainer Edge Agents.
+* **Backup Strategy:** Cloud nodes run automated daily offsite snapshots. The studio storage node runs weekly incremental backups alongside offline cold-storage archives.
+
 ---
 
 ## 📦 Container Catalogue
@@ -25,12 +83,12 @@ The following applications are auto-discovered, mirrored, and tracked in this li
 *   **photoview**: High-performance photo gallery designed for privacy and large backups.
 *   **kavita**: Advanced manga, comic, and ebook management systems.
 
-### 🤖 Media Automation (The *arr Suite)
+### 🤖 Media Automation
 *   **radarr**: Automated movie collection manager and downloader.
 *   **sonarr**: Automated TV series collection manager and downloader.
 *   **lidarr**: Automated music collection manager and downloader.
 *   **bazarr**: Automated subtitle management and synchronization.
-*   **readarr**: (bookshelf) Automated book management and downloader.
+*   **readarr**: Automated book management and downloader.
 *   **prowlarr**: Centralized indexer manager for all automation services.
 *   **qbittorrent**: High-speed, lightweight torrent client for data transmission.
 *   **ytdl-sub**: Automated YouTube content acquisition and organization.
@@ -48,7 +106,7 @@ The following applications are auto-discovered, mirrored, and tracked in this li
 *   **mariadb**: Robust SQL database used for high-availability applications.
 *   **redis**: High-speed in-memory data store for caching and real-time queues.
 *   **elasticsearch**: Distributed search and analytics engine for deep data discovery.
-*   **temporalio (Server & UI)**: Modern workflow orchestration for reliable task execution.
+*   **temporalio**: Modern workflow orchestration for reliable task execution.
 *   **dbgate**: Cross-platform database manager for SQL and NoSQL clusters.
 
 ### 🛡️ Network & System Utilities
@@ -60,4 +118,8 @@ The following applications are auto-discovered, mirrored, and tracked in this li
 *   **home-assistant**: Centralized automation platform for homelab management.
 
 ---
-© 2026 **PinoySeoul Media Enterprise**.  
+
+## 📄 License & Attribution
+
+Maintained by **PinoySeoul Media Enterprise**.  
+Released under the [MIT License](LICENSE).

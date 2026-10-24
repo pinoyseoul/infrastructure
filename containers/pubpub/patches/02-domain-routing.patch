@@ -1,5 +1,43 @@
+diff --git a/server/routes/superAdminDashboard.tsx b/server/routes/superAdminDashboard.tsx
+index 5b2f00d..7d70441 100644
+--- a/server/routes/superAdminDashboard.tsx
++++ b/server/routes/superAdminDashboard.tsx
+@@ -249,8 +249,14 @@ router.post('/api/superadmin/custom-domains', async (req, res, next) => {
+ 			throw new BadRequestError(new Error('Domain is already in use by another community'));
+ 		}
+ 
+-		// Add to Cloudflare first
+-		await addCustomHostname(hostname);
++		// Add to Cloudflare first (guarded)
++		if (isCloudflareConfigured()) {
++			try {
++				await addCustomHostname(hostname);
++			} catch (cfErr: any) {
++				console.warn('Cloudflare SaaS provisioning skipped/failed:', cfErr?.message);
++			}
++		}
+ 
+ 		// Update the community
+ 		await community.update({ domain: hostname });
+@@ -282,9 +288,13 @@ router.delete('/api/superadmin/custom-domains', async (req, res, next) => {
+ 			throw new NotFoundError(new Error('Community not found'));
+ 		}
+ 
+-		if (community.domain) {
+-			// Remove from Cloudflare first
+-			await removeCustomHostname(community.domain);
++		if (community.domain && isCloudflareConfigured()) {
++			// Remove from Cloudflare first (guarded)
++			try {
++				await removeCustomHostname(community.domain);
++			} catch (cfErr: any) {
++				console.warn('Cloudflare SaaS deprovisioning skipped/failed:', cfErr?.message);
++			}
+ 		}
+ 
+ 		// Clear the domain
 diff --git a/server/utils/initData.ts b/server/utils/initData.ts
-index 9296124..6f05b20 100644
+index 9296124..bfaf614 100644
 --- a/server/utils/initData.ts
 +++ b/server/utils/initData.ts
 @@ -74,7 +74,7 @@ export const getInitialData = async (
@@ -11,7 +49,7 @@ index 9296124..6f05b20 100644
  		isProd: isProd(),
  		isDuqDuq: isDuqDuq(),
  		isQubQub: isQubQub(),
-@@ -92,16 +92,16 @@ export const getInitialData = async (
+@@ -92,22 +92,22 @@ export const getInitialData = async (
  
  		return {
  			communityData: {
@@ -19,7 +57,7 @@ index 9296124..6f05b20 100644
 -				description: 'Collaborative Community Publishing',
 -				favicon: `https://${locationData.hostname}/favicon.png`,
 -				avatar: `https://${locationData.hostname}/static/logo.png`,
-+				title: 'OpenScience.ph',
++				title: 'OpenScience.ph Journals',
 +				description: 'An open scholarship publishing commons stewarded by OBRA Incorporated in collaboration with Philippine higher education institutions.',
 +				favicon: '/static/favicon.png',
 +				avatar: '/static/openscience_navbar_logo.png',
@@ -34,6 +72,13 @@ index 9296124..6f05b20 100644
  				hideCreatePubButton: true,
  				headerLinks: [
  					{ title: 'About', url: '/about' },
+ 					{ title: 'Pricing', url: '/pricing' },
+ 					{ title: 'Search', url: '/search' },
+-					{ title: 'Contact', url: 'mailto:hello@pubpub.org', external: true },
++					{ title: 'Contact', url: 'mailto:admin@openscience.ph', external: true },
+ 				],
+ 				collections: [],
+ 				analyticsSettings: {
 @@ -155,6 +155,7 @@ export const getInitialData = async (
  
  	if (

@@ -1,15 +1,34 @@
+diff --git a/client/components/GlobalControls/CreatePubButton.tsx b/client/components/GlobalControls/CreatePubButton.tsx
+index 4e6b8ee..9d5e289 100644
+--- a/client/components/GlobalControls/CreatePubButton.tsx
++++ b/client/components/GlobalControls/CreatePubButton.tsx
+@@ -63,9 +63,9 @@ const CreatePubButton = () => {
+ 			<GlobalControlsButton
+ 				onClick={handleCreatePub}
+ 				loading={isLoading}
+-				aria-label="Create Pub"
++				aria-label="Create Article"
+ 				type="submit"
+-				desktop={{ text: 'Create Pub' }}
++				desktop={{ text: 'Create Article' }}
+ 				mobile={{ icon: 'pubDocNew' }}
+ 			/>
+ 			<div
 diff --git a/client/components/GlobalControls/GlobalControls.tsx b/client/components/GlobalControls/GlobalControls.tsx
-index a27deec..49cd757 100644
+index a27deec..16d95a6 100644
 --- a/client/components/GlobalControls/GlobalControls.tsx
 +++ b/client/components/GlobalControls/GlobalControls.tsx
-@@ -33,6 +33,28 @@ const GlobalControls = (props: Props) => {
+@@ -33,6 +33,34 @@ const GlobalControls = (props: Props) => {
  		},
  	} = usePageContext();
  
 +	const renderJournals = () => {
++		const portalHost = (typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com'))
++			? 'journal.pinoyseoul.com'
++			: 'journals.openscience.ph';
 +		return (
 +			<GlobalControlsButton
-+				href="https://journal.pinoyseoul.com"
++				href={`https://${portalHost}`}
 +				aria-label="Journals"
 +				desktop={{ text: 'Journals' }}
 +				mobile={{ text: 'Journals' }}
@@ -18,9 +37,12 @@ index a27deec..49cd757 100644
 +	};
 +
 +	const renderRepository = () => {
++		const repoHost = (typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com'))
++			? 'openscience.pinoyseoul.com'
++			: 'openscience.ph';
 +		return (
 +			<GlobalControlsButton
-+				href="https://openscience.pinoyseoul.com"
++				href={`https://${repoHost}`}
 +				aria-label="Repository"
 +				desktop={{ text: 'Repository' }}
 +				mobile={{ text: 'Repository' }}
@@ -31,7 +53,15 @@ index a27deec..49cd757 100644
  	const renderSearch = () => {
  		return (
  			<GlobalControlsButton
-@@ -104,6 +126,8 @@ const GlobalControls = (props: Props) => {
+@@ -97,6 +125,7 @@ const GlobalControls = (props: Props) => {
+ 							}
+ 						/>
+ 					)}
++					{renderJournals()}
+ 					{loginData.isSuperAdmin && (
+ 						<GlobalControlsButton
+ 							href="/superadmin"
+@@ -104,6 +133,8 @@ const GlobalControls = (props: Props) => {
  						/>
  					)}
  					{canCreatePub && <CreatePubButton />}
@@ -40,7 +70,7 @@ index a27deec..49cd757 100644
  					{renderSearch()}
  					{canView && renderDashboardMenu()}
  					{renderNotificiations()}
-@@ -139,6 +163,8 @@ const GlobalControls = (props: Props) => {
+@@ -139,6 +170,8 @@ const GlobalControls = (props: Props) => {
  						href="https://www.knowledgefutures.org/pubpub/"
  						mobileOrDesktop={{ text: 'PubPub Platform (new!)' }}
  					/> */}
@@ -152,3 +182,16 @@ index 00493b2..f0d648f 100644
  						)}
  					</div>
  					<GlobalControls isBasePubPub={locationData.isBasePubPub} loggedIn={loggedIn} />
+diff --git a/client/components/ScopeDropdown/ScopeDropdown.tsx b/client/components/ScopeDropdown/ScopeDropdown.tsx
+index 7c25107..f8eed0b 100644
+--- a/client/components/ScopeDropdown/ScopeDropdown.tsx
++++ b/client/components/ScopeDropdown/ScopeDropdown.tsx
+@@ -176,7 +176,7 @@ const ScopeDropdown = (props: Props) => {
+ 								<div className="content">
+ 									<div className="top">
+ 										<Icon icon={scope.icon} iconSize={scope.iconSize || 10} />
+-										{scope.type}
++										{scope.type === 'Community' ? 'Journal' : scope.type === 'Pub' ? 'Article' : scope.type === 'Collection' ? 'Issue' : scope.type}
+ 									</div>
+ 									<div className="bottom">
+ 										<Avatar

@@ -11,58 +11,6 @@ index d94f591..80a1e7e 100644
  			hideNav: true,
  		},
  		Legal: {
-diff --git a/server/Html.tsx b/server/Html.tsx
-index ebb5f98..b922db4 100644
---- a/server/Html.tsx
-+++ b/server/Html.tsx
-@@ -94,6 +94,47 @@ const Html = (props: Props) => {
- 				<link rel="preconnect" href="https://assets.pubpub.org" crossOrigin="" />
- 				<link rel="stylesheet" href="https://assets.pubpub.org/_fonts/8da286c6/fonts.css" />
- 				<link rel="stylesheet" type="text/css" href={getPath('main', 'css')} />
-+				<style
-+					type="text/css"
-+					dangerouslySetInnerHTML={{
-+						__html: `
-+.header-component .avatar-component {
-+  background: #1e3a5f !important;
-+  border: 2px solid #38bdf8 !important;
-+  color: #ffffff !important;
-+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35) !important;
-+  transition: all 0.2s ease !important;
-+}
-+.header-component button:hover .avatar-component {
-+  border-color: #ffffff !important;
-+  background: #2563eb !important;
-+  box-shadow: 0 0 14px rgba(37, 99, 235, 0.6) !important;
-+  transform: scale(1.05);
-+}
-+.header-component .avatar-component > div {
-+  color: #ffffff !important;
-+  font-weight: 700 !important;
-+  letter-spacing: 0.05em !important;
-+}
-+.os-footer-bottom-row {
-+  display: flex !important;
-+  justify-content: space-between !important;
-+  align-items: center !important;
-+  width: 100% !important;
-+  box-sizing: border-box !important;
-+}
-+.os-footer-bottom-row .os-copyright {
-+  text-align: left !important;
-+  flex: 1 1 auto !important;
-+}
-+.os-footer-bottom-row .os-powered {
-+  text-align: right !important;
-+  margin-left: auto !important;
-+  flex: 0 0 auto !important;
-+}
-+`,
-+					}}
-+				/>
- 				{customScripts?.css && (
- 					<style
- 						type="text/css"
 diff --git a/server/routes/landing.tsx b/server/routes/landing.tsx
 index dbb81ec..76db5cd 100644
 --- a/server/routes/landing.tsx

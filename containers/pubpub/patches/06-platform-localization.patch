@@ -1,0 +1,385 @@
+diff --git a/client/components/GlobalControls/UserMenu.tsx b/client/components/GlobalControls/UserMenu.tsx
+index ace9f4e..f5f0400 100644
+--- a/client/components/GlobalControls/UserMenu.tsx
++++ b/client/components/GlobalControls/UserMenu.tsx
+@@ -75,16 +75,19 @@ type UserCommunity = {
+ };
+ 
+ const getCommunityUrl = (community: UserCommunity, locationData: { isDuqDuq: boolean }) => {
+-	if (locationData.isDuqDuq) {
+-		return `https://${community.subdomain}.duqduq.org`;
+-	}
+-	return community.domain
+-		? `https://${community.domain}`
+-		: `https://${community.subdomain}.pubpub.org`;
++	if (community.domain) return `https://${community.domain}`;
++	const base = (typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com'))
++		? 'pinoyseoul.com'
++		: 'openscience.ph';
++	return `https://${community.subdomain}.${base}`;
+ };
+ 
+ const getCommunityDisplayUrl = (community: UserCommunity) => {
+-	return community.domain || `${community.subdomain}.pubpub.org`;
++	if (community.domain) return community.domain;
++	const base = (typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com'))
++		? 'pinoyseoul.com'
++		: 'openscience.ph';
++	return `${community.subdomain}.${base}`;
+ };
+ 
+ const CommunityAvatar = ({ community, size = 24 }: { community: UserCommunity; size?: number }) => {
+diff --git a/client/containers/DashboardOverview/CommunityOverview/CommunityItems.tsx b/client/containers/DashboardOverview/CommunityOverview/CommunityItems.tsx
+index 22f4cfd..76729bb 100644
+--- a/client/containers/DashboardOverview/CommunityOverview/CommunityItems.tsx
++++ b/client/containers/DashboardOverview/CommunityOverview/CommunityItems.tsx
+@@ -27,12 +27,12 @@ type Props = {
+ 
+ const getSearchPlaceholderText = (showCollections: boolean, showPubs: boolean) => {
+ 	if (showCollections && showPubs) {
+-		return 'Search Collections and Pubs';
++		return 'Search Issues and Articles';
+ 	}
+ 	if (showCollections) {
+-		return 'Search Collections';
++		return 'Search Issues';
+ 	}
+-	return 'Search Pubs';
++	return 'Search Articles';
+ };
+ 
+ const CommunityItems = (props: Props) => {
+@@ -88,13 +88,13 @@ const CommunityItems = (props: Props) => {
+ 				return (
+ 					<NonIdealState
+ 						icon="clean"
+-						title="This Community looks brand new!"
+-						description="Try creating a Pub or Collection from above."
++						title="This Journal looks brand new!"
++						description="Try creating an Article or Issue from above."
+ 					/>
+ 				);
+ 			}
+ 			if (pubs.length === 0 && hasLoadedAllPubs && isSearchingOrFiltering) {
+-				return <SpecialRow>No matching Pubs or Collections.</SpecialRow>;
++				return <SpecialRow>No matching Articles or Issues.</SpecialRow>;
+ 			}
+ 		}
+ 		return null;
+@@ -119,7 +119,7 @@ const CommunityItems = (props: Props) => {
+ 									}
+ 								}}
+ 								icon="collection"
+-								label="Collections"
++								label="Issues"
+ 								count={collections.length}
+ 							/>
+ 						)}
+@@ -132,7 +132,7 @@ const CommunityItems = (props: Props) => {
+ 								}
+ 							}}
+ 							icon="pubDoc"
+-							label="Pubs"
++							label="Articles"
+ 							count={hasLoadedAllPubs ? pubs.length : `${pubs.length}+`}
+ 							disabled={!canShowCollections}
+ 						/>
+diff --git a/client/containers/DashboardOverview/PubOverview/PubOverview.tsx b/client/containers/DashboardOverview/PubOverview/PubOverview.tsx
+index 8accee1..c42d4fe 100644
+--- a/client/containers/DashboardOverview/PubOverview/PubOverview.tsx
++++ b/client/containers/DashboardOverview/PubOverview/PubOverview.tsx
+@@ -59,7 +59,7 @@ const PubOverview = (props: Props) => {
+ 		return (
+ 			<div className="collections section">
+ 				<div className="section-header">
+-					Appears in Collections ({collectionPubs.length})
++					Appears in Issues ({collectionPubs.length})
+ 				</div>
+ 				{pubData.collectionPubs.map((cp, index) => {
+ 					return (
+diff --git a/client/containers/DashboardSubmissionWorkflow/SubmissionWorkflowEditor.tsx b/client/containers/DashboardSubmissionWorkflow/SubmissionWorkflowEditor.tsx
+index 75ffcff..2576e39 100644
+--- a/client/containers/DashboardSubmissionWorkflow/SubmissionWorkflowEditor.tsx
++++ b/client/containers/DashboardSubmissionWorkflow/SubmissionWorkflowEditor.tsx
+@@ -82,7 +82,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
+ 
+ 	const sharedEmailPreviewProps = {
+ 		community: communityData,
+-		from: 'submissions@pubpub.org',
++		from: 'admin@openscience.ph',
+ 		to: 'submitter.name@place.org',
+ 		cc: workflow.targetEmailAddresses,
+ 	};
+diff --git a/client/containers/Login/Login.tsx b/client/containers/Login/Login.tsx
+index 9de6f7f..6b48bd8 100644
+--- a/client/containers/Login/Login.tsx
++++ b/client/containers/Login/Login.tsx
+@@ -91,7 +91,7 @@ const Login = () => {
+ 						{!locationData.isBasePubPub && (
+ 							<p>
+ 								Login to <b>{communityData.title}</b> using your{' '}
+-								<a href="https://www.pubpub.org">PubPub</a> account.
++								OpenScience.ph account.
+ 							</p>
+ 						)}
+ 						<form onSubmit={onLoginSubmit}>
+diff --git a/client/containers/Pub/PubHeader/CitationsModal.tsx b/client/containers/Pub/PubHeader/CitationsModal.tsx
+index ee36e80..57da005 100644
+--- a/client/containers/Pub/PubHeader/CitationsModal.tsx
++++ b/client/containers/Pub/PubHeader/CitationsModal.tsx
+@@ -32,7 +32,7 @@ const CitationsModal = (props: Props) => {
+ 			className="citations-modal-component"
+ 			isOpen={isOpen}
+ 			onClose={onClose}
+-			title="Cite this pub"
++			title="Cite this article"
+ 		>
+ 			<div className={Classes.DIALOG_BODY}>
+ 				<div className="style-wrapper">
+diff --git a/client/containers/Pub/PubHeader/DownloadButton.tsx b/client/containers/Pub/PubHeader/DownloadButton.tsx
+index df3f8d1..e0476c0 100644
+--- a/client/containers/Pub/PubHeader/DownloadButton.tsx
++++ b/client/containers/Pub/PubHeader/DownloadButton.tsx
+@@ -56,7 +56,7 @@ const DownloadButton = (props: Props) => {
+ 	const PopoverContent = () => {
+ 		return (
+ 			<Callout className="text-info" intent="warning">
+-				<p>You still have pending edits. Resolve your edits before downloading this Pub.</p>
++				<p>You still have pending edits. Resolve your edits before downloading this Article.</p>
+ 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+ 					<Button
+ 						text="Accept All"
+diff --git a/client/containers/Pub/PubHeader/UtilityButtons.tsx b/client/containers/Pub/PubHeader/UtilityButtons.tsx
+index e3b7450..6965134 100644
+--- a/client/containers/Pub/PubHeader/UtilityButtons.tsx
++++ b/client/containers/Pub/PubHeader/UtilityButtons.tsx
+@@ -41,7 +41,7 @@ const UtilityButtons = (props: Props) => {
+ 			)}
+ 			{canManage && (
+ 				<SmallHeaderButton
+-					label="Pub settings"
++					label="Article settings"
+ 					labelPosition="left"
+ 					icon="cog"
+ 					tagName="a"
+@@ -68,7 +68,7 @@ const UtilityButtons = (props: Props) => {
+ 			<PopoverButton
+ 				component={() => <CitationsPreview pubData={pubData} />}
+ 				className="pub-header-popover"
+-				aria-label="Cite this Pub"
++				aria-label="Cite this Article"
+ 			>
+ 				<SmallHeaderButton
+ 					label="Cite"
+diff --git a/client/containers/Search2/Search2.tsx b/client/containers/Search2/Search2.tsx
+index 2d3f877..03231e6 100644
+--- a/client/containers/Search2/Search2.tsx
++++ b/client/containers/Search2/Search2.tsx
+@@ -77,7 +77,7 @@ const updateHistory = (query: string, page: number, mode: string) => {
+ };
+ 
+ const getCommunityUrl = (r: { communityDomain: string | null; communitySlug: string }) =>
+-	r.communityDomain ? `https://${r.communityDomain}` : `https://${r.communitySlug}.pubpub.org`;
++	r.communityDomain ? `https://${r.communityDomain}` : `https://${r.communitySlug}.${typeof window !== "undefined" && window.location.hostname.includes("pinoyseoul.com") ? "pinoyseoul.com" : "openscience.ph"}`;
+ 
+ /* ---------- Pub result row (matches /search style) ---------- */
+ const PubResultRow = ({ item, isBasePubPub }: { item: PubResult; isBasePubPub: boolean }) => {
+@@ -131,7 +131,7 @@ const PubResultRow = ({ item, isBasePubPub }: { item: PubResult; isBasePubPub: b
+ 
+ /* ---------- Community result row ---------- */
+ const CommunityResultRow = ({ item }: { item: CommunityResult }) => {
+-	const url = item.domain ? `https://${item.domain}` : `https://${item.subdomain}.pubpub.org`;
++	const url = item.domain ? `https://${item.domain}` : `https://${item.subdomain}.${typeof window !== "undefined" && window.location.hostname.includes("pinoyseoul.com") ? "pinoyseoul.com" : "openscience.ph"}`;
+ 	const resizedAvatar = getResizedUrl(item.avatar, 'inside', 200);
+ 	return (
+ 		<div className="result communities">
+@@ -361,8 +361,8 @@ const Search2 = () => {
+ 						<div className="search-header">
+ 							<h2>Search {communityData.title}</h2>
+ 							{!isBasePubPub && (
+-								<a href={`https://www.pubpub.org${searchString}`}>
+-									Search all PubPub Communities
++								<a href={`/${searchString}`}>
++									Search all OpenScience.ph Journals
+ 								</a>
+ 							)}
+ 						</div>
+@@ -391,8 +391,8 @@ const Search2 = () => {
+ 								large={true}
+ 								animate={false}
+ 							>
+-								{isBasePubPub && <Tab id="communities" title="Communities" />}
+-								<Tab id="pubs" title="Pubs" />
++								{isBasePubPub && <Tab id="communities" title="Journals" />}
++								<Tab id="pubs" title="Articles" />
+ 							</Tabs>
+ 							{/* mode === 'pubs' && throttledQuery.trim() && (
+ 								<button
+diff --git a/client/containers/SuperAdminDashboard/CustomDomains/CustomDomains.tsx b/client/containers/SuperAdminDashboard/CustomDomains/CustomDomains.tsx
+index d64bc50..07af7d6 100644
+--- a/client/containers/SuperAdminDashboard/CustomDomains/CustomDomains.tsx
++++ b/client/containers/SuperAdminDashboard/CustomDomains/CustomDomains.tsx
+@@ -15,7 +15,7 @@ import { apiFetch } from 'client/utils/apiFetch';
+ 
+ import './customDomains.scss';
+ 
+-const CNAME_TARGET = 'custom-domain-1.pubpub.org';
++const CNAME_TARGET = (typeof window !== 'undefined' && window.location.hostname) ? window.location.hostname : 'journals.openscience.ph';
+ 
+ type CommunityDomain = {
+ 	id: string;
+@@ -108,10 +108,7 @@ const CustomDomains = (props: Props) => {
+ 
+ 			{!props.cloudflareConfigured && (
+ 				<Callout intent={Intent.WARNING} style={{ marginBottom: 20 }}>
+-					Cloudflare custom hostname API is not configured. Set{' '}
+-					<code>CLOUDFLARE_CUSTOM_HOSTNAME_API_TOKEN</code> and{' '}
+-					<code>CLOUDFLARE_ZONE_TAG</code> environment variables. Domains can still be
+-					viewed but add/remove will fail.
++					Cloudflare custom hostname API is not configured. Domains are mapped directly in the database.
+ 				</Callout>
+ 			)}
+ 
+diff --git a/client/containers/SuperAdminDashboard/ExploreCommunities/ExploreCommunities.tsx b/client/containers/SuperAdminDashboard/ExploreCommunities/ExploreCommunities.tsx
+index 7ffad13..83f8d46 100644
+--- a/client/containers/SuperAdminDashboard/ExploreCommunities/ExploreCommunities.tsx
++++ b/client/containers/SuperAdminDashboard/ExploreCommunities/ExploreCommunities.tsx
+@@ -211,7 +211,7 @@ const ExploreCommunitiesInner = ({
+ 	}, []);
+ 
+ 	const getCommunityUrl = (c: Community) =>
+-		c.domain ? `https://${c.domain}` : `https://${c.subdomain}.pubpub.org`;
++		c.domain ? `https://${c.domain}` : `https://${c.subdomain}.${typeof window !== "undefined" && window.location.hostname.includes("pinoyseoul.com") ? "pinoyseoul.com" : "openscience.ph"}`;
+ 
+ 	const handleSort = useCallback(
+ 		(field: SortField) => {
+@@ -351,7 +351,7 @@ const ExploreCommunitiesInner = ({
+ 												{c.title}
+ 											</a>
+ 											<span className="community-subdomain">
+-												{c.subdomain}.pubpub.org
++												{c.subdomain}
+ 											</span>
+ 										</div>
+ 									</div>
+diff --git a/client/containers/User/User.tsx b/client/containers/User/User.tsx
+index 7475e5c..a2384d2 100644
+--- a/client/containers/User/User.tsx
++++ b/client/containers/User/User.tsx
+@@ -73,11 +73,11 @@ const User = (props: Props) => {
+ 									Go to Full Profile
+ 								</a>
+ 								<h5>
+-									{externalPubs.length} pub
+-									{externalPubs.length === 1 ? '' : 's'} in other communities.
++									{externalPubs.length} article
++									{externalPubs.length === 1 ? '' : 's'} in other journals.
+ 								</h5>
+ 								<div>
+-									{userData.firstName} has published in other PubPub communities.
++									{userData.firstName} has published in other OpenScience.ph journals.
+ 									Click to go to their full profile.
+ 								</div>
+ 							</div>
+@@ -103,11 +103,11 @@ const User = (props: Props) => {
+ 							<NonIdealState
+ 								// @ts-expect-error ts-migrate(2322) FIXME: Type '{ visual: string; title: string; action: Ele... Remove this comment to see the full error message
+ 								visual="widget"
+-								title="No Pubs"
++								title="No Articles"
+ 								action={
+ 									selfProfile && !locationData.isBasePubPub ? (
+ 										<a href="/pub/create" className={Classes.BUTTON}>
+-											Create New pub
++											Create New Article
+ 										</a>
+ 									) : undefined
+ 								}
+diff --git a/client/containers/User/UserNav.tsx b/client/containers/User/UserNav.tsx
+index f0fb732..ac4a1e1 100644
+--- a/client/containers/User/UserNav.tsx
++++ b/client/containers/User/UserNav.tsx
+@@ -21,9 +21,9 @@ const defaultProps = {
+ 
+ const UserNav = function (props) {
+ 	const tabs = [
+-		{ id: 0, label: 'All Pubs', path: '', count: props.allPubsCount },
+-		{ id: 1, label: 'Attributed Pubs', path: '/authored', count: props.authoredPubsCount },
+-		// { id: 1, label: 'All Pubs', path: '/pubs' },
++		{ id: 0, label: 'All Articles', path: '', count: props.allPubsCount },
++		{ id: 1, label: 'Attributed Articles', path: '/authored', count: props.authoredPubsCount },
++		// { id: 1, label: 'All Articles', path: '/pubs' },
+ 		// { id: 2, label: 'Discussions', path: '/discussions' },
+ 	];
+ 	return (
+diff --git a/server/login/api.ts b/server/login/api.ts
+index ad9bbf9..e5ed446 100644
+--- a/server/login/api.ts
++++ b/server/login/api.ts
+@@ -69,7 +69,7 @@ function mapEstablishError(err: Error): LoginResult | null {
+ 			: '';
+ 		return {
+ 			status: 403,
+-			body: `Your account has been restricted due to activity identified as spam.${automatedNote} If you believe this is an error, please contact help@pubpub.org.`,
++			body: `Your account has been restricted due to activity identified as spam.${automatedNote} If you believe this is an error, please contact admin@openscience.ph.`,
+ 		} as const;
+ 	}
+ 	return null;
+diff --git a/server/utils/email/exports.ts b/server/utils/email/exports.ts
+index a6a564b..bec7c45 100644
+--- a/server/utils/email/exports.ts
++++ b/server/utils/email/exports.ts
+@@ -22,7 +22,7 @@ export const sendAccountExportReadyEmail = ({
+ 			Sincerely,
+ 			PubPub Support
+ 		`),
+-		replyTo: 'hello@pubpub.org',
++		replyTo: 'admin@openscience.ph',
+ 	});
+ };
+ 
+@@ -48,6 +48,6 @@ export const sendCommunityExportReadyEmail = ({
+ 			Sincerely,
+ 			PubPub Support
+ 		`),
+-		replyTo: 'hello@pubpub.org',
++		replyTo: 'admin@openscience.ph',
+ 	});
+ };
+diff --git a/server/utils/email/reset.ts b/server/utils/email/reset.ts
+index eb8331a..27c8111 100644
+--- a/server/utils/email/reset.ts
++++ b/server/utils/email/reset.ts
+@@ -18,6 +18,6 @@ export const sendPasswordResetEmail = ({ toEmail, resetUrl }) => {
+ 			Sincerely,
+ 			PubPub Support
+ 		`),
+-		replyTo: 'hello@pubpub.org',
++		replyTo: 'admin@openscience.ph',
+ 	});
+ };
+diff --git a/server/utils/email/signup.ts b/server/utils/email/signup.ts
+index f85d0fa..80eed8d 100644
+--- a/server/utils/email/signup.ts
++++ b/server/utils/email/signup.ts
+@@ -16,6 +16,6 @@ export const sendSignupEmail = ({ toEmail, signupUrl }) => {
+ 			Sincerely,
+ 			PubPub Support
+ 		`),
+-		replyTo: 'hello@pubpub.org',
++		replyTo: 'admin@openscience.ph',
+ 	});
+ };
+diff --git a/server/utils/email/transport.ts b/server/utils/email/transport.ts
+index e1b412d..1e220bc 100644
+--- a/server/utils/email/transport.ts
++++ b/server/utils/email/transport.ts
+@@ -28,7 +28,7 @@ type SendEmailOptions = {
+ 
+ const defaultFrom: From = {
+ 	name: 'PubPub Team',
+-	address: 'hello@pubpub.org',
++	address: 'admin@openscience.ph',
+ };
+ 
+ export const sendEmail = async (options: SendEmailOptions): Promise<void> => {

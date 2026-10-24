@@ -1,74 +1,36 @@
 diff --git a/client/components/Footer/Footer.tsx b/client/components/Footer/Footer.tsx
-index d3a7372..e92a180 100644
+index d3a7372..f915f84 100644
 --- a/client/components/Footer/Footer.tsx
 +++ b/client/components/Footer/Footer.tsx
-@@ -104,6 +104,48 @@ const Footer = (props: Props) => {
- 	const socialItems = isBasePubPub
- 		? baseSocialItems
- 		: createSocialNavItems(communityData, 'footer');
-+	if (isBasePubPub) {
-+		return (
-+			<div className="os-footer-inner" style={{ width: '100%', background: '#060d17', borderTop: '1px solid rgba(255,255,255,0.12)', padding: '48px 0 24px', color: '#f8fafc' }}>
-+				<div className="container os-footer-container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
-+					<div className="row os-footer-main-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', marginBottom: '36px' }}>
-+						<div className="os-footer-brand-col" style={{ flex: '1 1 360px' }}>
-+							<h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '20px', fontWeight: 700, color: '#ffffff', marginBottom: '12px' }}>OpenScience.ph</h4>
-+							<p style={{ color: '#94a3b8', fontSize: '13.5px', lineHeight: 1.6, marginBottom: '12px' }}>
-+								An open scholarship repository and digital preservation commons stewarded by <strong style={{ color: '#ffffff' }}>OBRA Incorporated</strong> in collaboration with Philippine higher education institutions.
-+							</p>
-+							<p style={{ color: '#64748b', fontSize: '12.5px', lineHeight: 1.5 }}>
-+								Advancing institutional research discoverability, sovereign preservation, and permanent academic access.
-+							</p>
-+						</div>
-+						<div className="os-footer-col" style={{ flex: '1 1 200px' }}>
-+							<h5 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '15px', fontWeight: 600, color: '#ffffff', marginBottom: '16px' }}>Repository Standards</h5>
-+							<ul style={{ listStyle: 'none', padding: 0, margin: 0, color: '#94a3b8', fontSize: '13px', lineHeight: '28px' }}>
-+								<li>Persistent Resolvable Identifiers</li>
-+								<li>Standardized Bibliographic Metadata</li>
-+								<li>FAIR Research Data Principles</li>
-+								<li>Diamond Open Access</li>
-+							</ul>
-+						</div>
-+						<div className="os-footer-col" style={{ flex: '1 1 280px' }}>
-+							<h5 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '15px', fontWeight: 600, color: '#ffffff', marginBottom: '16px' }}>Institutional Inquiries</h5>
-+							<p style={{ color: '#94a3b8', fontSize: '13.5px', lineHeight: 1.5, marginBottom: '16px' }}>
-+								For university partnerships, library onboarding, or collection inquiries:
-+							</p>
-+							<a href="https://openscience.pinoyseoul.com/contact.xhtml" style={{ display: 'inline-flex', alignItems: 'center', background: '#d97706', color: '#ffffff', padding: '9px 20px', borderRadius: '6px', fontSize: '13.5px', fontWeight: 600, textDecoration: 'none' }}>
-+								Contact Us &rarr;
-+							</a>
-+						</div>
-+					</div>
-+					<div className="os-footer-bottom-row" style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box', fontSize: '12px', color: '#64748b' }}>
-+						<div className="os-copyright" style={{ textAlign: 'left', flex: '1 1 auto' }}>&copy; 2026 OpenScience.ph. Works cataloged are stewarded under individual author licenses.</div>
-+						<div className="os-powered" style={{ textAlign: 'right', marginLeft: 'auto', flex: '0 0 auto' }}>Powered by MIT PubPub</div>
-+					</div>
-+				</div>
-+			</div>
-+		);
-+	}
-+
- 	return (
- 		<div className={`footer-component ${wrapperClasses}`}>
- 			<GridWrapper>
-@@ -257,30 +299,9 @@ const Footer = (props: Props) => {
- 					)}
- 				</div>
+@@ -117,7 +117,7 @@ const Footer = (props: Props) => {
+ 								<ul className="social-list">
+ 									<li>
+ 										<a
+-											href="mailto:hello@pubpub.org?subject=Contact"
++											href="mailto:admin@openscience.ph?subject=Contact"
+ 											aria-label="Contact via email"
+ 										>
+ 											<Icon icon="envelope" />
+@@ -259,25 +259,18 @@ const Footer = (props: Props) => {
  			</GridWrapper>
--			<div className="built-on">
--				<a
+ 			<div className="built-on">
+ 				<a
 -					href={
 -						isBasePubPub ? 'https://www.knowledgefutures.org' : 'https://www.pubpub.org'
 -					}
--				>
--					{!isBasePubPub && (
--						<React.Fragment>
++					href="https://github.com/pubpub/pubpub"
++					target="_blank"
++					rel="noopener noreferrer"
+ 				>
+ 					{!isBasePubPub && (
+ 						<React.Fragment>
 -							Published with
 -							<img className="logo" src={pubpubLogo} alt="PubPub logo" />
--						</React.Fragment>
--					)}
--					{isBasePubPub && (
--						<React.Fragment>
++							Powered by MIT PubPub
+ 						</React.Fragment>
+ 					)}
+ 					{isBasePubPub && (
+ 						<React.Fragment>
 -							A project of
 -							<span className="sr-only">Knowledge Futures</span>
 -							<img
@@ -76,52 +38,7 @@ index d3a7372..e92a180 100644
 -								src="/static/kfMini.svg"
 -								alt="Knowledge Futures logo"
 -							/>
--						</React.Fragment>
--					)}
--				</a>
-+			<div className="os-small-footer-bar" style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '1240px', margin: '0 auto', boxSizing: 'border-box', fontSize: '12px', color: '#64748b' }}>
-+				<div className="os-copyright">&copy; 2026 OpenScience.ph. Works cataloged are stewarded under individual author licenses.</div>
-+				<div className="os-powered" style={{ textAlign: 'right' }}>Powered by MIT PubPub</div>
- 			</div>
- 		</div>
- 	);
-diff --git a/client/components/Footer/footer.scss b/client/components/Footer/footer.scss
-index 2c5a1c7..01ac3db 100644
---- a/client/components/Footer/footer.scss
-+++ b/client/components/Footer/footer.scss
-@@ -3,7 +3,7 @@
- $bp: vendor.$bp-namespace;
- 
- .footer-component {
--	padding: 2.5em 0;
-+	padding: 1.5em 0 0;
- 	a {
- 		text-decoration: none;
- 	}
-@@ -167,4 +167,24 @@ $bp: vendor.$bp-namespace;
-   clip: rect(0, 0, 0, 0);
-   white-space: nowrap;
-   border-width: 0;
--}
-\ No newline at end of file
-+}
-+.footer-component {
-+	padding: 1.5em 0 0 !important;
-+}
-+
-+.os-footer-bottom-row {
-+	display: flex !important;
-+	justify-content: space-between !important;
-+	align-items: center !important;
-+	width: 100% !important;
-+	box-sizing: border-box !important;
-+	.os-copyright {
-+		text-align: left !important;
-+		flex: 1 1 auto !important;
-+	}
-+	.os-powered {
-+		text-align: right !important;
-+		margin-left: auto !important;
-+		flex: 0 0 auto !important;
-+	}
-+}
++							&copy; 2026 OpenScience.ph &middot; Powered by MIT PubPub
+ 						</React.Fragment>
+ 					)}
+ 				</a>

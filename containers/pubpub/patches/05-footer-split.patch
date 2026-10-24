@@ -1,5 +1,5 @@
 diff --git a/client/components/Footer/Footer.tsx b/client/components/Footer/Footer.tsx
-index d3a7372..595de8f 100644
+index d3a7372..e261278 100644
 --- a/client/components/Footer/Footer.tsx
 +++ b/client/components/Footer/Footer.tsx
 @@ -104,6 +104,48 @@ const Footer = (props: Props) => {
@@ -51,3 +51,60 @@ index d3a7372..595de8f 100644
  	return (
  		<div className={`footer-component ${wrapperClasses}`}>
  			<GridWrapper>
+@@ -257,30 +299,9 @@ const Footer = (props: Props) => {
+ 					)}
+ 				</div>
+ 			</GridWrapper>
+-			<div className="built-on">
+-				<a
+-					href={
+-						isBasePubPub ? 'https://www.knowledgefutures.org' : 'https://www.pubpub.org'
+-					}
+-				>
+-					{!isBasePubPub && (
+-						<React.Fragment>
+-							Published with
+-							<img className="logo" src={pubpubLogo} alt="PubPub logo" />
+-						</React.Fragment>
+-					)}
+-					{isBasePubPub && (
+-						<React.Fragment>
+-							A project of
+-							<span className="sr-only">Knowledge Futures</span>
+-							<img
+-								className="logo"
+-								src="/static/kfMini.svg"
+-								alt="Knowledge Futures logo"
+-							/>
+-						</React.Fragment>
+-					)}
+-				</a>
++			<div className="os-small-footer-bar" style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '1240px', margin: '0 auto', boxSizing: 'border-box', fontSize: '12px', color: '#64748b' }}>
++				<div className="os-copyright">&copy; 2026 OpenScience.ph. Works cataloged are stewarded under individual author licenses.</div>
++				<div className="os-powered" style={{ textAlign: 'right' }}>Powered by MIT PubPub</div>
+ 			</div>
+ 		</div>
+ 	);
+diff --git a/client/components/Footer/footer.scss b/client/components/Footer/footer.scss
+index 2c5a1c7..980d074 100644
+--- a/client/components/Footer/footer.scss
++++ b/client/components/Footer/footer.scss
+@@ -3,7 +3,7 @@
+ $bp: vendor.$bp-namespace;
+ 
+ .footer-component {
+-	padding: 2.5em 0;
++	padding: 1.5em 0 0;
+ 	a {
+ 		text-decoration: none;
+ 	}
+@@ -167,4 +167,7 @@ $bp: vendor.$bp-namespace;
+   clip: rect(0, 0, 0, 0);
+   white-space: nowrap;
+   border-width: 0;
+-}
+\ No newline at end of file
++}
++.footer-component {
++	padding: 1.5em 0 0 !important;
++}

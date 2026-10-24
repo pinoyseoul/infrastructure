@@ -1,11 +1,22 @@
 diff --git a/client/components/GlobalControls/GlobalControls.tsx b/client/components/GlobalControls/GlobalControls.tsx
-index a27deec..24a70cd 100644
+index a27deec..49cd757 100644
 --- a/client/components/GlobalControls/GlobalControls.tsx
 +++ b/client/components/GlobalControls/GlobalControls.tsx
-@@ -33,6 +33,17 @@ const GlobalControls = (props: Props) => {
+@@ -33,6 +33,28 @@ const GlobalControls = (props: Props) => {
  		},
  	} = usePageContext();
  
++	const renderJournals = () => {
++		return (
++			<GlobalControlsButton
++				href="https://journal.pinoyseoul.com"
++				aria-label="Journals"
++				desktop={{ text: 'Journals' }}
++				mobile={{ text: 'Journals' }}
++			/>
++		);
++	};
++
 +	const renderRepository = () => {
 +		return (
 +			<GlobalControlsButton
@@ -20,18 +31,20 @@ index a27deec..24a70cd 100644
  	const renderSearch = () => {
  		return (
  			<GlobalControlsButton
-@@ -104,6 +115,7 @@ const GlobalControls = (props: Props) => {
+@@ -104,6 +126,8 @@ const GlobalControls = (props: Props) => {
  						/>
  					)}
  					{canCreatePub && <CreatePubButton />}
++					{renderJournals()}
 +					{renderRepository()}
  					{renderSearch()}
  					{canView && renderDashboardMenu()}
  					{renderNotificiations()}
-@@ -139,6 +151,7 @@ const GlobalControls = (props: Props) => {
+@@ -139,6 +163,8 @@ const GlobalControls = (props: Props) => {
  						href="https://www.knowledgefutures.org/pubpub/"
  						mobileOrDesktop={{ text: 'PubPub Platform (new!)' }}
  					/> */}
++					{renderJournals()}
 +					{renderRepository()}
  					{renderSearch()}
  				</>
@@ -59,7 +72,7 @@ index 09df8e0..ed02545 100644
 +	}
 +}
 diff --git a/client/components/Header/Header.tsx b/client/components/Header/Header.tsx
-index 00493b2..0c24a0c 100644
+index 00493b2..f0d648f 100644
 --- a/client/components/Header/Header.tsx
 +++ b/client/components/Header/Header.tsx
 @@ -87,7 +87,9 @@ const Header = (props: Props) => {
@@ -98,7 +111,7 @@ index 00493b2..0c24a0c 100644
 +										<span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '18px', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em' }}>
 +											OpenScience.ph
 +										</span>
-+										<span className="os-beta-badge" style={{ backgroundColor: '#d97706', color: '#ffffff', fontSize: '10.5px', padding: '2px 7px', borderRadius: '4px', fontWeight: 700, marginLeft: '4px' }}>
++										<span className="os-beta-badge" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', height: '18px', lineHeight: '1', backgroundColor: '#d97706', color: '#ffffff', fontSize: '10.5px', padding: '2px 7px', borderRadius: '4px', fontWeight: 700, marginLeft: '8px', letterSpacing: '0.04em' }}>
 +											BETA
 +										</span>
 +									</a>

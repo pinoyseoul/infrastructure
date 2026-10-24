@@ -1,0 +1,43 @@
+# Pandoc is central to the Pub import and export features
+
+# https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
+
+# xsltproc is ued to extract bibliographies from XML (JATS) files on import
+
+xsltproc
+
+# poppler-utils contains pdftoppm, which we use to import PDF graphics as web-friendy images
+
+poppler-utils
+
+# imagemagick is used to convert other images to web-friendly formats
+
+imagemagick
+
+# libxml contains xmllint which is used to validate Datacite and Crossref deposits against an XSD schema
+
+libxml2
+libxml2-utils
+
+# postgresql-client for pg-dump
+postgresql-client-16
+
+# Chromium and dependencies for pubstash (HTML-to-PDF via Playwright + paged.js)
+chromium
+fonts-liberation
+fonts-dejavu-core
+fonts-freefont-ttf
+fonts-kacst
+fonts-noto-cjk
+fonts-noto-color-emoji
+fonts-thai-tlwg
+libnss3
+libatk-bridge2.0-0
+libdrm2
+libxcomposite1
+libxdamage1
+libxrandr2
+libgbm1
+libpango-1.0-0
+libcairo2
+libasound2

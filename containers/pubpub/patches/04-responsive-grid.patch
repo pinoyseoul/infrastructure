@@ -1,0 +1,75 @@
+diff --git a/client/containers/Explore/Explore.tsx b/client/containers/Explore/Explore.tsx
+index a8b7f9a..043b242 100644
+--- a/client/containers/Explore/Explore.tsx
++++ b/client/containers/Explore/Explore.tsx
+@@ -124,10 +124,9 @@ const Explore = (props: Props) => {
+ 			{/* Hero */}
+ 			<div className="explore-hero">
+ 				<div className="container">
+-					<h1>Explore Communities</h1>
++					<h1>OpenScience.ph Journals</h1>
+ 					<p className="explore-subtitle">
+-						Thousands of knowledge communities publish on PubPub. Journals, monographs,
+-						conferences, course materials, and more. Explore what people are building.
++						An open scholarship publishing commons stewarded by OBRA Incorporated in collaboration with Philippine higher education institutions.
+ 					</p>
+ 				</div>
+ 			</div>
+@@ -139,13 +138,13 @@ const Explore = (props: Props) => {
+ 						<div className="explore-search">
+ 							<input
+ 								type="text"
+-								placeholder="Search communities..."
++								placeholder="Search published journals, articles, or faculty scholarship..."
+ 								value={searchTerm}
+ 								onChange={(e) => {
+ 									setSearchTerm(e.target.value);
+ 									setVisibleCount(PAGE_SIZE);
+ 								}}
+-								aria-label="Search communities"
++								aria-label="Search published journals, articles, or faculty scholarship..."
+ 							/>
+ 						</div>
+ 						{searchTerm && (
+@@ -176,7 +175,7 @@ const Explore = (props: Props) => {
+ 					{filtered.length === 0 && searchTerm && (
+ 						<div className="no-results">
+ 							<p>
+-								No communities match &ldquo;{searchTerm}&rdquo;. Try a different
++								No journals match &ldquo;{searchTerm}&rdquo;. Try a different
+ 								search.
+ 							</p>
+ 						</div>
+diff --git a/client/containers/Explore/explore.scss b/client/containers/Explore/explore.scss
+index 4ecd2d0..7342a37 100644
+--- a/client/containers/Explore/explore.scss
++++ b/client/containers/Explore/explore.scss
+@@ -1,6 +1,6 @@
+ $textColorLight: #fff9e9;
+ $textColorDark: #2c3654;
+-$bgColorDark: #2c3654;
++$bgColorDark: #0a192f;
+ 
+ #explore-container {
+ 	font-family: 'Outfit', sans-serif;
+@@ -290,3 +290,20 @@ $bgColorDark: #2c3654;
+ 		}
+ 	}
+ }
++
++#explore-container {
++	.explore-main {
++		min-height: 480px;
++		.container {
++			max-width: 1240px !important;
++			margin: 0 auto !important;
++			padding: 0 20px !important;
++		}
++	}
++	.community-grid {
++		display: grid !important;
++		grid-template-columns: repeat(auto-fill, minmax(320px, 360px)) !important;
++		gap: 24px !important;
++		justify-content: start !important;
++	}
++}

@@ -1,0 +1,59 @@
+diff --git a/server/utils/initData.ts b/server/utils/initData.ts
+index 9296124..6f05b20 100644
+--- a/server/utils/initData.ts
++++ b/server/utils/initData.ts
+@@ -74,7 +74,7 @@ export const getInitialData = async (
+ 		query: req.query,
+ 		queryString: req.query ? `?${queryString.stringify(req.query)}` : '',
+ 		isDashboard,
+-		isBasePubPub: shouldForceBasePubPub() || hostname === 'www.pubpub.org',
++		isBasePubPub: shouldForceBasePubPub() || ['www.pubpub.org', 'journal.pinoyseoul.com', 'journals.openscience.ph', process.env.BASE_PORTAL_DOMAIN].filter(Boolean).includes(hostname),
+ 		isProd: isProd(),
+ 		isDuqDuq: isDuqDuq(),
+ 		isQubQub: isQubQub(),
+@@ -92,16 +92,16 @@ export const getInitialData = async (
+ 
+ 		return {
+ 			communityData: {
+-				title: 'PubPub',
+-				description: 'Collaborative Community Publishing',
+-				favicon: `https://${locationData.hostname}/favicon.png`,
+-				avatar: `https://${locationData.hostname}/static/logo.png`,
++				title: 'OpenScience.ph',
++				description: 'An open scholarship publishing commons stewarded by OBRA Incorporated in collaboration with Philippine higher education institutions.',
++				favicon: '/static/favicon.png',
++				avatar: '/static/openscience_navbar_logo.png',
+ 				headerLogo:
+ 					locationData.path === '/' ? '/static/logo.png' : '/static/logoBlack.svg',
+ 				hideHero: true,
+ 				accentColorLight: '#ffffff',
+-				accentColorDark: '#112233',
+-				headerColorType: 'light',
++				accentColorDark: '#0a192f',
++				headerColorType: 'dark',
+ 				hideCreatePubButton: true,
+ 				headerLinks: [
+ 					{ title: 'About', url: '/about' },
+@@ -155,6 +155,7 @@ export const getInitialData = async (
+ 
+ 	if (
+ 		(communityData.domain &&
++			communityData.domain !== hostname &&
+ 			whereQuery.subdomain &&
+ 			env.NODE_ENV === 'production' &&
+ 			isProd()) ||
+diff --git a/server/utils/routes.ts b/server/utils/routes.ts
+index dc0610d..d3901df 100644
+--- a/server/utils/routes.ts
++++ b/server/utils/routes.ts
+@@ -2,7 +2,9 @@ import { shouldForceBasePubPub } from 'utils/environment';
+ 
+ export const hostIsValid = (req, access) => {
+ 	// This should be merged with the check in getInitialData
+-	const isBasePubPub = shouldForceBasePubPub() || req.hostname === 'www.pubpub.org';
++	const baseDomains = ['www.pubpub.org', 'journal.pinoyseoul.com', 'journals.openscience.ph'];
++	if (process.env.BASE_PORTAL_DOMAIN) baseDomains.push(process.env.BASE_PORTAL_DOMAIN);
++	const isBasePubPub = shouldForceBasePubPub() || baseDomains.includes(req.hostname);
+ 	if (!isBasePubPub && access !== 'community') {
+ 		return false;
+ 	}

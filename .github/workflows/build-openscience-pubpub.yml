@@ -37,6 +37,7 @@ jobs:
           file: ./containers/pubpub/Dockerfile
           push: true
           tags: |
+            ghcr.io/pinoyseoul/pubpub:openscience-v1.2
             ghcr.io/pinoyseoul/pubpub:openscience-v1.1
             ghcr.io/pinoyseoul/pubpub:openscience-v1.0
             ghcr.io/pinoyseoul/pubpub:openscience-latest

@@ -15,7 +15,7 @@ index 4e6b8ee..9d5e289 100644
  			/>
  			<div
 diff --git a/client/components/GlobalControls/GlobalControls.tsx b/client/components/GlobalControls/GlobalControls.tsx
-index a27deec..16d95a6 100644
+index a27deec..b2de6a1 100644
 --- a/client/components/GlobalControls/GlobalControls.tsx
 +++ b/client/components/GlobalControls/GlobalControls.tsx
 @@ -33,6 +33,34 @@ const GlobalControls = (props: Props) => {
@@ -61,20 +61,18 @@ index a27deec..16d95a6 100644
  					{loginData.isSuperAdmin && (
  						<GlobalControlsButton
  							href="/superadmin"
-@@ -104,6 +133,8 @@ const GlobalControls = (props: Props) => {
+@@ -104,6 +133,7 @@ const GlobalControls = (props: Props) => {
  						/>
  					)}
  					{canCreatePub && <CreatePubButton />}
-+					{renderJournals()}
 +					{renderRepository()}
  					{renderSearch()}
  					{canView && renderDashboardMenu()}
  					{renderNotificiations()}
-@@ -139,6 +170,8 @@ const GlobalControls = (props: Props) => {
+@@ -139,6 +169,7 @@ const GlobalControls = (props: Props) => {
  						href="https://www.knowledgefutures.org/pubpub/"
  						mobileOrDesktop={{ text: 'PubPub Platform (new!)' }}
  					/> */}
-+					{renderJournals()}
 +					{renderRepository()}
  					{renderSearch()}
  				</>

@@ -1,5 +1,5 @@
 diff --git a/client/containers/Explore/Explore.tsx b/client/containers/Explore/Explore.tsx
-index a8b7f9a..599d3e4 100644
+index a8b7f9a..13afb6c 100644
 --- a/client/containers/Explore/Explore.tsx
 +++ b/client/containers/Explore/Explore.tsx
 @@ -37,8 +37,13 @@ type Props = {
@@ -18,7 +18,24 @@ index a8b7f9a..599d3e4 100644
  
  const pickTextColor = (hex: string | null) => {
  	if (!hex) return '#fff';
-@@ -124,10 +129,9 @@ const Explore = (props: Props) => {
+@@ -85,13 +90,14 @@ const CommunityCard = ({ community }: { community: Community }) => {
+ 				<div className="card-footer" style={{ color: subtextColor }}>
+ 					{summary && summary.pubs > 0 && (
+ 						<span className="card-stat">
+-							<strong style={{ color: textColor }}>{summary.pubs}</strong> pubs
++							<strong style={{ color: textColor }}>{summary.pubs}</strong>{' '}
++							{summary.pubs === 1 ? 'article' : 'articles'}
+ 						</span>
+ 					)}
+ 					{summary && summary.collections > 0 && (
+ 						<span className="card-stat">
+ 							<strong style={{ color: textColor }}>{summary.collections}</strong>{' '}
+-							collections
++							{summary.collections === 1 ? 'issue' : 'issues'}
+ 						</span>
+ 					)}
+ 				</div>
+@@ -124,10 +130,9 @@ const Explore = (props: Props) => {
  			{/* Hero */}
  			<div className="explore-hero">
  				<div className="container">
@@ -31,7 +48,7 @@ index a8b7f9a..599d3e4 100644
  					</p>
  				</div>
  			</div>
-@@ -139,18 +143,18 @@ const Explore = (props: Props) => {
+@@ -139,18 +144,18 @@ const Explore = (props: Props) => {
  						<div className="explore-search">
  							<input
  								type="text"
@@ -53,7 +70,7 @@ index a8b7f9a..599d3e4 100644
  							</span>
  						)}
  					</div>
-@@ -176,7 +180,7 @@ const Explore = (props: Props) => {
+@@ -176,7 +181,7 @@ const Explore = (props: Props) => {
  					{filtered.length === 0 && searchTerm && (
  						<div className="no-results">
  							<p>

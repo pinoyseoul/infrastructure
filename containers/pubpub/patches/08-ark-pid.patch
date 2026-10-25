@@ -1,0 +1,194 @@
+diff --git a/client/components/AssignDoi/AssignDoi.tsx b/client/components/AssignDoi/AssignDoi.tsx
+index 6788e81..891f889 100644
+--- a/client/components/AssignDoi/AssignDoi.tsx
++++ b/client/components/AssignDoi/AssignDoi.tsx
+@@ -278,6 +278,24 @@ function AssignDoi(props: Props) {
+ 	const fetchDeposit = async () => {
+ 		dispatch({ type: AssignDoiActionType.FetchDeposit });
+ 
++		// Sovereign ARK Pathway (Direct DB update when no commercial Crossref credentials exist)
++		if (!communityData.crossrefUsername && !communityData.crossrefPassword) {
++			try {
++				const arkIdentifier = `ark:/14373/j1${pubData.slug}`;
++				await apiFetch('/api/pubs', {
++					method: 'PUT',
++					body: JSON.stringify({ pubId: pubData.id, communityId: communityData.id, doi: arkIdentifier }),
++				});
++				dispatch({ type: AssignDoiActionType.FetchDepositSuccess, payload: { depositJson: {} } });
++				onDeposit(arkIdentifier);
++				return;
++			} catch (err: any) {
++				dispatch({ type: AssignDoiActionType.Error, payload: err.message });
++				onError(err);
++				return;
++			}
++		}
++
+ 		try {
+ 			const body = JSON.stringify(pickNonNullValues(requestBody));
+ 			const response = await apiFetch('/api/doi', {
+diff --git a/client/containers/DashboardSettings/PubSettings/Doi.tsx b/client/containers/DashboardSettings/PubSettings/Doi.tsx
+index 6a228e2..3d206df 100644
+--- a/client/containers/DashboardSettings/PubSettings/Doi.tsx
++++ b/client/containers/DashboardSettings/PubSettings/Doi.tsx
+@@ -554,9 +554,12 @@ class Doi extends Component<Props, State> {
+ 		const { pubData } = this.props;
+ 		const { doiSuffix, updating, generating, deleting } = this.state;
+ 		const fullDoi = this.getFullDoi();
+-		const invalidDoi = doiSuffix && !isDoi(fullDoi);
++		const isArk = fullDoi.startsWith('ark:');
++		const invalidDoi = doiSuffix && !isArk && !isDoi(fullDoi);
+ 		const intent = this.getIntent(invalidDoi);
+-		const helperText = this.getHelperText(invalidDoi);
++		const helperText = isArk
++			? 'Institutional Archival Resource Key (NAAN 14373). Resolves via N2T.net.'
++			: this.getHelperText(invalidDoi);
+ 
+ 		if (this.isDoiEditable()) {
+ 			return (
+@@ -565,10 +568,10 @@ class Doi extends Component<Props, State> {
+ 					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '"success"... Remove this comment to see the full error message
+ 					intent={intent}
+ 					className="doi"
+-					label="DOI Suffix"
++					label="Identifier Suffix"
+ 				>
+ 					<InputGroup
+-						placeholder="Enter a DOI suffix..."
++						placeholder="Enter identifier suffix..."
+ 						value={doiSuffix}
+ 						onChange={(e) => this.setState({ doiSuffix: e.target.value })}
+ 						leftElement={<span className="doi-prefix">{this.getDoiPrefix()}/</span>}
+diff --git a/client/containers/Pub/PubHeader/PubHeaderContent.tsx b/client/containers/Pub/PubHeader/PubHeaderContent.tsx
+index d8ac948..19f3127 100644
+--- a/client/containers/Pub/PubHeader/PubHeaderContent.tsx
++++ b/client/containers/Pub/PubHeader/PubHeaderContent.tsx
+@@ -63,11 +63,15 @@ const PubHeaderContent = (props: Props) => {
+ 					</span>
+ 					{doi && (
+ 						<span className="metadata-pair doi-pair">
+-							<b className="pub-header-themed-secondary">DOI</b>
++							<b className="pub-header-themed-secondary">
++								{doi.startsWith('ark:') ? 'ARK' : (doi.startsWith('10.') ? 'DOI' : 'Identifier')}
++							</b>
+ 							<ClickToCopyButton
+-								copyString={`https://doi.org/${doi}`}
++								copyString={
++									doi.startsWith('ark:') ? `https://n2t.net/${doi}` : `https://doi.org/${doi}`
++								}
+ 								className="click-to-copy"
+-								beforeCopyPrompt="Copy doi.org link"
++								beforeCopyPrompt="Copy identifier link"
+ 								icon={null}
+ 							>
+ 								{doi}
+diff --git a/client/containers/Pub/PubHeader/details/PubDetails.tsx b/client/containers/Pub/PubHeader/details/PubDetails.tsx
+index 76c7a75..94c70d2 100644
+--- a/client/containers/Pub/PubHeader/details/PubDetails.tsx
++++ b/client/containers/Pub/PubHeader/details/PubDetails.tsx
+@@ -78,11 +78,15 @@ const PubDetails = (props: Props) => {
+ 				<div className="section citation-and-doi">
+ 					{pubData.doi && (
+ 						<React.Fragment>
+-							<h6 className="pub-header-themed-secondary">DOI</h6>{' '}
++							<h6 className="pub-header-themed-secondary">
++								{pubData.doi.startsWith('ark:') ? 'ARK' : (pubData.doi.startsWith('10.') ? 'DOI' : 'Identifier')}
++							</h6>{' '}
+ 							<ClickToCopyButton
+-								copyString={`https://doi.org/${pubData.doi}`}
++								copyString={
++									pubData.doi.startsWith('ark:') ? `https://n2t.net/${pubData.doi}` : `https://doi.org/${pubData.doi}`
++								}
+ 								className="click-to-copy"
+-								beforeCopyPrompt="Copy doi.org link"
++								beforeCopyPrompt="Copy identifier link"
+ 							>
+ 								{pubData.doi}
+ 							</ClickToCopyButton>
+diff --git a/server/routes/pubRedirects.ts b/server/routes/pubRedirects.ts
+index 6cd3eb8..ba03907 100644
+--- a/server/routes/pubRedirects.ts
++++ b/server/routes/pubRedirects.ts
+@@ -28,17 +28,22 @@ router.get('/pub/:slug', async (req, res, next) => {
+ 		return next();
+ 	}
+ 	try {
++		const cleanSlug = req.params.slug
++			.replace(/_/gi, '-')
++			.replace(/^(j1|journal)\/?/, '')
++			.toLowerCase();
+ 		const pubData = (await Pub.findOne({
+ 			/* The replace statement is to capture v3 pub slug conventions */
+-			where: { slug: req.params.slug.replace(/_/gi, '-').toLowerCase() },
++			where: { slug: cleanSlug },
+ 			attributes: ['id'],
+ 			include: [{ model: Community, as: 'community', attributes: ['subdomain', 'domain'] }],
+ 		})) as DefinitelyHas<Pub, 'community'>;
+ 		if (pubData) {
++			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+ 			const newDomain = pubData.community.domain
+ 				? pubData.community.domain
+-				: `${pubData.community.subdomain}.pubpub.org`;
+-			return res.redirect(`https://${newDomain}/pub/${req.params.slug.replace(/_/gi, '-')}`);
++				: `${pubData.community.subdomain}.${baseDomain}`;
++			return res.redirect(`https://${newDomain}/pub/${cleanSlug}`);
+ 		}
+ 		return next();
+ 	} catch (err) {
+diff --git a/server/utils/citations/generateCitationHtml.ts b/server/utils/citations/generateCitationHtml.ts
+index 123ffac..66d3c29 100644
+--- a/server/utils/citations/generateCitationHtml.ts
++++ b/server/utils/citations/generateCitationHtml.ts
+@@ -103,14 +103,18 @@ export const generateCitationHtml = async (
+ 		'PubPub/6.0 (https://pubpub.org; mailto:dev@pubpub.org) Citation.js/0.7.11 Node.js/22.14.0',
+ 	);
+ 
++	const isDoi = pubData.doi && pubData.doi.startsWith('10.');
++	const isArk = pubData.doi && pubData.doi.startsWith('ark:');
++	const citationUrl = isArk ? `https://n2t.net/${pubData.doi}` : pubLink;
++
+ 	const pubCiteObject = await Cite.async({
+ 		...commonData,
+ 		// @ts-expect-error ts-migrate(2339) FIXME: Property 'containerDoi' does not exist on type '{ ... Remove this comment to see the full error message
+-		DOI: pubData.doi || commonData.containerDoi,
++		DOI: isDoi ? pubData.doi : (commonData.containerDoi || null),
+ 		ISSN: pubData.doi ? communityData.issn : null,
+ 		issued: pubIssuedDate && [getDatePartsObject(pubIssuedDate)],
+-		note: pubLink,
+-		URL: pubLink,
++		note: isArk ? `Archival Identifier: ${pubData.doi}` : pubLink,
++		URL: citationUrl,
+ 	});
+ 	return {
+ 		pub: {
+diff --git a/server/utils/ssr.tsx b/server/utils/ssr.tsx
+index 3dcb38d..38e6f52 100644
+--- a/server/utils/ssr.tsx
++++ b/server/utils/ssr.tsx
+@@ -354,12 +354,20 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
+ 	const finalDoi = doi || collection?.metadata?.doi;
+ 
+ 	if (finalDoi) {
+-		outputComponents = [
+-			...outputComponents,
+-			<meta key="doi1" name="citation_doi" content={`doi:${finalDoi}`} />,
+-			<meta key="doi2" property="dc.identifier" content={`doi:${finalDoi}`} />,
+-			<meta key="doi3" property="prism.doi" content={`doi:${finalDoi}`} />,
+-		];
++		if (finalDoi.startsWith('10.')) {
++			outputComponents = [
++				...outputComponents,
++				<meta key="doi1" name="citation_doi" content={`doi:${finalDoi}`} />,
++				<meta key="doi2" property="dc.identifier" content={`doi:${finalDoi}`} />,
++				<meta key="doi3" property="prism.doi" content={`doi:${finalDoi}`} />,
++			];
++		} else if (finalDoi.startsWith('ark:')) {
++			outputComponents = [
++				...outputComponents,
++				<meta key="ark1" name="citation_ark" content={finalDoi} />,
++				<meta key="ark2" property="dc.identifier" content={finalDoi} />,
++			];
++		}
+ 	}
+ 	if (notes) {
+ 		const citationNoteTags = notes.map((note, i) => {

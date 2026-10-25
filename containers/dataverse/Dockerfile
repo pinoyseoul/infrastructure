@@ -1,7 +1,7 @@
 # ==============================================================================
--- OpenScience.ph Sovereign Dataverse Unified Container
--- Target: ghcr.io/pinoyseoul/dataverse:latest
--- Base: gdcc/dataverse:latest
+# OpenScience.ph Sovereign Dataverse Unified Container
+# Target: ghcr.io/pinoyseoul/dataverse:latest
+# Base: gdcc/dataverse:latest
 # ==============================================================================
 FROM gdcc/dataverse:latest
 

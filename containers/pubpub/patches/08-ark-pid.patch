@@ -1,8 +1,13 @@
 diff --git a/client/components/AssignDoi/AssignDoi.tsx b/client/components/AssignDoi/AssignDoi.tsx
-index 6788e81..891f889 100644
+index 6788e81..c7e9460 100644
 --- a/client/components/AssignDoi/AssignDoi.tsx
 +++ b/client/components/AssignDoi/AssignDoi.tsx
-@@ -278,6 +278,24 @@ function AssignDoi(props: Props) {
+@@ -1,3 +1,4 @@
++import { Callout } from '@blueprintjs/core';
+ import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
+ 
+ import pickBy from 'lodash.pickby';
+@@ -278,6 +279,24 @@ function AssignDoi(props: Props) {
  	const fetchDeposit = async () => {
  		dispatch({ type: AssignDoiActionType.FetchDeposit });
  
@@ -27,21 +32,61 @@ index 6788e81..891f889 100644
  		try {
  			const body = JSON.stringify(pickNonNullValues(requestBody));
  			const response = await apiFetch('/api/doi', {
+@@ -338,10 +357,12 @@ function AssignDoi(props: Props) {
+ 		fetchPreview({ reviewRecommendation: nextReviewRecommendation });
+ 	};
+ 
++	const isArkMode = !communityData.crossrefUsername && !communityData.crossrefPassword;
++
+ 	let handleButtonClick;
+ 
+ 	if (status === SubmitDepositStatus.Initial) {
+-		handleButtonClick = handlePreviewClick;
++		handleButtonClick = isArkMode ? handleDepositClick : handlePreviewClick;
+ 	} else if (status === SubmitDepositStatus.Previewed) {
+ 		handleButtonClick = handleDepositClick;
+ 	}
+@@ -359,6 +380,13 @@ function AssignDoi(props: Props) {
+ 
+ 	return (
+ 		<div className="assign-doi-component">
++			{isArkMode && !pubData.doi && (
++				<Callout intent="primary" className="ark-callout" style={{ marginBottom: '15px' }}>
++					<p style={{ margin: 0 }}>This publication will be assigned a permanent persistent identifier under OBRA Incorporated&apos;s registered authority (NAAN 14373).</p>
++					<p style={{ margin: '6px 0 2px 0' }}><strong>Target Identifier:</strong> <code>{`ark:/14373/j1${pubData.slug}`}</code></p>
++					<p style={{ margin: '2px 0 0 0' }}><strong>Global Resolver:</strong> <code>{`https://n2t.net/ark:/14373/j1${pubData.slug}`}</code></p>
++				</Callout>
++			)}
+ 			{(status === SubmitDepositStatus.Previewed ||
+ 				status === SubmitDepositStatus.Previewing) && (
+ 				<>
 diff --git a/client/components/Deposit/SubmitDepositButton.tsx b/client/components/Deposit/SubmitDepositButton.tsx
-index 2149a93..2560a31 100644
+index 2149a93..428e279 100644
 --- a/client/components/Deposit/SubmitDepositButton.tsx
 +++ b/client/components/Deposit/SubmitDepositButton.tsx
-@@ -20,7 +20,7 @@ const buttonTextByStatus = {
+@@ -16,16 +16,16 @@ type Props = {
+ };
+ 
+ const buttonTextByStatus = {
+-	[SubmitDepositStatus.Initial]: 'Preview Deposit',
++	[SubmitDepositStatus.Initial]: 'Assign Persistent Identifier',
  	[SubmitDepositStatus.Previewing]: 'Generating Preview',
  	[SubmitDepositStatus.Previewed]: 'Submit Deposit',
- 	[SubmitDepositStatus.Depositing]: 'Depositing',
+-	[SubmitDepositStatus.Depositing]: 'Depositing',
 -	[SubmitDepositStatus.Deposited]: 'DOI Deposited',
++	[SubmitDepositStatus.Depositing]: 'Assigning Identifier...',
 +	[SubmitDepositStatus.Deposited]: 'Identifier Assigned',
  };
  
  const getButtonText = (status: SubmitDepositStatus, depositRecord?: DepositRecord) => {
+ 	if (status === SubmitDepositStatus.Initial && depositRecord) {
+-		return 'Preview & Update Deposit';
++		return 'Update Persistent Identifier';
+ 	}
+ 	if (status === SubmitDepositStatus.Previewed && depositRecord) {
+ 		return 'Re-Submit Deposit';
 diff --git a/client/containers/DashboardSettings/PubSettings/Doi.tsx b/client/containers/DashboardSettings/PubSettings/Doi.tsx
-index 6a228e2..eed8518 100644
+index 6a228e2..a517914 100644
 --- a/client/containers/DashboardSettings/PubSettings/Doi.tsx
 +++ b/client/containers/DashboardSettings/PubSettings/Doi.tsx
 @@ -115,12 +115,13 @@ class Doi extends Component<Props, State> {
@@ -62,7 +107,74 @@ index 6a228e2..eed8518 100644
  		}
  
  		return helperText;
-@@ -554,9 +555,12 @@ class Doi extends Component<Props, State> {
+@@ -178,6 +179,10 @@ class Doi extends Component<Props, State> {
+ 	}
+ 
+ 	disabledDueToUnmanagedPrefix() {
++		const hasCrossref = !!(this.props.communityData?.crossrefUsername && this.props.communityData?.crossrefPassword);
++		if (!hasCrossref) {
++			return false;
++		}
+ 		return this.props.depositTarget && !this.props.depositTarget.isPubPubManaged;
+ 	}
+ 
+@@ -345,14 +350,17 @@ class Doi extends Component<Props, State> {
+ 		const { pubData } = this.props;
+ 		const { justSetDoi } = this.state;
+ 
++		const isArk = pubData.doi?.startsWith('ark:');
++		const hasCrossref = !!(this.props.communityData?.crossrefUsername && this.props.communityData?.crossrefPassword);
++
+ 		if (justSetDoi) {
+ 			return (
+ 				<Callout intent="success" title="Success!">
+-					<p>Successfully submitted a DOI registration for this Pub.</p>
++					<p>{isArk ? 'Successfully assigned persistent identifier for this Pub.' : 'Successfully submitted a DOI registration for this Pub.'}</p>
+ 					<p>
+-						Registration may take a few hours to complete in Crossref&apos;s system. If
+-						DOI URLs do not work immediately, the registration is likely still
+-						processing.
++						{isArk
++							? 'Archival Resource Key is active and resolving globally via N2T.net.'
++							: 'Registration may take a few hours to complete in Crossref&apos;s system. If DOI URLs do not work immediately, the registration is likely still processing.'}
+ 					</p>
+ 				</Callout>
+ 			);
+@@ -360,14 +368,15 @@ class Doi extends Component<Props, State> {
+ 
+ 		return (
+ 			<>
+-				{!pubData.doi && <p>A DOI can be set for each Pub by admins of this Community.</p>}
+-				{this.disabledDueToUnmanagedPrefix() && (
++				{!pubData.doi && <p>A persistent identifier can be set for each Pub by admins of this Community.</p>}
++				{!isArk && !hasCrossref && this.disabledDueToUnmanagedPrefix() && (
+ 					<Callout intent="warning">
+ 						This Pub cannot be deposited to Crossref via PubPub because there is no
+ 						Crossref account connected to PubPub for this Community.
+ 					</Callout>
+ 				)}
+ 				{pubData.doi &&
++					!isArk &&
+ 					!pubData.crossrefDepositRecordId &&
+ 					!this.disabledDueToNoReleases() &&
+ 					!this.disabledDueToUnmanagedPrefix() && (
+@@ -377,9 +386,14 @@ class Doi extends Component<Props, State> {
+ 						</Callout>
+ 					)}
+ 				{pubData.crossrefDepositRecordId && <p>This Pub has been deposited to Crossref.</p>}
++				{isArk && (
++					<Callout intent="success" title="Persistent Identifier Active">
++						<p>This publication has an active sovereign Archival Resource Key (NAAN 14373) resolving globally via N2T.net.</p>
++					</Callout>
++				)}
+ 				{this.isDoiEditableWithoutRelations() && this.findSupplementTo() && (
+ 					<Callout intent="warning">
+-						The DOI for this Pub is not editable because it is a{' '}
++						The identifier for this Pub is not editable because it is a{' '}
+ 						<strong>Supplement</strong> to another Pub.
+ 					</Callout>
+ 				)}
+@@ -554,9 +568,12 @@ class Doi extends Component<Props, State> {
  		const { pubData } = this.props;
  		const { doiSuffix, updating, generating, deleting } = this.state;
  		const fullDoi = this.getFullDoi();
@@ -77,7 +189,7 @@ index 6a228e2..eed8518 100644
  
  		if (this.isDoiEditable()) {
  			return (
-@@ -565,10 +569,10 @@ class Doi extends Component<Props, State> {
+@@ -565,10 +582,10 @@ class Doi extends Component<Props, State> {
  					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '"success"... Remove this comment to see the full error message
  					intent={intent}
  					className="doi"
@@ -91,9 +203,18 @@ index 6a228e2..eed8518 100644
  						onChange={(e) => this.setState({ doiSuffix: e.target.value })}
  						leftElement={<span className="doi-prefix">{this.getDoiPrefix()}/</span>}
 diff --git a/client/containers/DashboardSettings/PubSettings/PubSettings.tsx b/client/containers/DashboardSettings/PubSettings/PubSettings.tsx
-index 30e7790..4ef98cc 100644
+index 30e7790..f18677f 100644
 --- a/client/containers/DashboardSettings/PubSettings/PubSettings.tsx
 +++ b/client/containers/DashboardSettings/PubSettings/PubSettings.tsx
+@@ -185,7 +185,7 @@ const PubSettings = (props: Props) => {
+ 
+ 	const renderDoi = () => {
+ 		return (
+-			<SettingsSection title="DOI" showTitle={false}>
++			<SettingsSection title="Persistent Identifier" showTitle={false}>
+ 				<Deposit
+ 					pub={persistedPubData}
+ 					communityData={communityData}
 @@ -294,7 +294,7 @@ const PubSettings = (props: Props) => {
  		},
  		{

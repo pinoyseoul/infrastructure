@@ -62,10 +62,10 @@ index b7aa020..370b822 100644
  	.use(robotsRouter)
 diff --git a/server/routes/oai.ts b/server/routes/oai.ts
 new file mode 100644
-index 0000000..24b4bad
+index 0000000..64aff81
 --- /dev/null
 +++ b/server/routes/oai.ts
-@@ -0,0 +1,346 @@
+@@ -0,0 +1,347 @@
 +import { Router } from 'express';
 +import xmlbuilder from 'xmlbuilder';
 +
@@ -170,7 +170,7 @@ index 0000000..24b4bad
 +		case 'ListSets': {
 +			const collections = await Collection.findAll({
 +				where: { communityId: community.id, isPublic: true },
-+				attributes: ['slug', 'title', 'description'],
++				attributes: ['slug', 'title', 'metadata'],
 +			});
 +
 +			const root = createBaseOaiXml(baseUrl, verb);
@@ -179,13 +179,14 @@ index 0000000..24b4bad
 +				const set = listSets.ele('set');
 +				set.ele('setSpec', col.slug);
 +				set.ele('setName', col.title);
-+				if (col.description) {
++				const desc = col.metadata?.description || col.metadata?.summary;
++				if (desc) {
 +					const setDesc = set.ele('setDescription');
 +					const dc = setDesc.ele('oai_dc:dc', {
 +						'xmlns:oai_dc': OAI_DC_NAMESPACE,
 +						'xmlns:dc': DC_NAMESPACE,
 +					});
-+					dc.ele('dc:description', col.description);
++					dc.ele('dc:description', String(desc));
 +				}
 +			}
 +
@@ -696,7 +697,7 @@ index 2303e9d..0229b6c 100644
  		pubDate: new Date(),
  		ttl: 60,
 diff --git a/server/server.ts b/server/server.ts
-index 079bed4..55dacbd 100755
+index 079bed4..2f960a3 100755
 --- a/server/server.ts
 +++ b/server/server.ts
 @@ -89,20 +89,22 @@ if (isProd() || isDuqDuq()) {
@@ -736,16 +737,18 @@ index 079bed4..55dacbd 100755
  	if (!env.DISABLE_SSL_REDIRECT) {
  		appRouter.use(enforce.HTTPS({ trustProtoHeader: true }));
  	}
-@@ -163,21 +165,22 @@ appRouter.use(
+@@ -163,21 +165,23 @@ appRouter.use(
  );
  
  appRouter.use((req, res, next) => {
 -	/* If on a pubpub/duqduq domain, set the session cookie to be accessible */
 -	/* across all subdomains to maintain login. Especially important when */
 -	/* creating communities. */
+-	const hostname = req.headers.communityhostname || req.hostname;
 +	/* If on a platform or base domain, set the session cookie to be accessible */
 +	/* across all subdomains to maintain login across communities. */
- 	const hostname = req.headers.communityhostname || req.hostname;
++	const rawHostname = req.headers.communityhostname || req.hostname;
++	const hostname = (Array.isArray(rawHostname) ? rawHostname[0] : (rawHostname || '')) as string;
 +	const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
 +	const isBaseDomain =
 +		hostname.endsWith(`.${baseDomain}`) || hostname === baseDomain;

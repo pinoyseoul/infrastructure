@@ -1,0 +1,34 @@
+﻿# OpenScience.ph (OBRA Incorporated) Crawler Optimization
+# Standards-compliant rules for Academic Search Engines & Harvesters
+
+User-agent: *
+Allow: /
+Allow: /dataset.xhtml
+Allow: /dataverse/
+Allow: /sitemap/
+Disallow: /api/
+Disallow: /dataverseuser.xhtml
+Disallow: /loginpage.xhtml
+Disallow: /editdatafiles.xhtml
+Disallow: /dataset-widgets.xhtml
+Disallow: /editterms.xhtml
+Disallow: /manage-guestbooks.xhtml
+Disallow: /view-guestbookresponses.xhtml
+Disallow: /theme-and-widgets.xhtml
+
+User-agent: Googlebot
+Allow: /
+Allow: /dataset.xhtml
+Allow: /dataverse/
+Allow: /sitemap/
+Disallow: /api/
+Disallow: /dataverseuser.xhtml
+Disallow: /loginpage.xhtml
+
+User-agent: Googlebot-Scholar
+Allow: /
+Allow: /dataset.xhtml
+Allow: /dataverse/
+Disallow: /api/
+
+Sitemap: https://openscience.pinoyseoul.com/sitemap/sitemap.xml

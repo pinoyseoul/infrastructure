@@ -1,0 +1,363 @@
+diff --git a/client/components/Editor/plugins/paste/upload.ts b/client/components/Editor/plugins/paste/upload.ts
+index 709396f..c6afe5d 100644
+--- a/client/components/Editor/plugins/paste/upload.ts
++++ b/client/components/Editor/plugins/paste/upload.ts
+@@ -1,6 +1,6 @@
+ import type { MediaUploadHandler } from '../../types';
+ 
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ import { getResizedUrl } from 'utils/images';
+ 
+ export const defaultMediaUploadHandler: MediaUploadHandler = (file: File) => {
+@@ -14,7 +14,7 @@ export const defaultMediaUploadHandler: MediaUploadHandler = (file: File) => {
+ 					file,
+ 					({ loaded, total }) => onProgress(loaded / total),
+ 					(_, __, ___, assetKey) => {
+-						const src = `https://assets.pubpub.org/${assetKey}`;
++						const src = getAssetPublicUrl(assetKey);
+ 						const img = new Image();
+ 						img.onload = () => onFinish(src);
+ 						img.src = getResizedUrl(src, 'inside', 800);
+diff --git a/client/components/Editor/schemas/iframe.ts b/client/components/Editor/schemas/iframe.ts
+index 3049db3..3e8ba78 100644
+--- a/client/components/Editor/schemas/iframe.ts
++++ b/client/components/Editor/schemas/iframe.ts
+@@ -47,7 +47,7 @@ export default {
+ 		toDOM: (node, { isStaticallyRendered } = { isStaticallyRendered: false }) => {
+ 			const figcaptionId = `${node.attrs.id}-figure-caption`;
+ 			const url = node.attrs.url;
+-			const isHtmlAsset = /^https?:\/\/[^/]*assets\.pubpub\.org\/.+(\.html?)$/i.test(url);
++			const isHtmlAsset = /^https?:\/\/[^/]*(?:assets\.pubpub\.org|storage\.pinoyseoul\.com|storage\.openscience\.ph)\/.+(\.html?)$/i.test(url);
+ 			const src = isHtmlAsset
+ 				? url.includes('?')
+ 					? `${url}&embed=1`
+diff --git a/client/components/FileUploadButton/FileUploadButton.tsx b/client/components/FileUploadButton/FileUploadButton.tsx
+index e38972e..d4e7542 100644
+--- a/client/components/FileUploadButton/FileUploadButton.tsx
++++ b/client/components/FileUploadButton/FileUploadButton.tsx
+@@ -2,7 +2,7 @@ import React, { Component } from 'react';
+ 
+ import { Button } from '@blueprintjs/core';
+ 
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ import { Icon, type IconName } from 'components';
+ 
+ import './fileUploadButton.scss';
+@@ -47,7 +47,7 @@ class FileUploadButton extends Component<Props, State> {
+ 	}
+ 
+ 	handleUploadFinish(evt, index, type, filename) {
+-		this.props.onUploadFinish(`https://assets.pubpub.org/${filename}`);
++		this.props.onUploadFinish(getAssetPublicUrl(filename));
+ 		this.setState({
+ 			isUploading: false,
+ 		});
+diff --git a/client/components/FormattingBar/media/MediaAudio.tsx b/client/components/FormattingBar/media/MediaAudio.tsx
+index 7e15fa1..7b312c3 100644
+--- a/client/components/FormattingBar/media/MediaAudio.tsx
++++ b/client/components/FormattingBar/media/MediaAudio.tsx
+@@ -3,7 +3,7 @@ import React, { Component } from 'react';
+ import { Spinner } from '@blueprintjs/core';
+ import Dropzone from 'react-dropzone';
+ 
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ import Icon from 'components/Icon/Icon';
+ 
+ type Props = {
+@@ -46,7 +46,7 @@ class MediaAudio extends Component<Props, State> {
+ 
+ 	onUploadFinish(evt, index, type, filename) {
+ 		this.props.onInsert('audio', {
+-			url: `https://assets.pubpub.org/${filename}`,
++			url: getAssetPublicUrl(filename),
+ 			align: this.props.isSmall ? 'full' : undefined,
+ 		});
+ 	}
+diff --git a/client/components/FormattingBar/media/MediaFile.tsx b/client/components/FormattingBar/media/MediaFile.tsx
+index 2388129..c6a6818 100644
+--- a/client/components/FormattingBar/media/MediaFile.tsx
++++ b/client/components/FormattingBar/media/MediaFile.tsx
+@@ -4,7 +4,7 @@ import { Spinner } from '@blueprintjs/core';
+ import filesize from 'filesize';
+ import Dropzone from 'react-dropzone';
+ 
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ import Icon from 'components/Icon/Icon';
+ 
+ type Props = {
+@@ -51,7 +51,7 @@ class MediaFile extends Component<Props, State> {
+ 
+ 	onUploadFinish(evt, index, type, filename) {
+ 		this.props.onInsert('file', {
+-			url: `https://assets.pubpub.org/${filename}`,
++			url: getAssetPublicUrl(filename),
+ 			fileName: this.state.loadingFileName,
+ 			fileSize: this.state.loadingFileSize,
+ 		});
+diff --git a/client/components/FormattingBar/media/MediaIframe.tsx b/client/components/FormattingBar/media/MediaIframe.tsx
+index 9e8bd6a..5c24ac4 100644
+--- a/client/components/FormattingBar/media/MediaIframe.tsx
++++ b/client/components/FormattingBar/media/MediaIframe.tsx
+@@ -31,7 +31,7 @@ class MediaIframe extends Component<Props, State> {
+ 	render() {
+ 		const isValid = isHttpsUri(this.state.url);
+ 
+-		const isAssets = this.state.url.includes('assets.pubpub.org');
++		const isAssets = this.state.url.includes('assets.pubpub.org') || this.state.url.includes('storage.pinoyseoul.com') || this.state.url.includes('storage.openscience.ph');
+ 		const isAssetsHtml = isAssets && this.state.url.endsWith('.html');
+ 		let src = this.state.url;
+ 		if (isAssetsHtml) {
+diff --git a/client/components/FormattingBar/media/MediaImage.tsx b/client/components/FormattingBar/media/MediaImage.tsx
+index 955c0a7..8cd44ed 100644
+--- a/client/components/FormattingBar/media/MediaImage.tsx
++++ b/client/components/FormattingBar/media/MediaImage.tsx
+@@ -3,7 +3,7 @@ import React, { Component } from 'react';
+ import { Spinner } from '@blueprintjs/core';
+ import Dropzone from 'react-dropzone';
+ 
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ import Icon from 'components/Icon/Icon';
+ 
+ type Props = {
+@@ -46,7 +46,7 @@ class MediaImage extends Component<Props, State> {
+ 
+ 	onUploadFinish(evt, index, type, filename) {
+ 		this.props.onInsert('image', {
+-			url: `https://assets.pubpub.org/${filename}`,
++			url: getAssetPublicUrl(filename),
+ 			align: this.props.isSmall ? 'full' : undefined,
+ 		});
+ 	}
+diff --git a/client/components/FormattingBar/media/MediaVideo.tsx b/client/components/FormattingBar/media/MediaVideo.tsx
+index 9b78d1a..71d5b45 100644
+--- a/client/components/FormattingBar/media/MediaVideo.tsx
++++ b/client/components/FormattingBar/media/MediaVideo.tsx
+@@ -3,7 +3,7 @@ import React, { Component } from 'react';
+ import { Spinner } from '@blueprintjs/core';
+ import Dropzone from 'react-dropzone';
+ 
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ import Icon from 'components/Icon/Icon';
+ 
+ type Props = {
+@@ -46,7 +46,7 @@ class MediaVideo extends Component<Props, State> {
+ 
+ 	onUploadFinish(evt, index, type, filename) {
+ 		this.props.onInsert('video', {
+-			url: `https://assets.pubpub.org/${filename}`,
++			url: getAssetPublicUrl(filename),
+ 			align: this.props.isSmall ? 'full' : undefined,
+ 		});
+ 	}
+diff --git a/client/components/ImageCropper/ImageCropper.tsx b/client/components/ImageCropper/ImageCropper.tsx
+index 80b5754..9b51eb8 100644
+--- a/client/components/ImageCropper/ImageCropper.tsx
++++ b/client/components/ImageCropper/ImageCropper.tsx
+@@ -3,7 +3,7 @@ import React, { Component } from 'react';
+ import { Button, Classes, Slider } from '@blueprintjs/core';
+ import AvatarEditor from 'react-avatar-editor';
+ 
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ 
+ import './imageCropper.scss';
+ 
+@@ -49,7 +49,7 @@ class ImageCropper extends Component<Props, State> {
+ 			isUploading: false,
+ 			scale: 1.5,
+ 		});
+-		this.props.onUploaded(`https://assets.pubpub.org/${filename}`, this.state.blob);
++		this.props.onUploaded(getAssetPublicUrl(filename), this.state.blob);
+ 	}
+ 
+ 	handleScaleChange(val) {
+diff --git a/client/components/ImageUpload/ImageUpload.tsx b/client/components/ImageUpload/ImageUpload.tsx
+index ed559fb..2dac791 100644
+--- a/client/components/ImageUpload/ImageUpload.tsx
++++ b/client/components/ImageUpload/ImageUpload.tsx
+@@ -2,7 +2,7 @@ import React, { Component } from 'react';
+ 
+ import { AnchorButton, Classes } from '@blueprintjs/core';
+ 
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ import Icon from 'components/Icon/Icon';
+ import ImageCropper from 'components/ImageCropper/ImageCropper';
+ import Overlay from 'components/Overlay/Overlay';
+@@ -74,7 +74,7 @@ class ImageUpload extends Component<
+ 	}
+ 
+ 	onUploadFinish(evt, index, type, filename) {
+-		const newImageUrl = `https://assets.pubpub.org/${filename}`;
++		const newImageUrl = getAssetPublicUrl(filename);
+ 		this.setState({
+ 			uploading: false,
+ 		});
+diff --git a/client/containers/OrgData/BrandHelper.tsx b/client/containers/OrgData/BrandHelper.tsx
+index 2785eff..74f3e28 100644
+--- a/client/containers/OrgData/BrandHelper.tsx
++++ b/client/containers/OrgData/BrandHelper.tsx
+@@ -15,7 +15,7 @@ import {
+ import { Select } from '@blueprintjs/select';
+ 
+ import { apiFetch } from 'client/utils/apiFetch';
+-import { s3Upload } from 'client/utils/upload';
++import { getAssetPublicUrl, s3Upload } from 'client/utils/upload';
+ 
+ type BrandAsset = {
+ 	label: string;
+@@ -93,7 +93,7 @@ const uploadImageFromUrl = (imageUrl: string): Promise<string> => {
+ 				file,
+ 				() => {},
+ 				(_evt, _idx, _type, s3Key) => {
+-					resolve(`https://assets.pubpub.org/${s3Key}`);
++					resolve(getAssetPublicUrl(s3Key));
+ 				},
+ 			);
+ 		} catch (err) {
+diff --git a/client/utils/upload.ts b/client/utils/upload.ts
+index 3f2bd84..34fccf4 100644
+--- a/client/utils/upload.ts
++++ b/client/utils/upload.ts
+@@ -79,7 +79,20 @@ const getFileNameForUpload = (file: File) => {
+ 
+ import { MAX_UPLOAD_SIZE_BYTES } from 'utils/uploadConsts';
+ 
+-const getBaseUrlForBucket = (bucket) => `https://s3-external-1.amazonaws.com/${bucket}`;
++export const getAssetPublicUrl = (key: string): string => {
++	if (!key) return '';
++	if (key.startsWith('http://') || key.startsWith('https://')) return key;
++	const base =
++		(typeof window !== 'undefined' &&
++			(window as any).__pubpub_pageContextProps__?.locationData?.s3PublicUrl) ||
++		'https://storage.pinoyseoul.com/journal-assets';
++	return `${base.replace(/\/+$/, '')}/${key.replace(/^\/+/, '')}`;
++};
++
++const getBaseUrlForBucket = (bucket: string, uploadUrl?: string) => {
++	if (uploadUrl) return uploadUrl;
++	return getAssetPublicUrl('');
++};
+ 
+ const defaultOnError = (err: Error) => {
+ 	// biome-ignore lint/suspicious/noAlert: simplest feedback for a non-React utility
+@@ -109,7 +122,7 @@ export const s3Upload = (
+ 			onError(new Error(`Could not get an upload policy (status ${this.status})`));
+ 			return;
+ 		}
+-		const { policy, signature, acl, awsAccessKeyId, bucket } = JSON.parse(this.responseText);
++		const { policy, signature, acl, awsAccessKeyId, bucket, uploadUrl } = JSON.parse(this.responseText);
+ 		const formData = new FormData();
+ 		formData.append('key', fileName);
+ 		formData.append('AWSAccessKeyId', awsAccessKeyId);
+@@ -123,7 +136,7 @@ export const s3Upload = (
+ 		formData.append('success_action_status', '200');
+ 		formData.append('file', file);
+ 		const sendFile = new XMLHttpRequest();
+-		const baseUrl = getBaseUrlForBucket(bucket);
++		const baseUrl = getBaseUrlForBucket(bucket, uploadUrl);
+ 		sendFile.upload.addEventListener('progress', (evt) => onProgress(evt, index), false);
+ 		// Listen on the request (not `sendFile.upload`) so we can inspect S3's response
+ 		// status. A rejected upload (e.g. a 403 for a malformed key) still fires the
+diff --git a/server/communityTemplate/queries.ts b/server/communityTemplate/queries.ts
+index b3e2153..6df8a1f 100644
+--- a/server/communityTemplate/queries.ts
++++ b/server/communityTemplate/queries.ts
+@@ -24,6 +24,7 @@ import {
+ 	User,
+ } from 'server/models';
+ import { sequelize } from 'server/sequelize';
++import { env } from 'server/env';
+ import { slugifyString } from 'utils/strings';
+ 
+ import { Org } from '../org/model';
+diff --git a/server/envSchema.ts b/server/envSchema.ts
+index b3f83db..5c8ec27 100644
+--- a/server/envSchema.ts
++++ b/server/envSchema.ts
+@@ -85,6 +85,10 @@ export const envSchema = z.object({
+ 	// ── S3 ─────────────────────────────────────────────────────────
+ 	AWS_ACCESS_KEY_ID: z.string().min(1).describe('AWS access key for S3 uploads'),
+ 	AWS_SECRET_ACCESS_KEY: z.string().min(1).describe('AWS secret key for S3 uploads'),
++	S3_ENDPOINT: z.string().url().optional().describe('S3-compatible custom endpoint for asset uploads'),
++	S3_BUCKET: z.string().default('journal-assets').describe('S3 bucket name for uploads'),
++	S3_PUBLIC_URL: z.string().url().optional().describe('Public base URL for uploaded assets (e.g. https://storage.pinoyseoul.com/journal-assets)'),
++	S3_FORCE_PATH_STYLE: booleanish.describe('Force path-style S3 URLs (required for MinIO/SeaweedFS)'),
+ 
+ 	// ── Backup ─────────────────────────────────────────────────────────
+ 	AWS_BACKUP_ACCESS_KEY_ID: z.string().describe('AWS access key for backup operations'),
+diff --git a/server/upload/api.ts b/server/upload/api.ts
+index 4593313..a8bad50 100644
+--- a/server/upload/api.ts
++++ b/server/upload/api.ts
+@@ -39,7 +39,7 @@ if (
+ const s3Client = createPubPubS3Client({
+ 	accessKeyId: env.AWS_ACCESS_KEY_ID,
+ 	secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+-	bucket: 'assets.pubpub.org',
++	bucket: env.S3_BUCKET || 'journal-assets',
+ 	ACL: 'public-read',
+ });
+ 
+@@ -159,7 +159,8 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload.f
+ 								});
+ 						}
+ 
+-						resolve({ url: `https://assets.pubpub.org/${key}`, size, key });
++						const basePublicUrl = (env.S3_PUBLIC_URL || 'https://storage.pinoyseoul.com/journal-assets').replace(/\/+$/, '');
++						resolve({ url: `${basePublicUrl}/${key}`, size, key });
+ 					} catch (err: any) {
+ 						reject(err);
+ 					}
+diff --git a/server/uploadPolicy/queries.ts b/server/uploadPolicy/queries.ts
+index 7a44f85..220e3bb 100644
+--- a/server/uploadPolicy/queries.ts
++++ b/server/uploadPolicy/queries.ts
+@@ -11,7 +11,7 @@ type GetUploadPolicyParams = {
+ 
+ export const getUploadPolicy = ({ contentType }: GetUploadPolicyParams) => {
+ 	const acl = 'public-read';
+-	const bucket = 'assets.pubpub.org';
++	const bucket = env.S3_BUCKET || 'journal-assets';
+ 	const awsAccessKeyId = env.AWS_ACCESS_KEY_ID;
+ 	const awsAccessKeySecret = env.AWS_SECRET_ACCESS_KEY;
+ 	const expirationDate = new Date(Date.now() + 60000);
+diff --git a/server/utils/s3.ts b/server/utils/s3.ts
+index f974750..3134c38 100644
+--- a/server/utils/s3.ts
++++ b/server/utils/s3.ts
+@@ -194,7 +194,7 @@ export const createPubPubS3Client = (config: PubPubS3ClientConfig): PubPubS3Clie
+ export const assetsClient = createPubPubS3Client({
+ 	accessKeyId: env.AWS_ACCESS_KEY_ID,
+ 	secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+-	bucket: 'assets.pubpub.org',
++	bucket: env.S3_BUCKET || 'journal-assets',
+ 	ACL: 'public-read',
+ });
+ 
+@@ -206,5 +206,5 @@ export const assetsClient = createPubPubS3Client({
+ export const exportsClient = createPubPubS3Client({
+ 	accessKeyId: env.AWS_ACCESS_KEY_ID,
+ 	secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+-	bucket: 'assets.pubpub.org',
++	bucket: env.S3_BUCKET || 'journal-assets',
+ });
+diff --git a/workers/tasks/import/assetStore.ts b/workers/tasks/import/assetStore.ts
+index 2e9152d..0a120f8 100644
+--- a/workers/tasks/import/assetStore.ts
++++ b/workers/tasks/import/assetStore.ts
+@@ -7,7 +7,7 @@ import { sleep } from 'utils/promises';
+ 
+ import { extensionFor } from './util';
+ 
+-export const getUrlForAssetKey = (assetKey: string) => `https://assets.pubpub.org/${assetKey}`;
++export const getUrlForAssetKey = (assetKey: string) => `${(process.env.S3_PUBLIC_URL || 'https://storage.pinoyseoul.com/journal-assets').replace(/\/+$/, '')}/${assetKey}`;
+ 
+ export const generateAssetKeyForFile = (filePath: string) => {
+ 	const fileExtension = extensionFor(filePath);

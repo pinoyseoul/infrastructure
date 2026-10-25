@@ -382,14 +382,14 @@ index 7a44f85..220e3bb 100644
 --- a/server/uploadPolicy/queries.ts
 +++ b/server/uploadPolicy/queries.ts
 @@ -11,7 +11,7 @@ type GetUploadPolicyParams = {
-
+ 
  export const getUploadPolicy = ({ contentType }: GetUploadPolicyParams) => {
  	const acl = 'public-read';
 -	const bucket = 'assets.pubpub.org';
 +	const bucket = env.S3_BUCKET || 'journal-assets';
- 	awsAccessKeyId = env.AWS_ACCESS_KEY_ID;
- 	awsAccessKeySecret = env.AWS_SECRET_ACCESS_KEY;
- 	expirationDate = new Date(Date.now() + 60000);
+ 	const awsAccessKeyId = env.AWS_ACCESS_KEY_ID;
+ 	const awsAccessKeySecret = env.AWS_SECRET_ACCESS_KEY;
+ 	const expirationDate = new Date(Date.now() + 60000);
 diff --git a/server/utils/s3.ts b/server/utils/s3.ts
 index f974750..3134c38 100644
 --- a/server/utils/s3.ts

@@ -222,10 +222,10 @@ index 2785eff..74f3e28 100644
  			);
  		} catch (err) {
 diff --git a/client/utils/upload.ts b/client/utils/upload.ts
-index 3f2bd84..34fccf4 100644
+index 3f2bd84..a0d9b0e 100644
 --- a/client/utils/upload.ts
 +++ b/client/utils/upload.ts
-@@ -79,7 +79,20 @@ const getFileNameForUpload = (file: File) => {
+@@ -79,7 +79,28 @@ const getFileNameForUpload = (file: File) => {
  
  import { MAX_UPLOAD_SIZE_BYTES } from 'utils/uploadConsts';
  
@@ -236,18 +236,26 @@ index 3f2bd84..34fccf4 100644
 +	const base =
 +		(typeof window !== 'undefined' &&
 +			(window as any).__pubpub_pageContextProps__?.locationData?.s3PublicUrl) ||
-+		'https://storage.pinoyseoul.com/journal-assets';
++		(typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com')
++			? 'https://storage.pinoyseoul.com/journal-assets'
++			: 'https://storage.openscience.ph/journal-assets');
 +	return `${base.replace(/\/+$/, '')}/${key.replace(/^\/+/, '')}`;
 +};
 +
 +const getBaseUrlForBucket = (bucket: string, uploadUrl?: string) => {
 +	if (uploadUrl) return uploadUrl;
-+	return getAssetPublicUrl('');
++	const base =
++		(typeof window !== 'undefined' &&
++			(window as any).__pubpub_pageContextProps__?.locationData?.s3PublicUrl) ||
++		(typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com')
++			? 'https://storage.pinoyseoul.com/journal-assets'
++			: 'https://storage.openscience.ph/journal-assets');
++	return base;
 +};
  
  const defaultOnError = (err: Error) => {
  	// biome-ignore lint/suspicious/noAlert: simplest feedback for a non-React utility
-@@ -109,7 +122,7 @@ export const s3Upload = (
+@@ -109,7 +130,7 @@ export const s3Upload = (
  			onError(new Error(`Could not get an upload policy (status ${this.status})`));
  			return;
  		}
@@ -256,7 +264,7 @@ index 3f2bd84..34fccf4 100644
  		const formData = new FormData();
  		formData.append('key', fileName);
  		formData.append('AWSAccessKeyId', awsAccessKeyId);
-@@ -123,7 +136,7 @@ export const s3Upload = (
+@@ -123,7 +144,7 @@ export const s3Upload = (
  		formData.append('success_action_status', '200');
  		formData.append('file', file);
  		const sendFile = new XMLHttpRequest();
@@ -266,7 +274,7 @@ index 3f2bd84..34fccf4 100644
  		// Listen on the request (not `sendFile.upload`) so we can inspect S3's response
  		// status. A rejected upload (e.g. a 403 for a malformed key) still fires the
 diff --git a/server/communityTemplate/queries.ts b/server/communityTemplate/queries.ts
-index b3e2153..6df8a1f 100644
+index b3e2153..29616df 100644
 --- a/server/communityTemplate/queries.ts
 +++ b/server/communityTemplate/queries.ts
 @@ -24,6 +24,7 @@ import {
@@ -277,6 +285,60 @@ index b3e2153..6df8a1f 100644
  import { slugifyString } from 'utils/strings';
  
  import { Org } from '../org/model';
+@@ -223,20 +224,30 @@ export const getActiveTemplatesForOrg = async (orgId: string) => {
+  *   - custom-domain.com
+  */
+ export const findCommunityByUrl = async (input: string) => {
+-	let hostname: string;
++	let hostname = String(input || '').trim();
++	if (!hostname.includes('.')) {
++		const community = await Community.findOne({
++			where: { subdomain: hostname.toLowerCase() },
++			attributes: ['id', 'subdomain', 'title'],
++		});
++		if (community) return community;
++	}
++
+ 	try {
+ 		// If user passed a bare hostname, prefix with https:// so URL() can parse it
+-		const normalized = input.includes('://') ? input : `https://${input}`;
++		const normalized = hostname.includes('://') ? hostname : `https://${hostname}`;
+ 		hostname = new URL(normalized).hostname.toLowerCase();
+ 	} catch {
+ 		throw new Error(`Invalid URL: "${input}"`);
+ 	}
+ 
+-	// Check if it's a *.pubpub.org subdomain
+-	const pubpubMatch = hostname.match(/^([a-z0-9-]+)\.pubpub\.org$/);
+-	if (pubpubMatch) {
++	// Check local subdomains across sovereign domains (openscience.ph, pinoyseoul.com) and pubpub.org
++	const subdomainMatch = hostname.match(
++		/^([a-z0-9-]+)\.(?:openscience\.ph|pinoyseoul\.com|pubpub\.org)$/,
++	);
++	if (subdomainMatch) {
+ 		const community = await Community.findOne({
+-			where: { subdomain: pubpubMatch[1] },
++			where: { subdomain: subdomainMatch[1] },
+ 			attributes: ['id', 'subdomain', 'title'],
+ 		});
+ 		if (community) return community;
+@@ -249,6 +260,16 @@ export const findCommunityByUrl = async (input: string) => {
+ 	});
+ 	if (community) return community;
+ 
++	// If external community on pubpub.org, return sentinel
++	if (hostname.endsWith('.pubpub.org')) {
++		return {
++			id: `external:${hostname}`,
++			subdomain: hostname.replace('.pubpub.org', ''),
++			title: hostname,
++			isExternal: true,
++		} as any;
++	}
++
+ 	throw new Error(`No community found for "${input}"`);
+ };
+ 
 diff --git a/server/envSchema.ts b/server/envSchema.ts
 index b3f83db..5c8ec27 100644
 --- a/server/envSchema.ts
@@ -316,7 +378,7 @@ index 4593313..a8bad50 100644
  						reject(err);
  					}
 diff --git a/server/uploadPolicy/queries.ts b/server/uploadPolicy/queries.ts
-index 7a44f85..220e3bb 100644
+index 7a44f85..f8aaf9f 100644
 --- a/server/uploadPolicy/queries.ts
 +++ b/server/uploadPolicy/queries.ts
 @@ -11,7 +11,7 @@ type GetUploadPolicyParams = {
@@ -328,6 +390,25 @@ index 7a44f85..220e3bb 100644
  	const awsAccessKeyId = env.AWS_ACCESS_KEY_ID;
  	const awsAccessKeySecret = env.AWS_SECRET_ACCESS_KEY;
  	const expirationDate = new Date(Date.now() + 60000);
+@@ -39,11 +39,18 @@ export const getUploadPolicy = ({ contentType }: GetUploadPolicyParams) => {
+ 	hmac.update(policy);
+ 	const signature = hmac.digest('base64');
+ 
++	const baseDomain =
++		env.BASE_DOMAIN ||
++		(typeof process !== 'undefined' && process.env.BASE_DOMAIN) ||
++		'openscience.ph';
++	const uploadUrl = env.S3_PUBLIC_URL || `https://storage.${baseDomain}/${bucket}`;
++
+ 	return {
+ 		acl,
+ 		awsAccessKeyId,
+ 		policy,
+ 		signature,
+ 		bucket,
++		uploadUrl,
+ 	};
+ };
 diff --git a/server/utils/s3.ts b/server/utils/s3.ts
 index f974750..3134c38 100644
 --- a/server/utils/s3.ts

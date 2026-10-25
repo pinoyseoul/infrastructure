@@ -378,37 +378,18 @@ index 4593313..a8bad50 100644
  						reject(err);
  					}
 diff --git a/server/uploadPolicy/queries.ts b/server/uploadPolicy/queries.ts
-index 7a44f85..f8aaf9f 100644
+index 7a44f85..220e3bb 100644
 --- a/server/uploadPolicy/queries.ts
 +++ b/server/uploadPolicy/queries.ts
 @@ -11,7 +11,7 @@ type GetUploadPolicyParams = {
- 
+
  export const getUploadPolicy = ({ contentType }: GetUploadPolicyParams) => {
  	const acl = 'public-read';
 -	const bucket = 'assets.pubpub.org';
 +	const bucket = env.S3_BUCKET || 'journal-assets';
- 	const awsAccessKeyId = env.AWS_ACCESS_KEY_ID;
- 	const awsAccessKeySecret = env.AWS_SECRET_ACCESS_KEY;
- 	const expirationDate = new Date(Date.now() + 60000);
-@@ -39,11 +39,18 @@ export const getUploadPolicy = ({ contentType }: GetUploadPolicyParams) => {
- 	hmac.update(policy);
- 	const signature = hmac.digest('base64');
- 
-+	const baseDomain =
-+		env.BASE_DOMAIN ||
-+		(typeof process !== 'undefined' && process.env.BASE_DOMAIN) ||
-+		'openscience.ph';
-+	const uploadUrl = env.S3_PUBLIC_URL || `https://storage.${baseDomain}/${bucket}`;
-+
- 	return {
- 		acl,
- 		awsAccessKeyId,
- 		policy,
- 		signature,
- 		bucket,
-+		uploadUrl,
- 	};
- };
+ 	awsAccessKeyId = env.AWS_ACCESS_KEY_ID;
+ 	awsAccessKeySecret = env.AWS_SECRET_ACCESS_KEY;
+ 	expirationDate = new Date(Date.now() + 60000);
 diff --git a/server/utils/s3.ts b/server/utils/s3.ts
 index f974750..3134c38 100644
 --- a/server/utils/s3.ts

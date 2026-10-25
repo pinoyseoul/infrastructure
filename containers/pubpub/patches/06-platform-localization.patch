@@ -216,27 +216,25 @@ index 2d3f877..03231e6 100644
  							{/* mode === 'pubs' && throttledQuery.trim() && (
  								<button
 diff --git a/client/containers/SuperAdminDashboard/CustomDomains/CustomDomains.tsx b/client/containers/SuperAdminDashboard/CustomDomains/CustomDomains.tsx
-index d64bc50..07af7d6 100644
+index d64bc50..19dad4e 100644
 --- a/client/containers/SuperAdminDashboard/CustomDomains/CustomDomains.tsx
 +++ b/client/containers/SuperAdminDashboard/CustomDomains/CustomDomains.tsx
-@@ -15,7 +15,7 @@ import { apiFetch } from 'client/utils/apiFetch';
- 
- import './customDomains.scss';
- 
--const CNAME_TARGET = 'custom-domain-1.pubpub.org';
-+const CNAME_TARGET = (typeof window !== 'undefined' && window.location.hostname) ? window.location.hostname : 'journals.openscience.ph';
- 
- type CommunityDomain = {
- 	id: string;
-@@ -108,10 +108,7 @@ const CustomDomains = (props: Props) => {
+@@ -107,11 +107,13 @@ const CustomDomains = (props: Props) => {
+ 			<h2>Custom Domains</h2>
  
  			{!props.cloudflareConfigured && (
- 				<Callout intent={Intent.WARNING} style={{ marginBottom: 20 }}>
+-				<Callout intent={Intent.WARNING} style={{ marginBottom: 20 }}>
 -					Cloudflare custom hostname API is not configured. Set{' '}
 -					<code>CLOUDFLARE_CUSTOM_HOSTNAME_API_TOKEN</code> and{' '}
 -					<code>CLOUDFLARE_ZONE_TAG</code> environment variables. Domains can still be
 -					viewed but add/remove will fail.
-+					Cloudflare custom hostname API is not configured. Domains are mapped directly in the database.
++				<Callout intent={Intent.PRIMARY} icon="info-sign" style={{ marginBottom: 20 }}>
++					Direct Database DNS Routing is Active. CNAME records should point to <code>{CNAME_TARGET}</code>. Set <code>CLOUDFLARE_CUSTOM_HOSTNAME_API_TOKEN</code> in Portainer stack environment to enable automated edge SSL issuance.
++				</Callout>
++			)}
++			{props.cloudflareConfigured && (
++				<Callout intent={Intent.SUCCESS} icon="tick-circle" style={{ marginBottom: 20 }}>
++					Cloudflare Custom Hostnames Active (Zone: <code>pinoyseoul.com</code>). Custom domains are automatically registered with Cloudflare Edge SSL.
  				</Callout>
  			)}
  

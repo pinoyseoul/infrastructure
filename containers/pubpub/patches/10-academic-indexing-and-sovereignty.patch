@@ -62,14 +62,14 @@ index b7aa020..370b822 100644
  	.use(robotsRouter)
 diff --git a/server/routes/oai.ts b/server/routes/oai.ts
 new file mode 100644
-index 0000000..64aff81
+index 0000000..8836140
 --- /dev/null
 +++ b/server/routes/oai.ts
-@@ -0,0 +1,347 @@
+@@ -0,0 +1,373 @@
 +import { Router } from 'express';
 +import xmlbuilder from 'xmlbuilder';
 +
-+import { Collection, CollectionPub, Pub, PubAttribution, Release, User } from 'server/models';
++import { Collection, CollectionPub, Community, Pub, PubAttribution, Release, User } from 'server/models';
 +import { getInitialData } from 'server/utils/initData';
 +import { hostIsValid } from 'server/utils/routes';
 +import { wrap } from 'server/wrap';
@@ -119,19 +119,25 @@ index 0000000..64aff81
 +	return match ? match[1] : identifier;
 +};
 +
-+const handleOaiRequest = async (req: any, res: any, next: any) => {
-+	if (!hostIsValid(req, 'community')) {
-+		return next();
-+	}
++const handleOaiRequest = async (req: any, res: any) => {
++	const isCommunity = hostIsValid(req, 'community');
++	let community: any = null;
++	let repositoryName = 'OpenScience.ph Scholarly Commons';
++	let communityWhere: any = {};
++	let baseUrl = `https://${req.hostname}/oai`;
 +
-+	const initialData = await getInitialData(req);
-+	const community = initialData.communityData;
-+	if (!community?.id || community.cmsMode) {
-+		return res.sendStatus(404);
++	if (isCommunity) {
++		const initialData = await getInitialData(req);
++		community = initialData.communityData;
++		if (!community?.id || community.cmsMode) {
++			return res.sendStatus(404);
++		}
++		repositoryName = community.title || 'OpenScience Repository';
++		communityWhere = { communityId: community.id };
++		baseUrl = `${communityUrl(community)}/oai`;
 +	}
 +
 +	const hostname = req.hostname;
-+	const baseUrl = `${communityUrl(community)}/oai`;
 +	const query = { ...req.query, ...req.body };
 +	const verb = query.verb as string | undefined;
 +
@@ -139,14 +145,16 @@ index 0000000..64aff81
 +		return sendOaiError(res, baseUrl, 'badVerb', 'Missing OAI verb');
 +	}
 +
++	const adminEmail = (community && community.email) || process.env.WEBMASTER_EMAIL || 'admin@pinoyseoul.com';
++
 +	switch (verb) {
 +		case 'Identify': {
 +			const root = createBaseOaiXml(baseUrl, verb);
 +			const identify = root.ele('Identify');
-+			identify.ele('repositoryName', community.title || 'OpenScience Repository');
++			identify.ele('repositoryName', repositoryName);
 +			identify.ele('baseURL', baseUrl);
 +			identify.ele('protocolVersion', '2.0');
-+			identify.ele('adminEmail', community.email || process.env.ADMIN_EMAIL || 'admin@pinoyseoul.com');
++			identify.ele('adminEmail', adminEmail);
 +			identify.ele('earliestDatestamp', '2020-01-01T00:00:00Z');
 +			identify.ele('deletedRecord', 'persistent');
 +			identify.ele('granularity', 'YYYY-MM-DDThh:mm:ssZ');
@@ -169,7 +177,7 @@ index 0000000..64aff81
 +
 +		case 'ListSets': {
 +			const collections = await Collection.findAll({
-+				where: { communityId: community.id, isPublic: true },
++				where: { ...(community?.id ? { communityId: community.id } : {}), isPublic: true },
 +				attributes: ['slug', 'title', 'metadata'],
 +			});
 +
@@ -205,8 +213,14 @@ index 0000000..64aff81
 +			}
 +
 +			const pubs = await Pub.findAll({
-+				where: { communityId: community.id },
++				where: { ...communityWhere },
 +				include: [
++					{
++						model: Community,
++						as: 'community',
++						required: false,
++						attributes: ['id', 'subdomain', 'domain', 'title'],
++					},
 +					{
 +						model: Release,
 +						as: 'releases',
@@ -275,7 +289,10 @@ index 0000000..64aff81
 +						dc.ele('dc:description', pub.description);
 +					}
 +
-+					dc.ele('dc:publisher', community.title || 'OpenScience');
++					const pubComm = (pub as any).community || community;
++					const pubCanonicalUrl = pubComm ? pubUrl(pubComm, pub) : `https://${hostname}/pub/${pub.slug}`;
++
++					dc.ele('dc:publisher', pubComm?.title || repositoryName);
 +					dc.ele('dc:date', isoDate.slice(0, 10));
 +					dc.ele('dc:type', 'info:eu-repo/semantics/article');
 +
@@ -288,7 +305,7 @@ index 0000000..64aff81
 +						}
 +					}
 +
-+					dc.ele('dc:identifier', pubUrl(community, pub));
++					dc.ele('dc:identifier', pubCanonicalUrl);
 +					dc.ele('dc:language', 'en');
 +					dc.ele('dc:rights', 'http://creativecommons.org/licenses/by/4.0/');
 +				}
@@ -316,10 +333,16 @@ index 0000000..64aff81
 +
 +			const pub = await Pub.findOne({
 +				where: {
-+					communityId: community.id,
++					...communityWhere,
 +					slug,
 +				},
 +				include: [
++					{
++						model: Community,
++						as: 'community',
++						required: false,
++						attributes: ['id', 'subdomain', 'domain', 'title'],
++					},
 +					{
 +						model: Release,
 +						as: 'releases',
@@ -385,7 +408,10 @@ index 0000000..64aff81
 +				dc.ele('dc:description', pub.description);
 +			}
 +
-+			dc.ele('dc:publisher', community.title || 'OpenScience');
++			const pubComm = (pub as any).community || community;
++			const pubCanonicalUrl = pubComm ? pubUrl(pubComm, pub) : `https://${hostname}/pub/${pub.slug}`;
++
++			dc.ele('dc:publisher', pubComm?.title || repositoryName);
 +			dc.ele('dc:date', isoDate.slice(0, 10));
 +			dc.ele('dc:type', 'info:eu-repo/semantics/article');
 +
@@ -398,7 +424,7 @@ index 0000000..64aff81
 +				}
 +			}
 +
-+			dc.ele('dc:identifier', pubUrl(community, pub));
++			dc.ele('dc:identifier', pubCanonicalUrl);
 +			dc.ele('dc:language', 'en');
 +			dc.ele('dc:rights', 'http://creativecommons.org/licenses/by/4.0/');
 +
@@ -414,10 +440,19 @@ index 0000000..64aff81
 +router.get('/oai', wrap(handleOaiRequest));
 +router.post('/oai', wrap(handleOaiRequest));
 diff --git a/server/routes/robots.ts b/server/routes/robots.ts
-index f47ad4d..3385fa4 100644
+index f47ad4d..3ff9514 100644
 --- a/server/routes/robots.ts
 +++ b/server/routes/robots.ts
-@@ -17,7 +17,6 @@ const buildRobotsFile = (community) => {
+@@ -9,7 +9,7 @@ import { isProd } from 'utils/environment';
+ 
+ export const router = Router();
+ 
+-const buildRobotsFile = (community) => {
++const buildRobotsFile = (community?: any, hostname?: string) => {
+ 	if (!isProd()) {
+ 		return stripIndent(`
+ 			User-agent: *
+@@ -17,23 +17,20 @@ const buildRobotsFile = (community) => {
  		`).trim();
  	}
  	if (community?.cmsMode) {
@@ -425,26 +460,43 @@ index f47ad4d..3385fa4 100644
  		return stripIndent(`
  			User-agent: *
  			Disallow: /
-@@ -26,9 +25,12 @@ const buildRobotsFile = (community) => {
- 	if (community) {
- 		return stripIndent(`
- 			User-agent: *
-+			Allow: /pub/
-+			Allow: /downloads/
- 			Disallow: /login?redirect=*
- 			Disallow: /dash/*
--			Sitemap: ${communityUrl(community)}/sitemap-index.xml
-+			Disallow: /admin/*
-+			Sitemap: ${communityUrl(community)}/sitemap.xml
  		`).trim();
  	}
+-	if (community) {
+-		return stripIndent(`
+-			User-agent: *
+-			Disallow: /login?redirect=*
+-			Disallow: /dash/*
+-			Sitemap: ${communityUrl(community)}/sitemap-index.xml
+-		`).trim();
+-	}
++	const baseUrl = community ? communityUrl(community) : (hostname ? `https://${hostname}` : '');
  	return stripIndent(`
+ 		User-agent: *
++		Allow: /pub/
++		Allow: /downloads/
+ 		Disallow: /login?redirect=*
++		Disallow: /dash/*
++		Disallow: /admin/*
++		${baseUrl ? `Sitemap: ${baseUrl}/sitemap.xml` : ''}
+ 	`).trim();
+ };
+ 
+@@ -47,6 +44,6 @@ router.get(
+ 		}
+ 
+ 		res.header('Content-Type', 'text/plain');
+-		return res.send(buildRobotsFile(communityData));
++		return res.send(buildRobotsFile(communityData, req.hostname));
+ 	}),
+ );
 diff --git a/server/routes/sitemap.ts b/server/routes/sitemap.ts
-index 8cee484..a027172 100644
+index 8cee484..53b2f62 100644
 --- a/server/routes/sitemap.ts
 +++ b/server/routes/sitemap.ts
 @@ -1,61 +1,29 @@
- import type { Community } from 'types';
+-import type { Community } from 'types';
++import type { Community as CommunityType } from 'types';
  
  import { Router } from 'express';
 -import { SitemapAndIndexStream, SitemapStream } from 'sitemap';
@@ -455,7 +507,8 @@ index 8cee484..a027172 100644
 +import { Readable } from 'stream';
  
 -import { env } from 'server/env';
- import { Page, Pub, Release } from 'server/models';
+-import { Page, Pub, Release } from 'server/models';
++import { Community, Page, Pub, Release } from 'server/models';
  import { getInitialData } from 'server/utils/initData';
  import { hostIsValid } from 'server/utils/routes';
 -import { createPubPubS3Client } from 'server/utils/s3';
@@ -510,14 +563,14 @@ index 8cee484..a027172 100644
 -	const shouldGenerate = await shouldGenerateSitemapIndex(community);
 -	if (!shouldGenerate) {
 -		return false;
-+const buildSitemapXml = async (community: Community): Promise<string> => {
++const buildSitemapXml = async (community: CommunityType): Promise<string> => {
 +	const cached = sitemapCache.get(community.id);
 +	if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
 +		return cached.xml;
  	}
  
  	const hostname = communityUrl(community);
-@@ -71,111 +39,69 @@ const maybeGenerateSitemapIndex = async (community) => {
+@@ -71,111 +39,115 @@ const maybeGenerateSitemapIndex = async (community) => {
  				attributes: [],
  			},
  		],
@@ -607,7 +660,7 @@ index 8cee484..a027172 100644
 +	return xml;
  };
  
- router.get(
+-router.get(
 -	'/sitemap.xml',
 -	wrap(async (req, res, next) => {
 -		if (!hostIsValid(req, 'community')) {
@@ -622,30 +675,78 @@ index 8cee484..a027172 100644
 -
 -		res.header('Content-Encoding', 'gzip');
 -		res.header('Content-Type', 'application/xml');
--
++const buildPortalSitemapXml = async (hostname: string): Promise<string> => {
++	const cached = sitemapCache.get(`portal:${hostname}`);
++	if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
++		return cached.xml;
++	}
+ 
 -		return sitemapFileStream.pipe(res);
 -	}),
 -);
--
++	const communities = await Community.findAll({
++		attributes: ['subdomain', 'domain', 'updatedAt'],
++	});
+ 
 -router.get(
 -	'/sitemap*',
-+	['/sitemap.xml', '/sitemap-index.xml', '/sitemap*'],
- 	wrap(async (req, res, next) => {
- 		if (!hostIsValid(req, 'community')) {
- 			return next();
- 		}
+-	wrap(async (req, res, next) => {
+-		if (!hostIsValid(req, 'community')) {
+-			return next();
+-		}
++	const smStream = new SitemapStream({ hostname: `https://${hostname}` });
++	const baseDomain = hostname.includes('.') ? hostname.substring(hostname.indexOf('.') + 1) : hostname;
  
 -		const { path } = req;
 -		const sitemapIndexOrSitemapFilename = path.replace(/^\//, '');
--
++	const urls = [
++		{
++			url: '/',
++			changefreq: 'daily',
++			priority: 1.0,
++		},
++		...communities.map((c) => ({
++			url: c.domain ? `https://${c.domain}` : `https://${c.subdomain}.${baseDomain}`,
++			changefreq: 'daily',
++			priority: 0.9,
++			lastmod: c.updatedAt ? new Date(c.updatedAt).toISOString() : undefined,
++		})),
++	];
++
++	const xmlBuffer = await streamToPromise(Readable.from(urls).pipe(smStream));
++	const xml = xmlBuffer.toString();
++
++	sitemapCache.set(`portal:${hostname}`, {
++		xml,
++		timestamp: Date.now(),
++	});
+ 
 -		if (!/^sitemap-([0-9]+|index)\.xml$/.test(sitemapIndexOrSitemapFilename)) {
 -			return res.sendStatus(404);
 -		}
--
- 		const { communityData } = await getInitialData(req, { isDashboard: true });
++	return xml;
++};
+ 
+-		const { communityData } = await getInitialData(req, { isDashboard: true });
 -		if (communityData.cmsMode) {
-+		if (communityData?.cmsMode) {
- 			return res.sendStatus(404);
+-			return res.sendStatus(404);
++router.get(
++	['/sitemap.xml', '/sitemap-index.xml', '/sitemap*'],
++	wrap(async (req, res) => {
++		if (hostIsValid(req, 'community')) {
++			const { communityData } = await getInitialData(req, { isDashboard: true });
++			if (communityData?.cmsMode) {
++				return res.sendStatus(404);
++			}
++
++			try {
++				const xml = await buildSitemapXml(communityData);
++				res.header('Content-Type', 'application/xml');
++				return res.status(200).send(xml);
++			} catch (err) {
++				console.error('[sitemap] Failed to generate community sitemap:', err);
++				return res.sendStatus(500);
++			}
  		}
 -		const sitemapFileStream = await getSitemapIndex(
 -			communityData,
@@ -654,14 +755,15 @@ index 8cee484..a027172 100644
  
 -		if (sitemapFileStream) {
 -			res.header('Content-Encoding', 'gzip');
++		// Base platform portal sitemap (e.g. journal.pinoyseoul.com)
 +		try {
-+			const xml = await buildSitemapXml(communityData);
++			const xml = await buildPortalSitemapXml(req.hostname);
  			res.header('Content-Type', 'application/xml');
 -
 -			return sitemapFileStream.pipe(res);
 +			return res.status(200).send(xml);
 +		} catch (err) {
-+			console.error('[sitemap] Failed to generate sitemap:', err);
++			console.error('[sitemap] Failed to generate portal sitemap:', err);
 +			return res.sendStatus(500);
  		}
 -

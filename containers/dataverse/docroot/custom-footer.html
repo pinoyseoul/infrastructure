@@ -1,10 +1,12 @@
 <style>
-  /* Site-wide clean navbar: remove external sysadmin guide and corporate support button */
-  #navbarFixed li:has(a[href*="guides.dataverse.org"]),
-  #navbarFixed a[href*="guides.dataverse.org"],
+  /* Site-wide clean navbar: remove Guides, Support, Contact, and About */
+  #navbarFixed li:has(a[href*="/user"]),
+  #navbarFixed li:has(a[href*="guide"]),
   #navbarFixed li:has(a[id*="headerSupportLink"]),
-  #navbarFixed form.navbar-form-link,
-  #navbarFixed a[id*="headerSupportLink"] {
+  #navbarFixed a[href*="/user"],
+  #navbarFixed a[href*="guide"],
+  #navbarFixed a[id*="headerSupportLink"],
+  #navbarFixed form.navbar-form-link {
     display: none !important;
   }
 
@@ -143,6 +145,15 @@
         var journalsItem = '<li id="nav-journals"><a href="https://journal.pinoyseoul.com">Journals</a></li>';
         $navRight.prepend(repositoriesItem).prepend(journalsItem);
       }
+      // Remove Guides, Support, Contact, and About elements from DOM
+      $('#navbarFixed a').each(function() {
+        var txt = $(this).text().trim().toLowerCase();
+        var href = ($(this).attr('href') || '').toLowerCase();
+        if (txt === 'guides' || txt === 'guide' || txt === 'support' || txt === 'contact us' || txt === 'about' ||
+            href.indexOf('/user') !== -1 || href.indexOf('guide') !== -1) {
+          $(this).closest('li').remove();
+        }
+      });
       var $brand = $('#navbarFixed .navbar-header .navbar-brand');
       if ($brand.length && !$brand.hasClass('os-brand-ready')) {
         $brand.addClass('os-brand-ready').html(

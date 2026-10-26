@@ -158,6 +158,18 @@ body {
 
 /* Sovereign top navbar styling handled natively via database settings */
 
+/* Site-wide clean navbar: suppress Guides, Support, and Contact links */
+#navbarFixed li:has(a[href*="/user"]),
+#navbarFixed li:has(a[href*="guide"]),
+#navbarFixed li:has(a[id*="headerSupportLink"]),
+#navbarFixed a[href*="/user"],
+#navbarFixed a[href*="guide"],
+#navbarFixed a[id*="headerSupportLink"],
+#navbarFixed form.navbar-form-link {
+  display: none !important;
+}
+
+
 /* Redesigned Search Dropdown: 360px wide dark container, no text clipping */
 #navbarFixed .dropdown-menu.navbar-search {
   min-width: 360px !important;

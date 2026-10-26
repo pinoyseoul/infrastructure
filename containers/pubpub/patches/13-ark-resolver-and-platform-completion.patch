@@ -24,33 +24,38 @@ index 37107b9..df620ab 100644
  				</Callout>
  			);
  		} else {
+diff --git a/client/components/Footer/Footer.tsx b/client/components/Footer/Footer.tsx
+index 1f475af..1f9ecaf 100644
+--- a/client/components/Footer/Footer.tsx
++++ b/client/components/Footer/Footer.tsx
+@@ -132,7 +132,7 @@ const Footer = (props: Props) => {
+ 							<p style={{ color: '#94a3b8', fontSize: '13px', lineHeight: 1.6, marginBottom: '14px' }}>
+ 								For university partnerships, library onboarding, or collection inquiries:
+ 							</p>
+-							<a href="mailto:admin@openscience.ph" style={{ display: 'inline-block', background: '#d97706', color: '#ffffff', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>Contact Us &rarr;</a>
++							<a href="https://openscience.pinoyseoul.com/contact.xhtml" style={{ display: 'inline-block', background: '#d97706', color: '#ffffff', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>Contact Us &rarr;</a>
+ 						</div>
+ 					</div>
+ 					<div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', fontSize: '12px', color: '#64748b' }}>
 diff --git a/client/components/GlobalControls/GlobalControls.tsx b/client/components/GlobalControls/GlobalControls.tsx
-index ee88f7f..9302658 100644
+index ee88f7f..036eb45 100644
 --- a/client/components/GlobalControls/GlobalControls.tsx
 +++ b/client/components/GlobalControls/GlobalControls.tsx
-@@ -34,12 +34,17 @@ const GlobalControls = (props: Props) => {
+@@ -34,12 +34,9 @@ const GlobalControls = (props: Props) => {
  	} = usePageContext();
  
  	const renderJournals = () => {
 -		const portalHost = (typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com'))
 -			? 'journal.pinoyseoul.com'
 -			: 'journals.openscience.ph';
-+		const portalHost =
-+			typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com')
-+				? 'journal.pinoyseoul.com'
-+				: 'journals.openscience.ph';
-+		const isCurrentPortal =
-+			typeof window !== 'undefined' &&
-+			(window.location.hostname === 'journal.pinoyseoul.com' ||
-+				window.location.hostname === portalHost);
  		return (
  			<GlobalControlsButton
 -				href={`https://${portalHost}`}
-+				href={isCurrentPortal ? '/' : `https://${portalHost}/`}
++				href="https://journal.pinoyseoul.com"
  				aria-label="Journals"
  				desktop={{ text: 'Journals' }}
  				mobile={{ text: 'Journals' }}
-@@ -47,16 +52,15 @@ const GlobalControls = (props: Props) => {
+@@ -47,16 +44,15 @@ const GlobalControls = (props: Props) => {
  		);
  	};
  
@@ -74,7 +79,7 @@ index ee88f7f..9302658 100644
  			/>
  		);
  	};
-@@ -133,7 +137,7 @@ const GlobalControls = (props: Props) => {
+@@ -133,7 +129,7 @@ const GlobalControls = (props: Props) => {
  						/>
  					)}
  					{canCreatePub && <CreatePubButton />}
@@ -83,7 +88,7 @@ index ee88f7f..9302658 100644
  					{renderSearch()}
  					{canView && renderDashboardMenu()}
  					{renderNotificiations()}
-@@ -166,7 +170,7 @@ const GlobalControls = (props: Props) => {
+@@ -166,7 +162,7 @@ const GlobalControls = (props: Props) => {
  						/>
  					)}
  					{renderJournals()}

@@ -25,7 +25,7 @@ index 37107b9..df620ab 100644
  			);
  		} else {
 diff --git a/client/components/GlobalControls/GlobalControls.tsx b/client/components/GlobalControls/GlobalControls.tsx
-index ee88f7f..62652fa 100644
+index ee88f7f..b570c36 100644
 --- a/client/components/GlobalControls/GlobalControls.tsx
 +++ b/client/components/GlobalControls/GlobalControls.tsx
 @@ -34,12 +34,18 @@ const GlobalControls = (props: Props) => {
@@ -85,6 +85,15 @@ index ee88f7f..62652fa 100644
  					{renderSearch()}
  					{canView && renderDashboardMenu()}
  					{renderNotificiations()}
+@@ -166,7 +172,7 @@ const GlobalControls = (props: Props) => {
+ 						/>
+ 					)}
+ 					{renderJournals()}
+-					{renderRepository()}
++					{renderRepositories()}
+ 					{renderSearch()}
+ 				</>
+ 			);
 diff --git a/client/components/LegalBanner/LegalBanner.tsx b/client/components/LegalBanner/LegalBanner.tsx
 index 8d61f78..dba41db 100644
 --- a/client/components/LegalBanner/LegalBanner.tsx

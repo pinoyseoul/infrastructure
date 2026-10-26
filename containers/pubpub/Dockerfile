@@ -57,7 +57,8 @@ RUN git apply --ignore-whitespace /app/openscience-patches/01-landing-route.patc
     git apply --ignore-whitespace /app/openscience-patches/08-ark-pid.patch && \
     git apply --ignore-whitespace /app/openscience-patches/09-storage-and-preservation.patch && \
     git apply --ignore-whitespace /app/openscience-patches/10-academic-indexing-and-sovereignty.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/11-avatar-preservation-and-header-controls.patch
+    git apply --ignore-whitespace /app/openscience-patches/11-avatar-preservation-and-header-controls.patch && \
+    git apply --ignore-whitespace /app/openscience-patches/12-deep-localization-and-polish.patch
 
 # Copy authentic OpenScience brand assets into static/
 COPY assets/* /app/static/

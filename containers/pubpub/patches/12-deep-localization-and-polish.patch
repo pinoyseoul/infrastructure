@@ -1336,18 +1336,15 @@ index 2dbb65d..469f9db 100644
  
  	return (
 diff --git a/client/containers/Signup/Signup.tsx b/client/containers/Signup/Signup.tsx
-index 96ff4bf..d5597be 100644
+index 96ff4bf..b2d9050 100644
 --- a/client/containers/Signup/Signup.tsx
 +++ b/client/containers/Signup/Signup.tsx
-@@ -79,11 +79,11 @@ const Signup = () => {
- 				{!isSuccessful && (
- 					<div>
+@@ -81,9 +81,9 @@ const Signup = () => {
  						<h1>Signup</h1>
--						{!locationData.isBasePubPub && (
-+						{!locationData.isBaseOpenScience.ph && (
+ 						{!locationData.isBasePubPub && (
  							<p>
 -								Signup to create a <a href="https://www.pubpub.org">PubPub</a>{' '}
-+								Signup to create a <a href="https://www.pubpub.org">OpenScience.ph</a>{' '}
++								Signup to create an <a href="/">OpenScience.ph</a>{' '}
  								account, which will work on <b>{communityData.title}</b> and all
 -								other PubPub communities.
 +								other OpenScience.ph communities.
@@ -1359,7 +1356,7 @@ index 96ff4bf..d5597be 100644
  						</form>
  						<a href="/login" className="switch-message">
 -							Already have a PubPub account? Click to Login
-+							Already have a OpenScience.ph account? Click to Login
++							Already have an OpenScience.ph account? Click to Login
  						</a>
  					</div>
  				)}

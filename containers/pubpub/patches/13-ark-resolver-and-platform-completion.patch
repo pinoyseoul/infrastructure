@@ -25,10 +25,10 @@ index 37107b9..df620ab 100644
  			);
  		} else {
 diff --git a/client/components/GlobalControls/GlobalControls.tsx b/client/components/GlobalControls/GlobalControls.tsx
-index ee88f7f..b570c36 100644
+index ee88f7f..9302658 100644
 --- a/client/components/GlobalControls/GlobalControls.tsx
 +++ b/client/components/GlobalControls/GlobalControls.tsx
-@@ -34,12 +34,18 @@ const GlobalControls = (props: Props) => {
+@@ -34,12 +34,17 @@ const GlobalControls = (props: Props) => {
  	} = usePageContext();
  
  	const renderJournals = () => {
@@ -47,11 +47,10 @@ index ee88f7f..b570c36 100644
  			<GlobalControlsButton
 -				href={`https://${portalHost}`}
 +				href={isCurrentPortal ? '/' : `https://${portalHost}/`}
-+				target="_self"
  				aria-label="Journals"
  				desktop={{ text: 'Journals' }}
  				mobile={{ text: 'Journals' }}
-@@ -47,16 +53,16 @@ const GlobalControls = (props: Props) => {
+@@ -47,16 +52,15 @@ const GlobalControls = (props: Props) => {
  		);
  	};
  
@@ -69,14 +68,13 @@ index ee88f7f..b570c36 100644
 -				desktop={{ text: 'Repository' }}
 -				mobile={{ text: 'Repository' }}
 +				href={repoUrl}
-+				target="_self"
 +				aria-label="Repositories"
 +				desktop={{ text: 'Repositories' }}
 +				mobile={{ text: 'Repositories' }}
  			/>
  		);
  	};
-@@ -133,7 +139,7 @@ const GlobalControls = (props: Props) => {
+@@ -133,7 +137,7 @@ const GlobalControls = (props: Props) => {
  						/>
  					)}
  					{canCreatePub && <CreatePubButton />}
@@ -85,7 +83,7 @@ index ee88f7f..b570c36 100644
  					{renderSearch()}
  					{canView && renderDashboardMenu()}
  					{renderNotificiations()}
-@@ -166,7 +172,7 @@ const GlobalControls = (props: Props) => {
+@@ -166,7 +170,7 @@ const GlobalControls = (props: Props) => {
  						/>
  					)}
  					{renderJournals()}

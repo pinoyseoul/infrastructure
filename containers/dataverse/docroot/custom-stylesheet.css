@@ -763,7 +763,17 @@ footer {
 .os-footer-cta-wrap {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 8px;
+}
+
+.os-btn-inquiry {
+  display: inline-flex !important;
+  align-items: center !important;
+  align-self: flex-start !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  padding: 8px 20px !important;
 }
 
 .os-contact-link {

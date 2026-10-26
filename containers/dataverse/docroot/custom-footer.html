@@ -59,14 +59,17 @@
 
   /* Inquiry Action Button */
   .os-btn-inquiry {
-    display: inline-flex;
-    align-items: center;
+    display: inline-flex !important;
+    align-items: center !important;
+    align-self: flex-start !important;
+    width: auto !important;
+    max-width: fit-content !important;
     gap: 8px;
     background: #d97706;
     color: #ffffff !important;
     text-decoration: none !important;
     border: none;
-    padding: 8px 18px;
+    padding: 8px 20px;
     border-radius: 6px;
     font-size: 13.5px;
     font-weight: 600;
@@ -134,11 +137,11 @@
   (function initNav() {
     function injectItems() {
       var $navRight = $('#topNavBar .navbar-nav.navbar-right');
-      if ($navRight.length && !$('#nav-institutions').length) {
-        var institutionsUrl = '/dataverse/root?q=&fq1=dvCategory%3A"Organization+or+Institution"';
-        var institutionsItem = '<li id="nav-institutions"><a href=\'' + institutionsUrl + '\'>Institutions</a></li>';
-        var journalsItem = '<li id="nav-journals"><a href="https://journal.pinoyseoul.com" target="_blank" rel="noopener">Journals</a></li>';
-        $navRight.prepend(institutionsItem).prepend(journalsItem);
+      if ($navRight.length && !$('#nav-repositories').length) {
+        var repositoriesUrl = '/dataverse/root?q=&fq0=dvObjectType%3A(dataverses)';
+        var repositoriesItem = '<li id="nav-repositories"><a href=\'' + repositoriesUrl + '\'>Repositories</a></li>';
+        var journalsItem = '<li id="nav-journals"><a href="https://journal.pinoyseoul.com">Journals</a></li>';
+        $navRight.prepend(repositoriesItem).prepend(journalsItem);
       }
       var $brand = $('#navbarFixed .navbar-header .navbar-brand');
       if ($brand.length && !$brand.hasClass('os-brand-ready')) {

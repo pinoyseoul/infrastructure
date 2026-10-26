@@ -69,34 +69,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <li jsf:rendered="#{!empty settingsWrapper.get(':NavbarAboutUrl')}">
-                            <h:outputLink value="#{settingsWrapper.get(':NavbarAboutUrl')}" target="_blank" rel="noopener">
-                                <h:outputText value="#{bundle['header.about']}"/>
-                            </h:outputLink>
-                        </li>
-                        <li>
-                            <h:outputLink value="#{settingsWrapper.get(':NavbarGuidesUrl', settingsWrapper.guidesBaseUrl.concat('/').concat(settingsWrapper.guidesVersion).concat('/user'))}" target="_blank" rel="noopener">
-                                <h:outputText value="#{bundle['header.guides.user']}"/>
-                            </h:outputLink>
-                        </li>
-                        <li jsf:rendered="#{!empty settingsWrapper.get(':NavbarSupportUrl')}">
-                            <h:outputLink value="#{settingsWrapper.get(':NavbarSupportUrl')}" target="_blank" rel="noopener">
-                                <h:outputText value="#{bundle['header.support']}"/>
-                            </h:outputLink>
-                        </li>
-                        <ui:fragment rendered="#{empty settingsWrapper.get(':NavbarSupportUrl')}">
-                            <li>
-                                <o:form useRequestURI="true" class="navbar-form navbar-left navbar-form-link">
-                                    <p:commandLink oncomplete="PF('contactForm').show()" update=":contactDialog" actionListener="#{sendFeedbackDialog.initUserInput}" id="headerSupportLink" process="@this">
-                                        <f:setPropertyActionListener target="#{sendFeedbackDialog.messageSubject}" value=""/>
-                                        <f:setPropertyActionListener target="#{sendFeedbackDialog.recipient}" value="#{null}"/>
-                                        <f:setPropertyActionListener target="#{sendFeedbackDialog.userMessage}" value=""/>
-                                        <f:setPropertyActionListener target="#{sendFeedbackDialog.userEmail}" value=""/>
-                                        <h:outputText value="#{bundle['header.support']}"/>
-                                    </p:commandLink>
-                                </o:form>
-                            </li>
-                        </ui:fragment>
                         <li class="dropdown" jsf:rendered="#{settingsWrapper.localesConfigured}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="#{bundle.language}">#{dataverseSession.localeTitle} <b class="caret"></b></a>
                             <ul class="dropdown-menu navbar-language">

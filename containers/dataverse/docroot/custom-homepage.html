@@ -1,0 +1,288 @@
+<!-- Google Fonts Preconnect & Load -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!-- Scoped Header & Layout Tuning on Root Homepage -->
+<style>
+  #dataverseHeader { display: none !important; }
+  #content.container { width: 100% !important; max-width: 1240px !important; padding: 0 20px !important; }
+</style>
+
+<div class="os-homepage">
+  <!-- Hero Section -->
+  <section class="os-hero">
+    <div class="os-hero-inner">
+      <div class="os-badge">
+        <span class="os-badge-dot"></span>
+        Open Scholarship & Digital Preservation
+      </div>
+      <h1 class="os-title">OpenScience.ph <span class="label label-warning os-hero-beta">BETA</span></h1>
+      <p class="os-tagline">
+        An open research repository and permanent digital archive for Philippine higher education, 
+        faculty scholarship, and academic collections.
+      </p>
+
+      <!-- Form-Safe Search Omnibar (Zero Form Nesting) -->
+      <div class="os-search-container">
+        <div class="os-search-box">
+          <span class="os-search-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input type="text" id="os-search-input" class="os-input" 
+                 placeholder="Search publications, dissertations, authors, or disciplines..." 
+                 onkeydown="if(event.key==='Enter'){osSearch();}" />
+          <button type="button" class="os-btn-search" onclick="osSearch();">
+            Search
+          </button>
+        </div>
+        
+        <div class="os-quick-topics">
+          <span class="os-topic-label">Common Disciplines:</span>
+          <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Social+Sciences%22" class="os-topic-pill">Social Sciences</a>
+          <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Computer+and+Information+Science%22" class="os-topic-pill">Computing</a>
+          <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Agricultural+Sciences%22" class="os-topic-pill">Agriculture</a>
+          <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Medicine%2C+Health+and+Life+Sciences%22" class="os-topic-pill">Health Sciences</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Academic Value Commitments -->
+  <section class="os-commitments">
+    <div class="os-grid-3">
+      <div class="os-commitment-card">
+        <div class="os-card-icon-wrap os-icon-navy">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M3 10h18M5 10v11M9 10v11M15 10v11M19 10v11M12 2l10 5H2l10-5z"/>
+          </svg>
+        </div>
+        <h3>Institutional Multi-Tenancy</h3>
+        <p>Colleges, research centers, and academic societies host dedicated branded collections with independent editorial oversight.</p>
+      </div>
+
+      <div class="os-commitment-card">
+        <div class="os-card-icon-wrap os-icon-amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <h3>Persistent Citations</h3>
+        <p>Every publication receives globally resolvable persistent identifiers, guaranteeing permanent academic citation links.</p>
+      </div>
+
+      <div class="os-commitment-card">
+        <div class="os-card-icon-wrap os-icon-emerald">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+        </div>
+        <h3>Diamond Open Access</h3>
+        <p>Research remains immediately accessible to readers worldwide, published under non-exclusive open licensing agreements.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Academic Disciplines -->
+  <section class="os-disciplines">
+    <div class="os-section-header">
+      <h2 class="os-heading">Browse Scholarship by Discipline</h2>
+      <p class="os-subheading">Explore cataloged research across major higher education programs in the Philippines.</p>
+    </div>
+    
+    <div class="os-discipline-grid">
+      <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Social+Sciences%22" class="os-discipline-item">
+        <div class="os-disc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+        </div>
+        <div class="os-disc-content">
+          <h4>Social Sciences & Humanities</h4>
+          <span>Philippine studies, governance, diaspora history, and cultural heritage</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Computer+and+Information+Science%22" class="os-discipline-item">
+        <div class="os-disc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        </div>
+        <div class="os-disc-content">
+          <h4>Computing & Information Science</h4>
+          <span>Civic technology, natural language processing, systems, and algorithms</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Agricultural+Sciences%22" class="os-discipline-item">
+        <div class="os-disc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+        </div>
+        <div class="os-disc-content">
+          <h4>Agriculture & Environmental Studies</h4>
+          <span>Food systems, tropical forestry, aquaculture, and climate adaptation</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Medicine%2C+Health+and+Life+Sciences%22" class="os-discipline-item">
+        <div class="os-disc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+        </div>
+        <div class="os-disc-content">
+          <h4>Health Sciences & Community Care</h4>
+          <span>Public health, nursing research, epidemiology, and maternal care</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Engineering%22" class="os-discipline-item">
+        <div class="os-disc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </div>
+        <div class="os-disc-content">
+          <h4>Engineering & Infrastructure</h4>
+          <span>Disaster resilience, rural electrification, and renewable energy</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <a href="/dataverse/root?q=&types=datasets&fq0=subject_ss%3A%22Law%22" class="os-discipline-item">
+        <div class="os-disc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 9l9-6 9 6M6 15l-3-6h6l-3 6zm12 0l-3-6h6l-3 6z"></path></svg>
+        </div>
+        <div class="os-disc-content">
+          <h4>Law & Public Administration</h4>
+          <span>Local governance, comparative administrative law, and policy</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Institutional Spaces -->
+  <section class="os-tenants" id="os-tenants">
+    <div class="os-section-header">
+      <h2 class="os-heading">Featured Repository Spaces</h2>
+      <p class="os-subheading">Institutional research collections and digital archives participating in OpenScience.ph.</p>
+    </div>
+
+    <div class="os-tenant-grid">
+      <div class="os-tenant-card">
+        <div class="os-tenant-top">
+          <span class="os-tenant-badge">Operational Lab Archive</span>
+          <img src="/logos/2/obra.png" alt="OBRA Logo" class="os-tenant-logo-preview" onerror="this.style.display='none'">
+        </div>
+        <h3>OBRA Incorporated Research Archive</h3>
+        <p>Open research datasets, civic technology documentation, and field labor studies curated by OBRA Incorporated.</p>
+        <a href="/dataverse/obra" class="os-tenant-btn">
+          Access Collection &rarr;
+        </a>
+      </div>
+
+      <div class="os-tenant-card os-tenant-partner">
+        <div class="os-tenant-top">
+          <span class="os-tenant-badge os-badge-amber">Consortium Program</span>
+        </div>
+        <h3>State Universities & Colleges Cohort</h3>
+        <p>Dedicated digital archives for state universities, supporting college collections, thesis archiving, and faculty scholarship.</p>
+        <a href="/contact.xhtml" class="os-tenant-btn os-btn-secondary">
+          Request Repository Space &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Academic Discovery & Federated Indexing Section -->
+  <section class="os-discovery">
+    <div class="os-section-header">
+      <h2 class="os-heading">Academic Discovery &amp; Global Indexing</h2>
+      <p class="os-subheading">Research deposited on OpenScience.ph is automatically shared and discoverable across major academic search engines and international library networks.</p>
+    </div>
+
+    <div class="os-discovery-cards-grid">
+      <!-- Google Scholar -->
+      <a href="https://scholar.google.com" target="_blank" rel="noopener" class="os-disc-partner-card">
+        <div class="os-partner-logo-box">
+          <img src="/logos/indexers/google-scholar.png" alt="Google Scholar">
+        </div>
+        <div class="os-partner-info">
+          <h4>Google Scholar</h4>
+          <span>Citation tracking and scholarly metric indexing</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <!-- WorldCat -->
+      <a href="https://www.worldcat.org" target="_blank" rel="noopener" class="os-disc-partner-card">
+        <div class="os-partner-logo-box">
+          <img src="/logos/indexers/worldcat.png" alt="WorldCat">
+        </div>
+        <div class="os-partner-info">
+          <h4>WorldCat</h4>
+          <span>Global library discovery and union catalog indexing</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <!-- OpenAIRE -->
+      <a href="https://explore.openaire.eu" target="_blank" rel="noopener" class="os-disc-partner-card">
+        <div class="os-partner-logo-box">
+          <img src="/logos/indexers/openaire.png" alt="OpenAIRE">
+        </div>
+        <div class="os-partner-info">
+          <h4>OpenAIRE</h4>
+          <span>European open science and research network</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <!-- BASE Search -->
+      <a href="https://www.base-search.net" target="_blank" rel="noopener" class="os-disc-partner-card">
+        <div class="os-partner-logo-box">
+          <img src="/logos/indexers/base-search.png" alt="BASE Search">
+        </div>
+        <div class="os-partner-info">
+          <h4>BASE Search</h4>
+          <span>Multidisciplinary academic search and indexing</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <!-- Dimensions -->
+      <a href="https://www.dimensions.ai" target="_blank" rel="noopener" class="os-disc-partner-card">
+        <div class="os-partner-logo-box">
+          <img src="/logos/indexers/dimensions.png" alt="Dimensions">
+        </div>
+        <div class="os-partner-info">
+          <h4>Dimensions</h4>
+          <span>Connected research datasets and citation metrics</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+
+      <!-- Semantic Scholar -->
+      <a href="https://www.semanticscholar.org" target="_blank" rel="noopener" class="os-disc-partner-card">
+        <div class="os-partner-logo-box">
+          <img src="/logos/indexers/semantic-scholar.png" alt="Semantic Scholar">
+        </div>
+        <div class="os-partner-info">
+          <h4>Semantic Scholar</h4>
+          <span>AI-powered literature search and discovery</span>
+        </div>
+        <span class="os-disc-arrow">&rarr;</span>
+      </a>
+    </div>
+  </section>
+</div>
+
+<script>
+  function osSearch() {
+    var q = encodeURIComponent(document.getElementById('os-search-input').value.trim());
+    window.location.href = '/dataverse/root?q=' + q;
+  }
+</script>

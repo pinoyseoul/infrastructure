@@ -1,0 +1,173 @@
+<style>
+  /* Site-wide clean navbar: remove external sysadmin guide and corporate support button */
+  #navbarFixed li:has(a[href*="guides.dataverse.org"]),
+  #navbarFixed a[href*="guides.dataverse.org"],
+  #navbarFixed li:has(a[id*="headerSupportLink"]),
+  #navbarFixed form.navbar-form-link,
+  #navbarFixed a[id*="headerSupportLink"] {
+    display: none !important;
+  }
+
+  /* Redesigned Search Dropdown: 360px wide dark container, no text clipping */
+  #navbarFixed .dropdown-menu.navbar-search {
+    min-width: 360px !important;
+    width: 360px !important;
+    padding: 12px 14px !important;
+    background-color: #0a192f !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45) !important;
+    border-radius: 8px !important;
+    margin-top: 6px !important;
+  }
+  #navbarFixed .dropdown-menu.navbar-search .input-group {
+    width: 100% !important;
+    display: flex !important;
+  }
+  #navbarFixed .dropdown-menu.navbar-search #navbarsearch {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    border-right: none !important;
+    border-radius: 6px 0 0 6px !important;
+    height: 38px !important;
+    font-size: 13.5px !important;
+    padding: 0 12px !important;
+    box-shadow: none !important;
+    flex: 1 !important;
+    width: 100% !important;
+  }
+  #navbarFixed .dropdown-menu.navbar-search .input-group-btn {
+    width: auto !important;
+  }
+  #navbarFixed .dropdown-menu.navbar-search .input-group-btn .btn {
+    height: 38px !important;
+    padding: 0 16px !important;
+    background: #d97706 !important;
+    border: 1px solid #d97706 !important;
+    color: #ffffff !important;
+    border-radius: 0 6px 6px 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #navbarFixed .dropdown-menu.navbar-search .input-group-btn .btn:hover {
+    background: #f59e0b !important;
+  }
+  #navbarFixed .dropdown-menu.navbar-search .input-group-btn .btn .glyphicon {
+    color: #ffffff !important;
+  }
+
+  /* Inquiry Action Button */
+  .os-btn-inquiry {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #d97706;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-top: 6px;
+  }
+  .os-btn-inquiry:hover {
+    background: #f59e0b;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    transform: translateY(-1px);
+  }
+</style>
+
+<div class="os-footer-inner">
+  <div class="container os-footer-container">
+    <div class="row os-footer-main-row">
+      <div class="col-md-5 col-sm-12 os-footer-brand-col">
+        <h4 class="os-footer-title">OpenScience.ph</h4>
+        <p class="os-footer-lead">
+          An open scholarship repository and digital preservation commons stewarded by 
+          <strong>OBRA Incorporated</strong> in collaboration with Philippine higher education institutions.
+        </p>
+        <p class="os-footer-mission">
+          Advancing institutional research discoverability, sovereign preservation, and permanent academic access.
+        </p>
+      </div>
+
+      <div class="col-md-3 col-sm-4 os-footer-col">
+        <h5 class="os-footer-heading">Repository Standards</h5>
+        <ul class="os-footer-menu">
+          <li>Persistent Resolvable Identifiers</li>
+          <li>Standardized Bibliographic Metadata</li>
+          <li>FAIR Research Data Principles</li>
+          <li>Diamond Open Access</li>
+        </ul>
+      </div>
+
+      <div class="col-md-4 col-sm-8 os-footer-col">
+        <h5 class="os-footer-heading">Institutional Inquiries</h5>
+        <p class="os-footer-text">
+          For university partnerships, library onboarding, or collection inquiries:
+        </p>
+        <div class="os-footer-cta-wrap">
+          <a href="/contact.xhtml" class="os-btn-inquiry">
+            Contact Us &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row os-footer-bottom-row">
+      <div class="col-sm-8 text-left os-copyright">
+        &copy; 2026 OpenScience.ph. Works cataloged are stewarded under individual author licenses.
+      </div>
+      <div class="col-sm-4 text-right os-powered">
+        <span>Powered by Harvard Dataverse</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function initNav() {
+    function injectItems() {
+      var $navRight = $('#topNavBar .navbar-nav.navbar-right');
+      if ($navRight.length && !$('#nav-institutions').length) {
+        var institutionsUrl = '/dataverse/root?q=&fq1=dvCategory%3A"Organization+or+Institution"';
+        var institutionsItem = '<li id="nav-institutions"><a href=\'' + institutionsUrl + '\'>Institutions</a></li>';
+        var journalsItem = '<li id="nav-journals"><a href="https://journal.pinoyseoul.com" target="_blank" rel="noopener">Journals</a></li>';
+        $navRight.prepend(institutionsItem).prepend(journalsItem);
+      }
+      var $brand = $('#navbarFixed .navbar-header .navbar-brand');
+      if ($brand.length && !$brand.hasClass('os-brand-ready')) {
+        $brand.addClass('os-brand-ready').html(
+          '<img src="/logos/openscience_navbar_logo.png" class="os-brand-logo" alt="OpenScience.ph" />' +
+          '<span class="os-brand-text">OpenScience.ph</span>' +
+          '<span class="label label-warning os-nav-beta">BETA</span>'
+        );
+      }
+    }
+    $(document).ready(injectItems);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      injectItems();
+    }
+
+    // Auto-dismiss infinite loading spinner
+    $(document).ajaxStop(function() {
+      $('#ajaxStatusPanel_start').hide();
+    });
+    $(document).ajaxComplete(function() {
+      $('#ajaxStatusPanel_start').hide();
+    });
+    $(document).ajaxError(function() {
+      $('#ajaxStatusPanel_start').hide();
+    });
+    setInterval(function() {
+      if ($('#ajaxStatusPanel_start').is(':visible')) {
+        $('#ajaxStatusPanel_start').stop(true, true).fadeOut(200);
+      }
+    }, 2000);
+  })();
+</script>

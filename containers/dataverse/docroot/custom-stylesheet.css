@@ -1,0 +1,2214 @@
+/* ==========================================================================
+   OpenScience.ph - Unified Academic Repository Design System (v2.0 Production)
+   Engineered for Harvard Dataverse 6.12.1 on Mediaserver
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+:root {
+  --os-navy-950: #060d17;
+  --os-navy-900: #0a192f;
+  --os-navy-800: #0f2744;
+  --os-navy-700: #173258;
+  --os-slate-50: #f8fafc;
+  --os-slate-100: #f1f5f9;
+  --os-slate-200: #e2e8f0;
+  --os-slate-300: #cbd5e1;
+  --os-slate-600: #475569;
+  --os-slate-700: #334155;
+  --os-slate-900: #0f172a;
+  --os-amber-500: #f59e0b;
+  --os-amber-600: #d97706;
+  --os-amber-700: #b45309;
+  --os-emerald-600: #059669;
+  --os-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --os-font-heading: 'Plus Jakarta Sans', var(--os-font-sans);
+}
+
+/* 1. Global Page Layout & Body */
+html {
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+body {
+  font-family: var(--os-font-sans) !important;
+  color: var(--os-slate-900) !important;
+  background-color: var(--os-slate-50) !important;
+  -webkit-font-smoothing: antialiased;
+  margin-bottom: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+}
+
+#content {
+  flex: 1 0 auto !important;
+}
+
+/* 2. Top Navigation Bar (Eliminating Bootstrap White Gradient) */
+#navbarFixed,
+#navbarFixed.navbar-default,
+#navbarFixed.navbar {
+  background: var(--os-navy-900) !important;
+  background-color: var(--os-navy-900) !important;
+  background-image: none !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+  filter: none !important;
+}
+
+#navbarFixed .navbar-header a {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 50px !important;
+  padding: 0 16px !important;
+  text-decoration: none !important;
+  float: left !important;
+}
+
+#navbarFixed .navbar-header .navbar-brand {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  float: none !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: normal !important;
+  font-size: 18px !important;
+  color: #ffffff !important;
+}
+
+#navbarFixed .navbar-header .navbar-brand::after {
+  content: none !important;
+  display: none !important;
+}
+
+.os-brand-logo {
+  width: 28px !important;
+  height: 28px !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+.os-brand-text {
+  font-family: var(--os-font-heading, 'Inter', sans-serif) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+.os-nav-beta {
+  vertical-align: middle !important;
+  margin: 0 !important;
+  padding: 2px 7px !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.1 !important;
+  display: inline-block !important;
+}
+
+.os-hero-beta {
+  vertical-align: middle !important;
+  font-size: 14px !important;
+  padding: 3px 10px !important;
+  margin-left: 12px !important;
+  letter-spacing: 0.05em !important;
+  display: inline-block !important;
+  line-height: 1.2 !important;
+}
+
+#navbarFixed .navbar-nav > li > a,
+#navbarFixed .navbar-nav > li > a.dropdown-toggle,
+#navbarFixed form.navbar-form-link a.ui-commandlink,
+#navbarFixed ul.navbar-nav li.dropdown span.dropdown-toggle {
+  color: var(--os-slate-300) !important;
+  font-family: var(--os-font-sans) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  transition: all 0.15s ease;
+}
+
+#navbarFixed .navbar-nav > li > a:hover,
+#navbarFixed .navbar-nav > li > a:focus,
+#navbarFixed form.navbar-form-link a.ui-commandlink:hover,
+#navbarFixed ul.navbar-nav li.dropdown.open > a,
+#navbarFixed ul.navbar-nav li.dropdown.open > span.dropdown-toggle {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-image: none !important;
+}
+
+#navbarFixed .dropdown.accountName .label.label-danger {
+  background-color: var(--os-amber-600) !important;
+}
+
+/* Sovereign top navbar styling handled natively via database settings */
+
+/* Redesigned Search Dropdown: 360px wide dark container, no text clipping */
+#navbarFixed .dropdown-menu.navbar-search {
+  min-width: 360px !important;
+  width: 360px !important;
+  padding: 12px 14px !important;
+  background-color: var(--os-navy-900) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45) !important;
+  border-radius: 8px !important;
+  margin-top: 6px !important;
+}
+
+#navbarFixed .dropdown-menu.navbar-search .input-group {
+  width: 100% !important;
+  display: flex !important;
+}
+
+#navbarFixed .dropdown-menu.navbar-search #navbarsearch {
+  background: #ffffff !important;
+  color: var(--os-slate-900) !important;
+  border: 1px solid #cbd5e1 !important;
+  border-right: none !important;
+  border-radius: 6px 0 0 6px !important;
+  height: 38px !important;
+  font-size: 13.5px !important;
+  padding: 0 12px !important;
+  box-shadow: none !important;
+  flex: 1 !important;
+  width: 100% !important;
+}
+
+#navbarFixed .dropdown-menu.navbar-search #navbarsearch:focus {
+  border-color: var(--os-amber-500) !important;
+  outline: none !important;
+}
+
+#navbarFixed .dropdown-menu.navbar-search .input-group-btn {
+  width: auto !important;
+}
+
+#navbarFixed .dropdown-menu.navbar-search .input-group-btn .btn {
+  height: 38px !important;
+  padding: 0 16px !important;
+  background: var(--os-amber-600) !important;
+  border: 1px solid var(--os-amber-600) !important;
+  color: #ffffff !important;
+  border-radius: 0 6px 6px 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#navbarFixed .dropdown-menu.navbar-search .input-group-btn .btn:hover {
+  background: var(--os-amber-500) !important;
+}
+
+#navbarFixed .dropdown-menu.navbar-search .input-group-btn .btn .glyphicon {
+  color: #ffffff !important;
+}
+
+#navbarFixed .dropdown-menu {
+  background-color: var(--os-navy-900) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 8px !important;
+  padding: 6px 0 !important;
+  min-width: 190px !important;
+}
+
+#navbarFixed .dropdown-menu li {
+  background: transparent !important;
+}
+
+#navbarFixed .dropdown-menu li > a,
+#navbarFixed .dropdown-menu li form a,
+#navbarFixed .dropdown-menu li a.ui-commandlink,
+#navbarFixed .dropdown-menu li.logout a,
+#navbarFixed .dropdown-menu li.logout form a {
+  color: #e2e8f0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  display: block !important;
+  padding: 8px 18px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+
+#navbarFixed .dropdown-menu li:hover,
+#navbarFixed .dropdown-menu li:hover > a,
+#navbarFixed .dropdown-menu li a:hover,
+#navbarFixed .dropdown-menu li a:focus,
+#navbarFixed .dropdown-menu li form a:hover,
+#navbarFixed .dropdown-menu li form a:focus,
+#navbarFixed .dropdown-menu li.logout:hover,
+#navbarFixed .dropdown-menu li.logout a:hover,
+#navbarFixed .dropdown-menu li.logout form a:hover {
+  background: var(--os-navy-700) !important;
+  background-color: var(--os-navy-700) !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+#navbarFixed .dropdown-menu .divider {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  margin: 6px 0 !important;
+  height: 1px !important;
+}
+
+
+/* 3. Homepage Architecture */
+.os-homepage {
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+/* Hero Section */
+.os-hero {
+  background: radial-gradient(circle at 50% 0%, var(--os-navy-700) 0%, var(--os-navy-900) 100%) !important;
+  color: #ffffff !important;
+  padding: 64px 32px 52px 32px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 16px 36px -8px rgba(10, 25, 47, 0.35);
+  margin-bottom: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.os-hero-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.os-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 22px;
+  backdrop-filter: blur(8px);
+}
+
+.os-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--os-emerald-600);
+  box-shadow: 0 0 8px var(--os-emerald-600);
+}
+
+.os-title {
+  font-family: var(--os-font-heading) !important;
+  font-size: 46px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 0 16px 0 !important;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.os-tagline {
+  font-size: 17px;
+  color: var(--os-slate-300);
+  line-height: 1.6;
+  margin: 0 auto 36px auto;
+  max-width: 700px;
+}
+
+/* Safe Search Box (Zero Form Nesting) */
+.os-search-container {
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.os-search-box {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 5px;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.35);
+}
+
+.os-search-icon-wrap {
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+}
+
+.os-input {
+  flex: 1;
+  border: none !important;
+  padding: 12px 14px !important;
+  font-size: 15px !important;
+  color: var(--os-slate-900) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.os-btn-search {
+  background-color: var(--os-amber-600) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0 28px !important;
+  height: 46px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.os-btn-search:hover {
+  background-color: var(--os-amber-700) !important;
+}
+
+.os-quick-topics {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #94a3b8;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.os-topic-label {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.os-topic-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #e2e8f0 !important;
+  border-radius: 9999px;
+  padding: 3px 12px;
+  text-decoration: none !important;
+  transition: all 0.15s ease;
+}
+
+.os-topic-pill:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff !important;
+}
+
+/* 4. Core Academic Value Commitments */
+.os-commitments {
+  margin-bottom: 50px;
+}
+
+.os-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .os-grid-3 { grid-template-columns: 1fr; }
+  .os-title { font-size: 32px !important; }
+}
+
+.os-commitment-card {
+  background: #ffffff;
+  border: 1px solid var(--os-slate-200);
+  border-radius: 10px;
+  padding: 28px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.os-commitment-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -4px rgba(15, 39, 68, 0.08);
+  border-color: var(--os-slate-300);
+}
+
+.os-card-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.os-icon-navy {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #dbeafe;
+}
+
+.os-icon-amber {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fef3c7;
+}
+
+.os-icon-emerald {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #d1fae5;
+}
+
+.os-commitment-card h3 {
+  font-family: var(--os-font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--os-navy-800);
+  margin: 0 0 8px 0;
+}
+
+.os-commitment-card p {
+  font-size: 14px;
+  color: var(--os-slate-600);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* 5. Disciplines Grid */
+.os-disciplines {
+  margin-bottom: 50px;
+}
+
+.os-section-header {
+  margin-bottom: 22px;
+}
+
+.os-heading {
+  font-family: var(--os-font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--os-navy-900);
+  margin: 0 0 6px 0;
+}
+
+.os-subheading {
+  font-size: 14px;
+  color: var(--os-slate-600);
+  margin: 0;
+}
+
+.os-discipline-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 992px) {
+  .os-discipline-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 576px) {
+  .os-discipline-grid { grid-template-columns: 1fr; }
+}
+
+.os-discipline-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid var(--os-slate-200);
+  border-radius: 10px;
+  padding: 18px 20px;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+}
+
+.os-discipline-item:hover {
+  border-color: var(--os-amber-600);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -2px rgba(217, 119, 6, 0.08);
+}
+
+.os-disc-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--os-slate-50);
+  border: 1px solid var(--os-slate-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--os-navy-800);
+  flex-shrink: 0;
+}
+
+.os-disc-content {
+  flex: 1;
+}
+
+.os-disc-content h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--os-navy-900);
+  margin: 0 0 4px 0;
+}
+
+.os-disc-content span {
+  font-size: 12px;
+  color: var(--os-slate-600);
+  line-height: 1.4;
+  display: block;
+}
+
+.os-disc-arrow {
+  color: #94a3b8;
+  font-size: 16px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.os-discipline-item:hover .os-disc-arrow {
+  transform: translateX(4px);
+  color: var(--os-amber-600);
+}
+
+/* 6. Institutional Spaces */
+.os-tenants {
+  margin-bottom: 50px;
+}
+
+.os-tenant-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .os-tenant-grid { grid-template-columns: 1fr; }
+}
+
+.os-tenant-card {
+  background: #ffffff;
+  border: 1px solid var(--os-slate-200);
+  border-radius: 10px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.os-tenant-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.os-tenant-logo-preview {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+}
+
+.os-tenant-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--os-slate-100);
+  color: var(--os-navy-800);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.os-badge-amber {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.os-tenant-card h3 {
+  font-family: var(--os-font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--os-navy-900);
+}
+
+.os-tenant-card p {
+  font-size: 14px;
+  color: var(--os-slate-600);
+  line-height: 1.55;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.os-tenant-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background-color: var(--os-navy-900);
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease;
+  width: fit-content;
+}
+
+.os-tenant-btn:hover {
+  background-color: var(--os-navy-800);
+}
+
+.os-btn-secondary {
+  background-color: transparent !important;
+  color: var(--os-navy-800) !important;
+  border: 1px solid var(--os-slate-300) !important;
+}
+
+.os-btn-secondary:hover {
+  background-color: var(--os-slate-100) !important;
+}
+
+/* 7. Footer Architecture (Eliminating Collapsed 0px Footer & Duplicate dvfooter) */
+footer {
+  height: auto !important;
+  min-height: auto !important;
+  background: var(--os-navy-950) !important;
+  background-color: var(--os-navy-950) !important;
+  color: #94a3b8 !important;
+  margin-top: 60px !important;
+  padding: 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  overflow: visible !important;
+}
+
+#dvfooter {
+  display: none !important;
+}
+
+.os-footer-inner {
+  background-color: var(--os-navy-950);
+  color: #94a3b8;
+  padding: 56px 0 32px 0;
+}
+
+.os-footer-title {
+  color: #ffffff !important;
+  font-family: var(--os-font-heading) !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  margin: 0 0 14px 0 !important;
+}
+
+.os-footer-lead {
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.os-footer-mission {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.os-footer-heading {
+  color: #ffffff !important;
+  font-family: var(--os-font-heading) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  margin: 0 0 16px 0 !important;
+  letter-spacing: 0.02em;
+}
+
+.os-footer-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+}
+
+.os-footer-menu li {
+  margin-bottom: 10px;
+  color: #cbd5e1;
+}
+
+.os-footer-menu code {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.os-footer-text {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.os-footer-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.os-contact-link {
+  color: var(--os-amber-500) !important;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none !important;
+}
+
+.os-contact-link:hover {
+  color: #ffffff !important;
+}
+
+.os-register-badge {
+  display: inline-block;
+  color: #e2e8f0 !important;
+  font-size: 13px;
+  text-decoration: none !important;
+}
+
+.os-register-badge:hover {
+  color: #ffffff !important;
+}
+
+.os-footer-bottom-row {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  color: #64748b;
+}
+
+.os-powered {
+  color: #64748b;
+}
+
+/* ==========================================================================
+   8. Core Dataverse Application & Collection View Styling
+   Harmonizing Internal Collection UI with Deep Navy & Gold Aesthetic
+   ========================================================================== */
+
+/* 8.1 Global Links & Typography Overrides */
+a {
+  color: var(--os-navy-800);
+  transition: color 0.15s ease;
+}
+
+a:hover, a:focus {
+  color: var(--os-amber-600);
+  text-decoration: underline;
+}
+
+/* 8.2 Breadcrumb Navigation */
+#breadCrumbPanel {
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 0 !important;
+  margin-bottom: 2px !important;
+}
+
+#breadcrumbNavBlock {
+  font-size: 13px !important;
+  color: var(--os-slate-600) !important;
+}
+
+#breadcrumbNavBlock a {
+  color: var(--os-navy-800) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+#breadcrumbNavBlock a:hover {
+  color: var(--os-amber-600) !important;
+  text-decoration: underline !important;
+}
+
+#breadcrumbNavBlock .breadcrumbCarrot {
+  color: var(--os-slate-400) !important;
+  margin: 0 6px !important;
+  font-size: 12px !important;
+}
+
+/* 8.3 Collection Header (#dataverseHeader) */
+#dataverseHeader {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-radius: 10px !important;
+  padding: 18px 24px !important;
+  margin-bottom: 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+#actionButtonBlock {
+  margin-bottom: 10px !important;
+}
+
+/* 8.4 Empty State Card for Collections */
+#emptyResults,
+div.emptyResults,
+div.emptyResults.bg-warning {
+  background: #ffffff !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-radius: 8px !important;
+  padding: 36px 28px !important;
+  margin: 12px 0 28px 0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  text-align: center !important;
+}
+
+div.emptyResults p {
+  color: var(--os-slate-600) !important;
+  font-size: 14.5px !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+}
+
+div.emptyResults a {
+  color: var(--os-amber-600) !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+}
+
+div.emptyResults a:hover {
+  color: var(--os-amber-700) !important;
+}
+
+#dataverseHeader .dataverseHeaderBlock {
+  display: flex !important;
+  align-items: center !important;
+}
+
+#dataverseHeader .dataverseHeaderLogo {
+  padding-right: 20px !important;
+}
+
+#dataverseHeader .dataverseHeaderLogo img {
+  max-height: 64px !important;
+  width: auto !important;
+}
+
+#dataverseHeader .dataverseHeaderDataverseName,
+#dataverseHeader .dataverseHeaderDataverseName h1,
+.dataverseHeaderCell.dataverseHeaderName a {
+  color: var(--os-navy-900) !important;
+  font-family: var(--os-font-heading) !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  letter-spacing: -0.02em !important;
+}
+
+#dataverseHeader .dataverseHeaderCell.dataverseHeaderName span {
+  color: var(--os-slate-600) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+/* Collection description inside header/content */
+#dataverse-description,
+div.dataverse-description-block,
+div[id$='dataverseDesc'] {
+  color: var(--os-slate-700) !important;
+  font-size: 14.5px !important;
+  line-height: 1.65 !important;
+  margin-top: 14px !important;
+}
+
+#dataverse-description a,
+div.dataverse-description-block a {
+  color: var(--os-navy-800) !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+}
+
+#dataverse-description a:hover,
+div.dataverse-description-block a:hover {
+  color: var(--os-amber-600) !important;
+}
+
+/* 8.4 Top Action Bar (Contact, Share, Link, Edit buttons) */
+.button-block {
+  margin-bottom: 18px !important;
+}
+
+.button-block .btn-default,
+.button-block .btn-contact,
+.button-block .btn-share {
+  background: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid var(--os-slate-300) !important;
+  color: var(--os-slate-700) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  padding: 6px 14px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.15s ease !important;
+}
+
+.button-block .btn-default:hover,
+.button-block .btn-default:focus,
+.button-block .btn-contact:hover,
+.button-block .btn-share:hover {
+  background: var(--os-slate-100) !important;
+  border-color: var(--os-slate-400) !important;
+  color: var(--os-navy-900) !important;
+}
+
+.button-block .btn-default .glyphicon,
+.button-block .btn-default .icon {
+  color: var(--os-navy-800) !important;
+  margin-right: 4px !important;
+}
+
+/* 8.5 Search Panel & Search Controls */
+#search-row-panel {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin-bottom: 24px !important;
+}
+
+.search-widget .input-group input.form-control,
+#search-row-panel input.form-control {
+  border: 1px solid var(--os-slate-300) !important;
+  border-radius: 6px 0 0 6px !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  padding: 8px 14px !important;
+  height: 40px !important;
+  color: var(--os-slate-900) !important;
+}
+
+.search-widget .input-group input.form-control:focus,
+#search-row-panel input.form-control:focus {
+  border-color: var(--os-navy-800) !important;
+  box-shadow: 0 0 0 2px rgba(15, 39, 68, 0.12) !important;
+}
+
+.search-widget .input-group-btn .btn-default,
+#search-row-panel .input-group-btn .btn-default {
+  height: 40px !important;
+  border-radius: 0 6px 6px 0 !important;
+  border-left: none !important;
+  background: #ffffff !important;
+  border-color: var(--os-slate-300) !important;
+}
+
+.search-widget .input-group-btn .btn-default .glyphicon-search {
+  color: var(--os-slate-600) !important;
+}
+
+/* Deposit Button */
+button[id$='addDataverseOrDataset'],
+a[id$='addDataverseOrDataset'],
+.btn.btn-primary.btn-deposit,
+#search-row-panel .btn-primary {
+  background: var(--os-amber-600) !important;
+  background-color: var(--os-amber-600) !important;
+  background-image: none !important;
+  border-color: var(--os-amber-600) !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  height: 40px !important;
+  padding: 8px 18px !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 3px rgba(217, 119, 6, 0.25) !important;
+  transition: all 0.15s ease !important;
+}
+
+button[id$='addDataverseOrDataset']:hover,
+a[id$='addDataverseOrDataset']:hover,
+#search-row-panel .btn-primary:hover {
+  background: var(--os-amber-700) !important;
+  background-color: var(--os-amber-700) !important;
+  border-color: var(--os-amber-700) !important;
+  color: #ffffff !important;
+}
+
+/* Active Facet Filter Tags (e.g. Category: Organization or Institution) */
+#resultsFacetsTopBlock {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-bottom: 12px !important;
+  clear: both !important;
+}
+
+#resultsFacetsTopBlock .facetLink.facetSelected {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+  padding: 4px 10px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  color: var(--os-navy-900) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+
+#resultsFacetsTopBlock .facetLink.facetSelected:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+#resultsFacetsTopBlock .facetLink.facetSelected .glyphicon-remove {
+  font-size: 10px !important;
+  color: #64748b !important;
+  margin-left: 4px !important;
+}
+
+#resultsFacetsTopBlock .facetLink.facetSelected:hover .glyphicon-remove {
+  color: #ef4444 !important;
+}
+
+/* Results Count & Sort Dropdown */
+#resultsCountPaginatorBlock {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 10px !important;
+  margin-bottom: 12px !important;
+  clear: both !important;
+  padding: 0 !important;
+}
+
+#resultsCountPaginatorBlock div.results-count {
+  font-family: var(--os-font-heading) !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: var(--os-navy-900) !important;
+  padding: 6px 12px 6px 0 !important;
+}
+
+#resultsCountPaginatorBlock div.results-sort-pagination {
+  padding-right: 0 !important;
+}
+
+#resultsCountPaginatorBlock .btn-default,
+div[id$='sortButtonBlock'] .btn-default {
+  background: #ffffff !important;
+  border: 1px solid var(--os-slate-300) !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--os-slate-700) !important;
+}
+
+/* 8.6 Left Sidebar Facets (#dv-sidebar) */
+#dv-sidebar {
+  background: #ffffff !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-radius: 10px !important;
+  padding: 16px 18px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Facet Type (Collections, Publications, Files) */
+form[id$='facetType'] > div.clearfix {
+  display: flex !important;
+  align-items: center !important;
+  margin-bottom: 8px !important;
+  float: none !important;
+}
+
+form[id$='facetType'] > div.clearfix:last-child {
+  margin-bottom: 0 !important;
+}
+
+form[id$='facetType'] > div.clearfix .facetTypeChBox {
+  display: inline-flex !important;
+  align-items: center !important;
+  float: none !important;
+  margin-right: 8px !important;
+  line-height: 1 !important;
+}
+
+form[id$='facetType'] > div.clearfix a.facetTypeLink {
+  display: inline-flex !important;
+  align-items: center !important;
+  float: none !important;
+  font-size: 13px !important;
+  color: var(--os-slate-700) !important;
+  text-decoration: none !important;
+  line-height: 1.4 !important;
+}
+
+form[id$='facetType'] > div.clearfix a.facetTypeLink:hover {
+  color: var(--os-amber-600) !important;
+}
+
+form[id$='facetType'] > div.clearfix a.facetTypeLink.facetSelected {
+  font-weight: 700 !important;
+  color: var(--os-navy-900) !important;
+}
+
+form[id$='facetType'] .text-icon-inline {
+  color: var(--os-navy-800) !important;
+  margin-right: 6px !important;
+  font-size: 13px !important;
+}
+
+/* Pure CSS Checkbox Alignment & Styling */
+#dv-sidebar .ui-chkbox {
+  display: inline-flex !important;
+  vertical-align: middle !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#dv-sidebar .ui-chkbox .ui-chkbox-box {
+  border: 1.5px solid var(--os-slate-300) !important;
+  border-radius: 4px !important;
+  background: #ffffff !important;
+  background-image: none !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  position: relative !important;
+}
+
+#dv-sidebar .ui-chkbox .ui-chkbox-box.ui-state-active {
+  background: var(--os-navy-900) !important;
+  background-color: var(--os-navy-900) !important;
+  border-color: var(--os-navy-900) !important;
+}
+
+#dv-sidebar .ui-chkbox .ui-chkbox-icon {
+  display: none !important;
+}
+
+#dv-sidebar .ui-chkbox .ui-chkbox-box.ui-state-active::after {
+  content: "" !important;
+  display: block !important;
+  width: 4px !important;
+  height: 8px !important;
+  border: solid #ffffff !important;
+  border-width: 0 2px 2px 0 !important;
+  transform: rotate(45deg) translate(-0.5px, -0.5px) !important;
+}
+
+/* Non-Type Facet Categories */
+#dv-sidebar .facetCategoryName {
+  font-family: var(--os-font-heading) !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--os-navy-900) !important;
+  margin: 14px 0 6px 0 !important;
+  padding-bottom: 4px !important;
+  display: block !important;
+  border-top: 1px solid var(--os-slate-100) !important;
+  padding-top: 10px !important;
+}
+
+#dv-sidebar div[id$='facetCategoryList'] > div > ul > li {
+  border-bottom: 1px solid var(--os-slate-100) !important;
+  padding: 6px 0 !important;
+}
+
+#dv-sidebar div[id$='facetCategoryList'] > div > ul > li:last-child {
+  border-bottom: none !important;
+}
+
+#dv-sidebar a.facetLink {
+  color: var(--os-slate-700) !important;
+  font-size: 13px !important;
+  transition: color 0.15s ease !important;
+  text-decoration: none !important;
+  word-break: break-word !important;
+  display: inline-block !important;
+  line-height: 1.4 !important;
+}
+
+#dv-sidebar a.facetLink:hover {
+  color: var(--os-amber-600) !important;
+}
+
+#dv-sidebar a.facetLink.facetSelected {
+  color: var(--os-navy-900) !important;
+  font-weight: 700 !important;
+}
+
+/* 8.7 Dataset & Collection Result Cards (Tight, Crisp Height) */
+table[id$='resultsTable'] {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  margin: 0 !important;
+}
+
+table[id$='resultsTable'] thead {
+  display: none !important;
+}
+
+table[id$='resultsTable'] td {
+  padding: 0 !important;
+  border: none !important;
+}
+
+table[id$='resultsTable'] td > div.datasetResult,
+table[id$='resultsTable'] td > div.dataverseResult,
+table[id$='resultsTable'] td > div.fileResult {
+  background: #ffffff !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-radius: 8px !important;
+  padding: 14px 18px !important;
+  margin: 0 0 10px 0 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  transition: all 0.15s ease !important;
+}
+
+table[id$='resultsTable'] td > div.datasetResult:hover,
+table[id$='resultsTable'] td > div.dataverseResult:hover,
+table[id$='resultsTable'] td > div.fileResult:hover {
+  border-color: var(--os-slate-300) !important;
+  box-shadow: 0 4px 10px rgba(15, 39, 68, 0.06) !important;
+}
+
+/* Result Card Title Block */
+table[id$='resultsTable'] div.card-title-icon-block {
+  margin-bottom: 6px !important;
+}
+
+table[id$='resultsTable'] div.card-title-icon-block a,
+table[id$='resultsTable'] a.result-title {
+  color: var(--os-navy-900) !important;
+  font-family: var(--os-font-heading) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+table[id$='resultsTable'] div.card-title-icon-block a:hover,
+table[id$='resultsTable'] a.result-title:hover {
+  color: var(--os-amber-600) !important;
+}
+
+/* Preview Icon */
+table[id$='resultsTable'] div.card-preview-icon-block {
+  float: left !important;
+  width: 48px !important;
+  height: 48px !important;
+  margin: 4px 12px 6px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #ffffff !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-radius: 6px !important;
+  padding: 2px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  overflow: hidden !important;
+}
+
+table[id$='resultsTable'] div.card-preview-icon-block a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  text-decoration: none !important;
+}
+
+table[id$='resultsTable'] div.card-preview-icon-block img {
+  max-width: 44px !important;
+  max-height: 44px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  border-radius: 4px !important;
+  vertical-align: middle !important;
+}
+
+table[id$='resultsTable'] div.card-preview-icon-block span[class^='icon'],
+table[id$='resultsTable'] div.card-preview-icon-block span[class^='glyphicon'] {
+  color: var(--os-navy-800) !important;
+  opacity: 0.75 !important;
+  font-size: 2.2em !important;
+}
+
+
+/* Citation Snippet */
+[id$='resultsTable'] .resultDatasetCitationBlock {
+  background: var(--os-slate-50) !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-left: 3px solid var(--os-navy-800) !important;
+  border-radius: 4px !important;
+  padding: 6px 10px !important;
+  margin: 6px 0 6px 60px !important;
+  font-size: 12.5px !important;
+  color: var(--os-slate-700) !important;
+  line-height: 1.45 !important;
+}
+
+[id$='resultsTable'] .resultDatasetCitationBlock a {
+  color: var(--os-navy-800) !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+}
+
+[id$='resultsTable'] .resultDatasetCitationBlock a:hover {
+  color: var(--os-amber-600) !important;
+}
+
+
+/* Action Icons inside Card (Pencil, View) */
+table[id$='resultsTable'] div.card-title-icon-block .glyphicon-pencil,
+table[id$='resultsTable'] div.card-title-icon-block .icon-edit {
+  color: var(--os-slate-400) !important;
+  font-size: 14px !important;
+  transition: color 0.15s ease !important;
+}
+
+table[id$='resultsTable'] div.card-title-icon-block .glyphicon-pencil:hover,
+table[id$='resultsTable'] div.card-title-icon-block .icon-edit:hover {
+  color: var(--os-amber-600) !important;
+}
+
+/* Replace Harvard upper-right icon with OpenScience logo */
+table[id$='resultsTable'] div.card-title-icon-block .icon-dataverse {
+  display: inline-block !important;
+  width: 20px !important;
+  height: 20px !important;
+  background: url('/logos/openscience_navbar_logo.png') no-repeat center !important;
+  background-size: contain !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  vertical-align: middle !important;
+}
+
+table[id$='resultsTable'] div.card-title-icon-block .icon-dataverse::before {
+  display: none !important;
+  content: "" !important;
+}
+
+/* 8.8 Modern Pill Badges (Draft, Unpublished, Published) */
+table[id$='resultsTable'] span.label {
+  border-radius: 4px !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  padding: 2px 7px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  box-shadow: none !important;
+}
+
+/* Draft */
+table[id$='resultsTable'] span.label-primary {
+  background-color: #e0e7ff !important;
+  color: #3730a3 !important;
+  border: 1px solid #c7d2fe !important;
+}
+
+/* Unpublished */
+table[id$='resultsTable'] span.label-warning {
+  background-color: #fef3c7 !important;
+  color: #92400e !important;
+  border: 1px solid #fde68a !important;
+}
+
+/* Published / Released */
+table[id$='resultsTable'] span.label-success {
+  background-color: #d1fae5 !important;
+  color: #065f46 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+/* Deaccessioned / Danger */
+table[id$='resultsTable'] span.label-danger {
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+  border: 1px solid #fecaca !important;
+}
+
+/* Default / Neutral */
+table[id$='resultsTable'] span.label-default {
+  background-color: var(--os-slate-100) !important;
+  color: var(--os-slate-700) !important;
+  border: 1px solid var(--os-slate-200) !important;
+}
+
+/* 8.9 Pagination Controls */
+.pagination {
+  margin: 16px 0 !important;
+  display: inline-flex !important;
+  border-radius: 6px !important;
+}
+
+.pagination > li > a,
+.pagination > li > span {
+  color: var(--os-slate-700) !important;
+  background: #ffffff !important;
+  border: 1px solid var(--os-slate-200) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 6px 12px !important;
+  margin: 0 2px !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+}
+
+.pagination > li > a:hover,
+.pagination > li > span:hover {
+  background: var(--os-slate-100) !important;
+  border-color: var(--os-slate-300) !important;
+  color: var(--os-navy-900) !important;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover {
+  background: var(--os-navy-900) !important;
+  background-color: var(--os-navy-900) !important;
+  border-color: var(--os-navy-900) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.pagination > .disabled > span,
+.pagination > .disabled > a {
+  color: var(--os-slate-300) !important;
+  background-color: var(--os-slate-50) !important;
+  border-color: var(--os-slate-200) !important;
+}
+
+/* 8.10 Eliminating Clashing Collection Footer (#dataverseFooter) */
+#dataverseFooter,
+div#dataverseFooter,
+div[id$='dataverseFooter'],
+.dataverseFooterLogo,
+div[class*='dataverseFooterLogo'] {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* 8.11 Dataset & File Page Harmonization (Matching Clean Reference UI) */
+div.citation-block {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  margin-bottom: 12px !important;
+}
+
+div.citation-block div.alert,
+div.citation-block .bg-citation,
+div.citation-block .bg-citation-file {
+  background: #f8fafc !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-left: 1px solid var(--os-slate-200) !important;
+  border-radius: 6px !important;
+  padding: 12px 16px !important;
+  margin-bottom: 12px !important;
+  color: var(--os-slate-800) !important;
+  line-height: 1.55 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+div.citation-block div.preview-icon-block {
+  min-height: auto !important;
+  padding: 0 14px 6px 0 !important;
+}
+
+div.citation-block div.preview-icon-block span[class^='icon'],
+div.citation-block div.preview-icon-block span[class^='glyphicon'] {
+  color: var(--os-navy-800) !important;
+  opacity: 0.7 !important;
+  font-size: 3.5em !important;
+}
+
+div.citation-block div.citation span a {
+  color: var(--os-navy-800) !important;
+  text-decoration: underline !important;
+}
+
+div.citation-block div.citation span a:hover {
+  color: var(--os-amber-600) !important;
+}
+
+/* Action Button Block (Access, Edit, Share - Solid Deep Navy Primary) */
+#actionButtonBlock .btn-access-dataset,
+#actionButtonBlock .btn-access-file,
+.btn.btn-access-dataset,
+.btn.btn-access-file,
+#actionButtonBlock .btn-primary {
+  background: var(--os-navy-900) !important;
+  background-color: var(--os-navy-900) !important;
+  background-image: none !important;
+  border: 1px solid var(--os-navy-950) !important;
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  border-radius: 4px !important;
+  padding: 7px 14px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+  transition: background-color 0.15s ease !important;
+}
+
+#actionButtonBlock .btn-access-dataset:hover,
+#actionButtonBlock .btn-access-file:hover,
+.btn.btn-access-dataset:hover,
+.btn.btn-access-file:hover,
+#actionButtonBlock .btn-primary:hover {
+  background: var(--os-navy-800) !important;
+  background-color: var(--os-navy-800) !important;
+  border-color: var(--os-navy-900) !important;
+  color: #ffffff !important;
+}
+
+#actionButtonBlock .btn-default,
+#actionButtonBlock .btn-group .btn-default {
+  background: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid var(--os-slate-300) !important;
+  color: var(--os-slate-700) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-radius: 4px !important;
+  padding: 6px 12px !important;
+  transition: all 0.15s ease !important;
+}
+
+#actionButtonBlock .btn-default:hover,
+#actionButtonBlock .btn-group .btn-default:hover {
+  background: var(--os-slate-100) !important;
+  color: var(--os-navy-900) !important;
+  border-color: var(--os-slate-400) !important;
+}
+
+/* Classic Structured Tabs (Files, Metadata, Terms, Versions, Preview) */
+#contentTabs .ui-tabs {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#contentTabs .ui-tabs .ui-tabs-nav {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--os-slate-200) !important;
+  padding: 0 4px !important;
+  display: flex !important;
+  gap: 4px !important;
+  margin-bottom: 0 !important;
+}
+
+#contentTabs .ui-tabs .ui-tabs-nav li.ui-state-default {
+  background: #f1f5f9 !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-bottom: 1px solid var(--os-slate-200) !important;
+  border-radius: 6px 6px 0 0 !important;
+  margin-bottom: -1px !important;
+  transition: all 0.15s ease !important;
+}
+
+#contentTabs .ui-tabs .ui-tabs-nav li.ui-state-default a {
+  color: var(--os-slate-600) !important;
+  font-family: var(--os-font-sans) !important;
+  font-weight: 500 !important;
+  font-size: 13.5px !important;
+  padding: 8px 16px !important;
+  text-decoration: none !important;
+}
+
+#contentTabs .ui-tabs .ui-tabs-nav li.ui-state-default:hover {
+  background: var(--os-slate-200) !important;
+}
+
+#contentTabs .ui-tabs .ui-tabs-nav li.ui-state-active {
+  background: #ffffff !important;
+  border-color: var(--os-slate-200) !important;
+  border-bottom-color: #ffffff !important;
+}
+
+#contentTabs .ui-tabs .ui-tabs-nav li.ui-state-active a {
+  color: var(--os-navy-900) !important;
+  font-weight: 700 !important;
+}
+
+/* Tab Panels Content Surface */
+#contentTabs .ui-tabs-panels {
+  background: #ffffff !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-radius: 0 6px 6px 6px !important;
+  padding: 20px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* File Table & Controls */
+.btn-upload,
+a[id$='uploadFiles'],
+button[id$='uploadFiles'] {
+  background: var(--os-navy-900) !important;
+  border: 1px solid var(--os-navy-950) !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border-radius: 4px !important;
+  height: 36px !important;
+  padding: 7px 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.btn-upload:hover,
+a[id$='uploadFiles']:hover,
+button[id$='uploadFiles']:hover {
+  background: var(--os-navy-800) !important;
+  color: #ffffff !important;
+}
+
+div[id$="filesTable"] thead tr {
+  background: var(--os-slate-100) !important;
+  background-image: none !important;
+}
+
+div[id$="filesTable"] thead th {
+  color: var(--os-navy-900) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  border: 1px solid var(--os-slate-200) !important;
+  padding: 8px 10px !important;
+}
+
+#my_data_filter_column div.checkbox label:not(.facetTypeLabel) {
+  color: var(--os-slate-700) !important;
+}
+
+#my_data_filter_column div.checkbox label.facetSelected:hover,
+#my_data_filter_column div.checkbox.facetSelected label {
+  color: var(--os-navy-900) !important;
+}
+
+tr.ui-state-highlight a:not(.btn),
+.ui-widget-content tr.ui-state-highlight a:not(.btn) {
+  color: var(--os-navy-900) !important;
+}
+
+/* ==========================================================================
+   Academic Discovery & Federated Indexing (3x2 Grid matching Disciplines)
+   ========================================================================== */
+.os-discovery {
+  margin-bottom: 50px;
+}
+
+.os-discovery-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 992px) {
+  .os-discovery-cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 576px) {
+  .os-discovery-cards-grid { grid-template-columns: 1fr; }
+}
+
+.os-disc-partner-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid var(--os-slate-200);
+  border-radius: 10px;
+  padding: 18px 20px;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+}
+
+.os-disc-partner-card:hover {
+  border-color: var(--os-amber-600);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -2px rgba(217, 119, 6, 0.08);
+}
+
+.os-partner-logo-box {
+  width: 96px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 4px;
+}
+
+.os-partner-logo-box img {
+  max-height: 36px;
+  max-width: 92px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.os-disc-partner-card:hover .os-partner-logo-box img {
+  transform: scale(1.06);
+}
+
+.os-partner-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.os-partner-info h4 {
+  font-family: var(--os-font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--os-navy-900);
+  margin: 0 0 3px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.os-partner-info span {
+  font-family: var(--os-font-sans);
+  font-size: 12px;
+  color: var(--os-slate-600);
+  line-height: 1.4;
+  display: block;
+  white-space: normal;
+}
+
+.os-disc-partner-card .os-disc-arrow {
+  color: #94a3b8;
+  font-size: 16px;
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.os-disc-partner-card:hover .os-disc-arrow {
+  transform: translateX(4px);
+  color: var(--os-amber-600);
+}
+
+/* ==========================================================================
+   Account & Depositor Workspace ("My Data" - dataverseuser.xhtml)
+   Harmonizes client-side Nunjucks rendered cards with OpenScience Design System
+   ========================================================================== */
+
+/* 1. Account Page Tabs (My Data, Notifications, Account Information, API Token) */
+#dataverseUserForm .ui-tabs {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+#dataverseUserForm .ui-tabs .ui-tabs-nav {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid var(--os-slate-200) !important;
+  border-radius: 0 !important;
+  display: flex !important;
+  gap: 8px !important;
+  margin-bottom: 20px !important;
+  padding: 0 0 2px 0 !important;
+}
+
+#dataverseUserForm .ui-tabs .ui-tabs-nav li {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  margin-bottom: -2px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+#dataverseUserForm .ui-tabs .ui-tabs-nav li a {
+  color: var(--os-slate-600) !important;
+  font-family: var(--os-font-sans) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 10px 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+#dataverseUserForm .ui-tabs .ui-tabs-nav li:hover a {
+  color: var(--os-navy-900) !important;
+}
+
+#dataverseUserForm .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+  border-bottom: 2px solid var(--os-amber-600) !important;
+}
+
+#dataverseUserForm .ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
+  color: var(--os-navy-900) !important;
+  font-weight: 700 !important;
+}
+
+#dataverseUserForm .ui-tabs .ui-tabs-panels {
+  background: #ffffff !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-radius: 8px !important;
+  padding: 24px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* 2. Search Bar & Find Button */
+#my_data_filter_column2 #mydata_search_term {
+  border: 1px solid var(--os-slate-300) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  color: var(--os-slate-900) !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+#my_data_filter_column2 #mydata_search_term:focus {
+  border-color: var(--os-navy-800) !important;
+  box-shadow: 0 0 0 3px rgba(15, 39, 68, 0.12) !important;
+  outline: none !important;
+}
+
+#my_data_filter_column2 #btn_find_my_data {
+  background: var(--os-navy-900) !important;
+  border: 1px solid var(--os-navy-950) !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  transition: background 0.2s ease !important;
+}
+
+#my_data_filter_column2 #btn_find_my_data:hover {
+  background: var(--os-navy-800) !important;
+  color: #ffffff !important;
+}
+
+/* 3. Left Filter Sidebar */
+#my_data_filter_column b {
+  font-family: var(--os-font-heading) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--os-navy-900) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  display: block !important;
+  margin-top: 14px !important;
+  margin-bottom: 8px !important;
+}
+
+#my_data_filter_column div.checkbox label a {
+  color: var(--os-slate-700) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+#my_data_filter_column div.checkbox label a:hover {
+  color: var(--os-amber-600) !important;
+}
+
+#my_data_filter_column div[id^="div_"] {
+  border-bottom: 1px solid var(--os-slate-200) !important;
+}
+
+/* 4. Result Cards Overrides (Overriding inline style="border: 1px solid #428bca") */
+#div-card-results > div {
+  border: 1px solid var(--os-slate-200) !important;
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  padding: 16px 20px !important;
+  margin-bottom: 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+#div-card-results > div:hover {
+  border-color: var(--os-slate-300) !important;
+  box-shadow: 0 4px 12px rgba(10, 25, 47, 0.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Card Title Typography */
+#div-card-results .card-title-icon-block a {
+  color: var(--os-navy-900) !important;
+  font-family: var(--os-font-heading) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  line-height: 1.4 !important;
+  transition: color 0.15s ease !important;
+}
+
+#div-card-results .card-title-icon-block a:hover {
+  color: var(--os-amber-600) !important;
+  text-decoration: none !important;
+}
+
+/* Card Metadata & Dates */
+#div-card-results span.text-muted {
+  color: var(--os-slate-600) !important;
+  font-size: 12px !important;
+}
+
+#div-card-results span.text-muted a {
+  color: var(--os-navy-800) !important;
+  font-weight: 600 !important;
+}
+
+#div-card-results span.text-muted a:hover {
+  color: var(--os-amber-600) !important;
+}
+
+/* Citation Box inside Card */
+#div-card-results .resultDatasetCitationBlock {
+  background: var(--os-slate-50) !important;
+  border: 1px solid var(--os-slate-200) !important;
+  border-left: 3px solid var(--os-amber-600) !important;
+  border-radius: 4px !important;
+  padding: 10px 14px !important;
+  margin: 10px 0 !important;
+  font-size: 12px !important;
+  color: var(--os-slate-700) !important;
+  display: block !important;
+}
+
+/* Badges Harmonization (Draft, Unpublished, Admin, Roles) */
+#div-card-results .card-title-icon-block .label-primary,
+#div-card-results .card-title-icon-block .label.draft {
+  background: #e0e7ff !important;
+  color: #3730a3 !important;
+  border: 1px solid #c7d2fe !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding: 2px 7px !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+#div-card-results .card-title-icon-block .label-warning,
+#div-card-results .card-title-icon-block .label.unpublished {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  border: 1px solid #fde68a !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding: 2px 7px !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+#div-card-results .card-title-icon-block .label-info {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding: 2px 7px !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+/* ==========================================================================
+   OpenScience.ph - Unified Modern Authentication & ORCID Highlighting
+   ========================================================================== */
+#login-container {
+  padding: 40px 15px 70px !important;
+}
+
+#login-container > .col-md-12 > .col-md-6 {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.03) !important;
+  padding: 36px 36px 40px !important;
+  float: none !important;
+  margin: 0 auto !important;
+  max-width: 480px !important;
+}
+
+#login-container h1 {
+  font-family: var(--os-font-heading, 'Inter', sans-serif) !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin-top: 0 !important;
+  margin-bottom: 24px !important;
+  text-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding-bottom: 16px !important;
+}
+
+#login-container h1 .glyphicon {
+  color: #d97706 !important;
+  font-size: 20px !important;
+}
+
+/* Primary ORCID Auth Button */
+/* Primary ORCID Auth Button */
+#login-container a.btn[href*="orcid"],
+#login-container a.btn:has(img[alt*="ORCID"]),
+#login-container a.btn-orcid-primary,
+#login-container .form-horizontal a.btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  background: #A6CE39 !important;
+  background-color: #A6CE39 !important;
+  background-image: none !important;
+  border: 1px solid #8ebd1a !important;
+  color: #1a3300 !important;
+  font-family: var(--os-font-sans, 'Inter', sans-serif) !important;
+  font-size: 15.5px !important;
+  font-weight: 700 !important;
+  padding: 13px 24px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px rgba(166, 206, 57, 0.4) !important;
+  width: 100% !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  transition: all 0.2s ease !important;
+}
+
+#login-container a.btn[href*="orcid"]:hover,
+#login-container a.btn:has(img[alt*="ORCID"]):hover,
+#login-container a.btn-orcid-primary:hover,
+#login-container .form-horizontal a.btn:hover {
+  background: #95be2e !important;
+  background-color: #95be2e !important;
+  background-image: none !important;
+  border-color: #7fa615 !important;
+  box-shadow: 0 6px 20px rgba(166, 206, 57, 0.55) !important;
+  transform: translateY(-1px) !important;
+  color: #0f172a !important;
+}
+
+#login-container a.btn[href*="orcid"] img,
+#login-container a.btn:has(img[alt*="ORCID"]) img,
+#login-container a.btn-orcid-primary img {
+  width: 22px !important;
+  height: 22px !important;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12)) !important;
+}
+
+/* ORCID Switch Button in Other Providers */
+#otherProviders {
+  margin-top: 28px !important;
+  padding-top: 20px !important;
+  border-top: 1px solid #f1f5f9 !important;
+  text-align: center !important;
+}
+
+#otherProviders h3 {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  margin-top: 0 !important;
+  margin-bottom: 14px !important;
+}
+
+#otherProviders a.btn,
+#otherProviders a.ui-commandlink {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 8px 18px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #f8fafc !important;
+  color: #1e293b !important;
+  transition: all 0.15s ease !important;
+}
+
+#otherProviders a.btn:hover,
+#otherProviders a.ui-commandlink:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+/* Builtin Login Form inputs and buttons */
+#loginForm .form-control {
+  border-radius: 6px !important;
+  border: 1px solid #cbd5e1 !important;
+  height: 40px !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease !important;
+}
+
+#loginForm .form-control:focus {
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15) !important;
+}
+
+#loginForm button#loginForm\:login {
+  background: #0f172a !important;
+  border: 1px solid #0f172a !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 9px 24px !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+}
+
+#loginForm button#loginForm\:login:hover {
+  background: #1e293b !important;
+  border-color: #1e293b !important;
+}
+
+
+
+
+
+

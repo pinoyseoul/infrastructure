@@ -17,11 +17,17 @@ COPY docroot/dataverse_header.xhtml /opt/payara/deployments/dataverse/dataverse_
 COPY docroot/404static.xhtml /opt/payara/deployments/dataverse/404static.xhtml
 COPY docroot/robots.txt /opt/payara/deployments/dataverse/robots.txt
 
+# Bake in authentic OpenScience.ph favicons and PWA manifest
+COPY resources/images/fav/* /opt/payara/deployments/dataverse/resources/images/fav/
+COPY resources/images/fav/favicon.ico /opt/payara/deployments/dataverse/favicon.ico
+
 # Bake in standardized Solr search facets
 COPY langBundles/staticSearchFields.properties /opt/payara/deployments/dataverse/WEB-INF/classes/propertyFiles/staticSearchFields.properties
 
-# Create permanent symlink for collection card logo thumbnails
-RUN ln -sf /dv/docroot/logos /opt/payara/appserver/glassfish/domains/domain1/docroot/logos
+# Create permanent docroot symlinks for logos, root favicon.ico, and academic sitemap
+RUN ln -sf /dv/docroot/logos /opt/payara/appserver/glassfish/domains/domain1/docroot/logos && \
+    ln -sf /dv/docroot/logos/favicon.ico /opt/payara/appserver/glassfish/domains/domain1/docroot/favicon.ico && \
+    ln -sf /dv/docroot/sitemap /opt/payara/appserver/glassfish/domains/domain1/docroot/sitemap
 
 # Ensure proper Payara ownership across webapp deployment
 RUN chown -R payara:payara /opt/payara/deployments/dataverse/

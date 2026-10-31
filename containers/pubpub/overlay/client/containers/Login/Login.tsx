@@ -20,6 +20,11 @@ const Login = () => {
 	const passwordRef = useRef(null);
 	const altchaRef = useRef<AltchaRef>(null);
 	const { locationData, loginData, communityData } = usePageContext();
+
+	const orcidReturnTo = typeof window !== 'undefined'
+		? `${window.location.origin}${locationData.query && locationData.query.redirect ? (locationData.query.redirect.startsWith('/') ? locationData.query.redirect : `/${locationData.query.redirect}`) : '/'}`
+		: (locationData.query && locationData.query.redirect ? locationData.query.redirect : '/');
+
 	const onLoginSubmit = (evt) => {
 		evt.preventDefault();
 		if (
@@ -94,15 +99,10 @@ const Login = () => {
 								OpenScience.ph account.
 							</p>
 						)}
-						{(() => {
-							const orcidReturnTo = typeof window !== 'undefined'
-								? `${window.location.origin}${locationData.query && locationData.query.redirect ? (locationData.query.redirect.startsWith('/') ? locationData.query.redirect : `/${locationData.query.redirect}`) : '/'}`
-								: (locationData.query && locationData.query.redirect ? locationData.query.redirect : '/');
-							return (
-								<div className="os-orcid-login-container" style={{ margin: '20px 0 24px', textAlign: 'center' }}>
-									<a
-										href={`/auth/orcid?returnTo=${encodeURIComponent(orcidReturnTo)}`}
-										className="btn os-orcid-login-btn"
+						<div className="os-orcid-login-container" style={{ margin: '20px 0 24px', textAlign: 'center' }}>
+							<a
+								href={`/auth/orcid?returnTo=${encodeURIComponent(orcidReturnTo)}`}
+								className="btn os-orcid-login-btn"
 								style={{
 									display: 'inline-flex',
 									alignItems: 'center',

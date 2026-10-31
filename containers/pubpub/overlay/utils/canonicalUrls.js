@@ -168,7 +168,13 @@ export const canonicalPubUrl = (community, pub, options = {}) => {
 	return pubUrl(community, pub, options);
 };
 
-export const doiUrl = (doi) => `https://doi.org/${doi}`;
+export const doiUrl = (doi) => {
+	if (!doi) return '';
+	if (doi.startsWith('ark:')) {
+		return `https://n2t.net/${doi}`;
+	}
+	return `https://doi.org/${doi}`;
+};
 
 export const pageUrl = (community, page) => {
 	return isArchiving() ? `/${page.slug}` : `${communityUrl(community)}/${page.slug}`;

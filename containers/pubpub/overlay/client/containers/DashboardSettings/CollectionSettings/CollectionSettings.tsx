@@ -138,7 +138,7 @@ const CollectionSettings = (props: Props) => {
 		collection.kind !== 'tag' &&
 			depositTarget?.service === 'datacite' && {
 				id: 'doi',
-				title: 'DOI',
+				title: 'Persistent Identifier',
 				icon: 'barcode',
 				sections: [
 					<Deposit

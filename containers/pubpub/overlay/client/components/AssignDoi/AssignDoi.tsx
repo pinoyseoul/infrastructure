@@ -382,7 +382,7 @@ function AssignDoi(props: Props) {
 		<div className="assign-doi-component">
 			{isArkMode && !pubData.doi && (
 				<Callout intent="primary" className="ark-callout" style={{ marginBottom: '15px' }}>
-					<p style={{ margin: 0 }}>This publication will be assigned a permanent persistent identifier under OBRA Incorporated&apos;s registered authority (NAAN 14373).</p>
+					<p style={{ margin: 0 }}>This Article will be assigned a permanent persistent identifier.</p>
 					<p style={{ margin: '6px 0 2px 0' }}><strong>Target Identifier:</strong> <code>{`ark:/14373/j1${pubData.slug}`}</code></p>
 					<p style={{ margin: '2px 0 0 0' }}><strong>Global Resolver:</strong> <code>{`https://n2t.net/ark:/14373/j1${pubData.slug}`}</code></p>
 				</Callout>

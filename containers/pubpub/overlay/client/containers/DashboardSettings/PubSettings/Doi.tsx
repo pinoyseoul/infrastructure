@@ -61,6 +61,8 @@ class Doi extends Component<Props, State> {
 		const [, doiSuffix] = (props.pubData.doi || '').split('/');
 
 		this.state = {
+			isLinkingExternal: false,
+			customIdentifier: props.pubData.doi || '',
 			doiSuffix,
 			error: false,
 			justSetDoi: false,
@@ -388,7 +390,7 @@ class Doi extends Component<Props, State> {
 				{pubData.crossrefDepositRecordId && <p>This Article has been deposited to Crossref.</p>}
 				{isArk && (
 					<Callout intent="success" title="Persistent Identifier Active">
-						<p>This publication has an active sovereign Archival Resource Key (NAAN 14373) resolving globally via N2T.net.</p>
+						<p>This Article has an active persistent identifier.</p>
 					</Callout>
 				)}
 				{this.isDoiEditableWithoutRelations() && this.findSupplementTo() && (
@@ -487,6 +489,8 @@ class Doi extends Component<Props, State> {
 	renderCrossrefDeposit() {
 		const { pubData } = this.props;
 		const { justSetDoi } = this.state;
+		const hasCrossref = !!(this.props.communityData?.crossrefUsername && this.props.communityData?.crossrefPassword);
+
 		return (
 			<FormGroup
 				helperText={
@@ -510,14 +514,14 @@ class Doi extends Component<Props, State> {
 					)
 				}
 			>
-				{this.disabledDueToParentWithoutDoi() && (
+				{hasCrossref && this.disabledDueToParentWithoutDoi() && (
 					<Callout intent="warning">
 						This Article cannot be deposited to Crossref because it is{' '}
 						{this.renderParentEdgeRelation()} its parent Article, and its parent Article does
 						not have a DOI.
 					</Callout>
 				)}
-				{this.disabledDueToNoReleases() && (
+				{hasCrossref && this.disabledDueToNoReleases() && (
 					<Callout intent="warning">
 						This Article cannot be deposited to Crossref because it has no published
 						releases.
@@ -532,12 +536,47 @@ class Doi extends Component<Props, State> {
 					target="pub"
 					disabled={
 						this.props.depositDisabled ||
-						this.disabledDueToParentWithoutDoi() ||
-						this.disabledDueToNoReleases() ||
-						this.disabledDueToUnmanagedPrefix() ||
-						this.hasBlockingValidationIssues()
+						(hasCrossref && (
+							this.disabledDueToParentWithoutDoi() ||
+							this.disabledDueToNoReleases() ||
+							this.disabledDueToUnmanagedPrefix() ||
+							this.hasBlockingValidationIssues()
+						))
 					}
 				/>
+				{!hasCrossref && !pubData.doi && (
+					<div style={{ marginTop: '16px', borderTop: '1px solid #e1e4e8', paddingTop: '12px' }}>
+						<Button
+							minimal={true}
+							small={true}
+							icon={this.state.isLinkingExternal ? 'chevron-down' : 'chevron-right'}
+							onClick={() => this.setState({ isLinkingExternal: !this.state.isLinkingExternal })}
+							text="Link an existing identifier (DOI, Handle, ARK, or repository URL)"
+						/>
+						<Collapse isOpen={this.state.isLinkingExternal}>
+							<div style={{ marginTop: '10px', padding: '12px', background: 'rgba(0,0,0,0.02)', borderRadius: '6px' }}>
+								<FormGroup
+									label="Existing Identifier"
+									helperText="If this article was previously published elsewhere, enter its existing persistent identifier or permanent repository URL."
+								>
+									<InputGroup
+										placeholder="e.g. 10.xxxx/..., hdl:..., ark:/..., or URL"
+										value={this.state.customIdentifier}
+										onChange={(e) => this.setState({ customIdentifier: e.target.value })}
+										style={{ marginBottom: '8px' }}
+									/>
+									<Button
+										intent="success"
+										text="Save Existing Identifier"
+										disabled={!this.state.customIdentifier.trim()}
+										loading={this.state.updating}
+										onClick={() => this.updateDoi(this.state.customIdentifier.trim(), 'updating', '')}
+									/>
+								</FormGroup>
+							</div>
+						</Collapse>
+					</div>
+				)}
 			</FormGroup>
 		);
 	}
@@ -572,7 +611,7 @@ class Doi extends Component<Props, State> {
 		const invalidDoi = doiSuffix && !isArk && !isDoi(fullDoi);
 		const intent = this.getIntent(invalidDoi);
 		const helperText = isArk
-			? 'Institutional Archival Resource Key (NAAN 14373). Resolves via N2T.net.'
+			? 'Persistent identifier updated successfully.'
 			: this.getHelperText(invalidDoi);
 
 		if (this.isDoiEditable()) {
@@ -618,12 +657,31 @@ class Doi extends Component<Props, State> {
 		return (
 			<>
 				{pubData.doi && (
-					<p>
-						Article DOI:{' '}
-						<a className="doi-link" href={`https://doi.org/${pubData.doi}`}>
-							{pubData.doi}
-						</a>
-					</p>
+					<div style={{ margin: '16px 0', padding: '14px', background: 'rgba(0,0,0,0.03)', borderRadius: '6px' }}>
+						<p style={{ margin: '0 0 6px 0' }}>
+							<strong>{pubData.doi.startsWith('ark:') ? 'Article ARK:' : 'Article DOI:'}</strong>{' '}
+							<code>{pubData.doi}</code>
+						</p>
+					<p style={{ margin: '0 0 10px 0', fontSize: '13px' }}>
+							<strong>Permanent Link:</strong>{' '}
+							<a
+								className="doi-link"
+								target="_blank"
+								rel="noopener noreferrer"
+								href={pubData.doi.startsWith('ark:') ? `https://n2t.net/${pubData.doi}` : `https://doi.org/${pubData.doi}`}
+							>
+								{pubData.doi.startsWith('ark:') ? `https://n2t.net/${pubData.doi}` : `https://doi.org/${pubData.doi}`}
+							</a>
+						</p>
+						<Button
+							minimal={true}
+							small={true}
+							intent="danger"
+							text="Remove Identifier"
+							loading={this.state.deleting}
+							onClick={() => this.handleDeleteDoiClick()}
+						/>
+					</div>
 				)}
 			</>
 		);

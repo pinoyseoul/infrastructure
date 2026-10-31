@@ -570,7 +570,11 @@ class Doi extends Component<Props, State> {
 										text="Save Existing Identifier"
 										disabled={!this.state.customIdentifier.trim()}
 										loading={this.state.updating}
-										onClick={() => this.updateDoi(this.state.customIdentifier.trim(), 'updating', '')}
+										onClick={() => {
+										const raw = this.state.customIdentifier.trim();
+										const clean = raw.replace(/^(https?:\/\/)?(dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '');
+										this.updateDoi(clean, 'updating', '');
+									}}
 									/>
 								</FormGroup>
 							</div>
@@ -659,7 +663,7 @@ class Doi extends Component<Props, State> {
 				{pubData.doi && (
 					<div style={{ margin: '16px 0', padding: '14px', background: 'rgba(0,0,0,0.03)', borderRadius: '6px' }}>
 						<p style={{ margin: '0 0 6px 0' }}>
-							<strong>{pubData.doi.startsWith('ark:') ? 'Article ARK:' : 'Article DOI:'}</strong>{' '}
+							<strong>{pubData.doi.startsWith('ark:') ? 'Article ARK:' : (pubData.doi.startsWith('10.') ? 'Article DOI:' : 'Article Identifier:')}</strong>{' '}
 							<code>{pubData.doi}</code>
 						</p>
 					<p style={{ margin: '0 0 10px 0', fontSize: '13px' }}>
@@ -668,9 +672,9 @@ class Doi extends Component<Props, State> {
 								className="doi-link"
 								target="_blank"
 								rel="noopener noreferrer"
-								href={pubData.doi.startsWith('ark:') ? `https://n2t.net/${pubData.doi}` : `https://doi.org/${pubData.doi}`}
+								href={pubData.doi.startsWith('ark:') ? `https://n2t.net/${pubData.doi}` : (pubData.doi.startsWith('http') ? pubData.doi : `https://doi.org/${pubData.doi}`)}
 							>
-								{pubData.doi.startsWith('ark:') ? `https://n2t.net/${pubData.doi}` : `https://doi.org/${pubData.doi}`}
+								{pubData.doi.startsWith('ark:') ? `https://n2t.net/${pubData.doi}` : (pubData.doi.startsWith('http') ? pubData.doi : `https://doi.org/${pubData.doi}`)}
 							</a>
 						</p>
 						<Button

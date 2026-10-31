@@ -8,6 +8,7 @@ import dateFormat from 'dateformat';
 import { useFacetsQuery } from 'client/utils/useFacets';
 import { ContributorsList, DashboardFrame, PubHeaderBackground, PubTitle } from 'components';
 import CitationsPreview from 'containers/Pub/PubHeader/CitationsPreview';
+import { doiUrl } from 'utils/canonicalUrls';
 import { getAllPubContributors } from 'utils/contributors';
 import { getDashUrl } from 'utils/dashboard';
 import { formatDate } from 'utils/dates';
@@ -156,7 +157,18 @@ const PubOverview = (props: Props) => {
 						'Cite As',
 						<CitationsPreview pubData={pubData} showHeader={false} />,
 					)}
-					{pubData.doi && renderSection('DOI', pubData.doi)}
+					{pubData.doi &&
+						renderSection(
+							'Persistent Identifier',
+							<a
+								href={doiUrl(pubData.doi)}
+								target="_blank"
+								rel="noopener noreferrer"
+								style={{ wordBreak: 'break-all' }}
+							>
+								{pubData.doi}
+							</a>,
+						)}
 					{renderContributors()}
 					{renderCollections()}
 					{!!pubData.reviews?.length && renderReviews(pubData.reviews)}

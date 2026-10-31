@@ -173,6 +173,9 @@ export const doiUrl = (doi) => {
 	if (doi.startsWith('ark:')) {
 		return `https://n2t.net/${doi}`;
 	}
+	if (doi.startsWith('http://') || doi.startsWith('https://')) {
+		return doi;
+	}
 	return `https://doi.org/${doi}`;
 };
 

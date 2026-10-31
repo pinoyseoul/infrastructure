@@ -103,17 +103,35 @@ export const generateCitationHtml = async (
 		'PubPub/6.0 (https://pubpub.org; mailto:dev@pubpub.org) Citation.js/0.7.11 Node.js/22.14.0',
 	);
 
-	const isDoi = pubData.doi && pubData.doi.startsWith('10.');
-	const isArk = pubData.doi && pubData.doi.startsWith('ark:');
-	const citationUrl = isArk ? `https://n2t.net/${pubData.doi}` : pubLink;
+	const rawIdentifier = (pubData.doi || '').trim();
+	const cleanDoi = rawIdentifier
+		.replace(/^(https?:\/\/)?(dx\.)?doi\.org\//i, '')
+		.replace(/^doi:\s*/i, '')
+		.trim();
+	const cleanArk = rawIdentifier
+		.replace(/^(https?:\/\/)?(n2t\.net\/)?/i, '')
+		.trim();
+
+	const isDoi = cleanDoi.startsWith('10.');
+	const isArk = cleanArk.startsWith('ark:');
+	const isHttpUrl = rawIdentifier.startsWith('http://') || rawIdentifier.startsWith('https://');
+
+	let citationUrl = pubLink;
+	if (isArk) {
+		citationUrl = `https://n2t.net/${cleanArk}`;
+	} else if (isDoi) {
+		citationUrl = `https://doi.org/${cleanDoi}`;
+	} else if (isHttpUrl) {
+		citationUrl = rawIdentifier;
+	}
 
 	const pubCiteObject = await Cite.async({
 		...commonData,
 		// @ts-expect-error ts-migrate(2339) FIXME: Property 'containerDoi' does not exist on type '{ ... Remove this comment to see the full error message
-		DOI: isDoi ? pubData.doi : (commonData.containerDoi || null),
-		ISSN: pubData.doi ? communityData.issn : null,
+		DOI: isDoi ? cleanDoi : (commonData.containerDoi || null),
+		ISSN: isDoi ? communityData.issn : null,
 		issued: pubIssuedDate && [getDatePartsObject(pubIssuedDate)],
-		note: isArk ? `Archival Identifier: ${pubData.doi}` : pubLink,
+		note: isArk ? `Archival Identifier: ${cleanArk}` : (isDoi ? `DOI: ${cleanDoi}` : (isHttpUrl ? `Identifier: ${rawIdentifier}` : pubLink)),
 		URL: citationUrl,
 	});
 	return {

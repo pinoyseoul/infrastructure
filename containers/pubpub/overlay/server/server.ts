@@ -138,8 +138,19 @@ appRouter.use('/api/health', (req, res) => {
 	res.status(200).json({ status: 'ok' });
 });
 
+// Purge legacy host-only and domain cookies to prevent RFC 6265 cookie shadowing
+appRouter.use((req, res, next) => {
+	if (req.cookies && req.cookies['connect.sid']) {
+		const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+		res.clearCookie('connect.sid', { path: '/' });
+		res.clearCookie('connect.sid', { path: '/', domain: '.' + baseDomain });
+	}
+	next();
+});
+
 appRouter.use(
 	session({
+		name: 'os_session',
 		secret: env.SESSION_SECRET ?? 'sessionsecret',
 		resave: false,
 		saveUninitialized: false,

@@ -9,14 +9,14 @@ export const sendPasswordResetEmail = ({ toEmail, resetUrl }) => {
 	// e.g. 'We've received a request to reset your PubPub account on Responsive Science.'
 	return sendEmail({
 		to: [toEmail],
-		subject: 'Password Reset · PubPub',
+		subject: 'Password Reset — OpenScience.ph',
 		text: stripIndent(`
 			We've received a password reset request. Follow the link below to reset your password.
 
 			${resetUrl}
 
 			Sincerely,
-			PubPub Support
+			OpenScience.ph Support
 		`),
 		replyTo: 'admin@openscience.ph',
 	});

@@ -61,7 +61,7 @@ class DeletePub extends Component<Props, State> {
 						<b>This article cannot be deleted because it has an assigned persistent identifier.</b>
 					</p>
 					<p>
-						Pubs with DOIs must be preserved for the scholarly record. If you believe
+						Articles with DOIs must be preserved for the scholarly record. If you believe
 						this article should be retracted or removed, please contact us at{' '}
 						<a href="mailto:admin@openscience.ph">admin@openscience.ph</a>.
 					</p>
@@ -74,16 +74,16 @@ class DeletePub extends Component<Props, State> {
 		return (
 			<div className={`${Classes.CALLOUT} ${Classes.INTENT_DANGER}`}>
 				<p>
-					<b>Deleting a Pub is permanent and cannot be undone.</b>
+					<b>Deleting an Article is permanent and cannot be undone.</b>
 				</p>
 				<p>
-					This will permanently delete the Pub <b>{pubData.title}</b>, its discussions,
+					This will permanently delete the Article <b>{pubData.title}</b>, its discussions,
 					and associated metadata.
 				</p>
-				<p>Please type the title of the Pub below to confirm your intention.</p>
+				<p>Please type the title of the Article below to confirm your intention.</p>
 
 				<InputField
-					label={<b>Confirm Pub Title</b>}
+					label={<b>Confirm Article Title</b>}
 					value={this.state.title}
 					onChange={this.updateTitle}
 				/>
@@ -91,7 +91,7 @@ class DeletePub extends Component<Props, State> {
 				<Button
 					type="button"
 					className={Classes.INTENT_DANGER}
-					text="Delete Pub"
+					text="Delete Article"
 					loading={this.state.isLoading}
 					onClick={this.handleDelete}
 					disabled={!canDelete}

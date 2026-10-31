@@ -1,0 +1,74 @@
+import type { Callback } from 'types';
+
+import React, { useCallback, useMemo } from 'react';
+
+import { usePubData } from 'client/containers/Pub/pubHooks';
+import { apiFetch } from 'client/utils/apiFetch';
+import { ConfirmDialog } from 'components';
+
+import { renderTimeLabelForDate } from './utils';
+
+type Props = {
+	historyKey: number;
+	dateForHistoryKey: null | Date;
+	children: React.ComponentProps<typeof ConfirmDialog>['children'];
+	onRestore: Callback;
+};
+
+const reassurance = (
+	<>
+		The existing draft contents will remain in your Article's history. You can always restore back
+		to the current state if you wish.
+	</>
+);
+
+const renderError = () => {
+	return <>There was a problem restoring the Article contents.</>;
+};
+
+const RestoreHistoryDialog = (props: Props) => {
+	const { children, historyKey, dateForHistoryKey, onRestore } = props;
+	const { editHash, id: pubId } = usePubData();
+
+	const confirmText = useMemo(() => {
+		if (dateForHistoryKey) {
+			const { date, time } = renderTimeLabelForDate(dateForHistoryKey);
+			return (
+				<>
+					<p>
+						Ready to restore this Article draft back to its contents on{' '}
+						<b>
+							{date} at {time}
+						</b>
+						?
+					</p>
+					<p>{reassurance}</p>
+				</>
+			);
+		}
+		return null;
+	}, [dateForHistoryKey]);
+
+	const handleConfirm = useCallback(async () => {
+		await apiFetch.post('/api/pubHistory/restore', {
+			pubId,
+			accessHash: editHash,
+			historyKey,
+		});
+		onRestore();
+	}, [editHash, historyKey, onRestore, pubId]);
+
+	return (
+		<ConfirmDialog
+			confirmLabel="Restore"
+			title="Restore Article draft"
+			text={confirmText}
+			errorState={renderError}
+			onConfirm={handleConfirm}
+		>
+			{children}
+		</ConfirmDialog>
+	);
+};
+
+export default RestoreHistoryDialog;

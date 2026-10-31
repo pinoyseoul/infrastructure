@@ -5,7 +5,7 @@ import { isDangerousSpamScore } from 'server/spamTag/communityScore';
 import { isProd } from 'utils/environment';
 import { getSuperAdminTabUrl } from 'utils/superAdmin';
 
-const defaultBody = { username: 'PubPub', unfurl_links: true };
+const defaultBody = { username: 'OpenScience.ph', unfurl_links: true };
 
 export const postToSlack = async (body: Record<string, any>) => {
 	const slackUrl = env.SLACK_WEBHOOK_URL!;

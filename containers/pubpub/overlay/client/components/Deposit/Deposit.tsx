@@ -173,24 +173,24 @@ export default function Deposit(props: Props) {
 					{unapprovedWarning}
 					{'pub' in props && resource && firstIntraWorkRelationship && (
 						<p>
-							This Pub will be cited as a member of the{' '}
+							This Article will be cited as a member of the{' '}
 							{resourceKindToProperNoun[
 								firstIntraWorkRelationship.resource.kind
 							].toLowerCase()}
 							, <b>{firstIntraWorkRelationship.resource.title}</b>. You can change
 							this by updating the <em>Primary Collection</em> of the Pub from the
-							Collections tab.
+							Issues tab.
 						</p>
 					)}
 					{disabledDueToNoReleases && (
 						<Callout intent="warning">
-							This Pub cannot be deposited because it has no published releases.
+							This Article cannot be deposited because it has no published releases.
 						</Callout>
 					)}
 					{resource && isSupplementTo(resource) && (
 						<Callout intent="warning">
 							The DOI for this Pub is not editable because it is a{' '}
-							<strong>Supplement</strong> to another Pub.
+							<strong>Supplement</strong> to another Article.
 						</Callout>
 					)}
 					{resource && (

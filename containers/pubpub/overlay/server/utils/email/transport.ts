@@ -27,7 +27,7 @@ type SendEmailOptions = {
 } & Body;
 
 const defaultFrom: From = {
-	name: 'PubPub Team',
+	name: 'OpenScience.ph Team',
 	address: 'admin@openscience.ph',
 };
 

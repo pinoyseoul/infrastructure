@@ -76,7 +76,7 @@ const DeleteCommunity = (props: Props) => {
 				{audit && (
 					<div style={{ marginBottom: 15 }}>
 						<p>
-							This community contains <b>{audit.totalPubs}</b> pub
+							This journal contains <b>{audit.totalPubs}</b> article
 							{audit.totalPubs !== 1 ? 's' : ''}:
 						</p>
 						<ul style={{ margin: '8px 0' }}>

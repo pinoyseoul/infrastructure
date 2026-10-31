@@ -161,7 +161,7 @@ const YourCommunitiesSection = ({ communities }: { communities: UserCommunity[] 
 					// borderBottom: '1px solid rgba(16, 22, 26, 0.1)',
 				}}
 			>
-				Your Communities
+				Your Journals
 			</li>
 			<div style={{ maxHeight: 'min(40vh, 300px)', overflowY: 'auto' }}>
 				{!communities ? (

@@ -149,7 +149,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	if (collection) {
 		outputComponents = [
 			...outputComponents,
-			<meta key="c0" name="citation_publisher" content={communityPublisher || 'PubPub'} />,
+			<meta key="c0" name="citation_publisher" content={communityPublisher || 'OpenScience.ph'} />,
 		];
 		if (collection.kind === 'issue') {
 			outputComponents = [

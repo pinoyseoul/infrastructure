@@ -72,7 +72,7 @@ const PubSettings = (props: Props) => {
 	const slugError = !pubData.slug
 		? 'Required'
 		: error?.slugStatus === 'used'
-			? 'This URL is not available because it is in use by another Pub.'
+			? 'This URL is not available because it is in use by another Article.'
 			: null;
 
 	const renderDetails = () => {
@@ -89,7 +89,7 @@ const PubSettings = (props: Props) => {
 				</InputField>
 				<InputField
 					label="Link"
-					helperText={`Pub will be available at ${pubUrl(communityData, pubData)}`}
+					helperText={`Article will be available at ${pubUrl(communityData, pubData)}`}
 					value={pubData.slug}
 					onChange={(evt) => updatePubData({ slug: slugifyString(evt.target.value) })}
 					error={slugError}
@@ -146,7 +146,7 @@ const PubSettings = (props: Props) => {
 					label={
 						<LabelWithInfo
 							label="Preview Image"
-							info="This image is shown as a preview from Pages and other Pubs."
+							info="This image is shown as a preview from Pages and other Articles."
 						/>
 					}
 					canClear={true}
@@ -216,8 +216,8 @@ const PubSettings = (props: Props) => {
 				title="Download"
 				description={
 					<>
-						You can add a file that users can download for this Pub, in addition to the
-						ones that PubPub automatically generates.
+						You can add a file that users can download for this Article, in addition to the
+						ones that OpenScience.ph automatically generates.
 					</>
 				}
 			>
@@ -232,7 +232,7 @@ const PubSettings = (props: Props) => {
 
 	const renderCollections = () => {
 		return (
-			<SettingsSection title="Collections" showTitle={false}>
+			<SettingsSection title="Issues" showTitle={false}>
 				<PubCollectionsListing
 					pub={pubData}
 					allCollections={communityData.collections}
@@ -287,7 +287,7 @@ const PubSettings = (props: Props) => {
 		},
 		{
 			id: 'collections',
-			title: 'Collections',
+			title: 'Issues',
 			pubPubIcon: 'collection',
 			hideSaveButton: true,
 			sections: [renderCollections],

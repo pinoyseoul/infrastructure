@@ -97,13 +97,13 @@ const PubDetails = (props: Props) => {
 				<div className="section collections">
 					<h6 className="pub-header-themed-secondary">
 						{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
-						Appears in Collections ({collectionPubs.length})
+						Appears in Issues ({collectionPubs.length})
 					</h6>
 					<div className="collection-list">
 						{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 						{collectionPubs.length === 0 && (
 							<i className="collection-list-entry">
-								This pub doesn't belong to any collections.
+								This article doesn't belong to any issues.
 							</i>
 						)}
 						{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}

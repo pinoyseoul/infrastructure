@@ -339,7 +339,7 @@ class Doi extends Component<Props, State> {
 				<p>
 					This Pub will be cited as a member of the {schema.label.singular},{' '}
 					<b>{collection.title}</b>. You can change this by updating the{' '}
-					<em>Primary Collection</em> of the Pub from the Collections tab.
+					<em>Primary Issue</em> of the Article from the Issues tab.
 				</p>
 			);
 		}
@@ -356,7 +356,7 @@ class Doi extends Component<Props, State> {
 		if (justSetDoi) {
 			return (
 				<Callout intent="success" title="Success!">
-					<p>{isArk ? 'Successfully assigned persistent identifier for this Pub.' : 'Successfully submitted a DOI registration for this Pub.'}</p>
+					<p>{isArk ? 'Successfully assigned persistent identifier for this Article.' : 'Successfully submitted a DOI registration for this Pub.'}</p>
 					<p>
 						{isArk
 							? 'Archival Resource Key is active and resolving globally via N2T.net.'
@@ -368,11 +368,11 @@ class Doi extends Component<Props, State> {
 
 		return (
 			<>
-				{!pubData.doi && <p>A persistent identifier can be set for each Pub by admins of this Community.</p>}
+				{!pubData.doi && <p>A persistent identifier can be set for each Article by admins of this Journal.</p>}
 				{!isArk && !hasCrossref && this.disabledDueToUnmanagedPrefix() && (
 					<Callout intent="warning">
-						This Pub cannot be deposited to Crossref via PubPub because there is no
-						Crossref account connected to PubPub for this Community.
+						This Article cannot be deposited to Crossref via OpenScience.ph because there is no
+						Crossref account connected to OpenScience.ph for this Journal.
 					</Callout>
 				)}
 				{pubData.doi &&
@@ -381,11 +381,11 @@ class Doi extends Component<Props, State> {
 					!this.disabledDueToNoReleases() &&
 					!this.disabledDueToUnmanagedPrefix() && (
 						<Callout intent="warning">
-							A DOI has been assigned to this Pub, but it has not yet been deposited
+							A DOI has been assigned to this Article, but it has not yet been deposited
 							to Crossref.
 						</Callout>
 					)}
-				{pubData.crossrefDepositRecordId && <p>This Pub has been deposited to Crossref.</p>}
+				{pubData.crossrefDepositRecordId && <p>This Article has been deposited to Crossref.</p>}
 				{isArk && (
 					<Callout intent="success" title="Persistent Identifier Active">
 						<p>This publication has an active sovereign Archival Resource Key (NAAN 14373) resolving globally via N2T.net.</p>
@@ -394,7 +394,7 @@ class Doi extends Component<Props, State> {
 				{this.isDoiEditableWithoutRelations() && this.findSupplementTo() && (
 					<Callout intent="warning">
 						The identifier for this Pub is not editable because it is a{' '}
-						<strong>Supplement</strong> to another Pub.
+						<strong>Supplement</strong> to another Article.
 					</Callout>
 				)}
 			</>
@@ -499,7 +499,7 @@ class Doi extends Component<Props, State> {
 							{this.isDoiEditable() && (
 								<>
 									{' '}
-									PubPub will automatically assign a DOI if the suffix is left
+									OpenScience.ph will automatically assign a DOI if the suffix is left
 									blank. Please note that{' '}
 									<strong>
 										once submitted, the DOI will no longer be editable.
@@ -512,14 +512,14 @@ class Doi extends Component<Props, State> {
 			>
 				{this.disabledDueToParentWithoutDoi() && (
 					<Callout intent="warning">
-						This Pub cannot be deposited to Crossref because it is{' '}
-						{this.renderParentEdgeRelation()} its parent Pub, and its parent Pub does
+						This Article cannot be deposited to Crossref because it is{' '}
+						{this.renderParentEdgeRelation()} its parent Article, and its parent Article does
 						not have a DOI.
 					</Callout>
 				)}
 				{this.disabledDueToNoReleases() && (
 					<Callout intent="warning">
-						This Pub cannot be deposited to Crossref because it has no published
+						This Article cannot be deposited to Crossref because it has no published
 						releases.
 					</Callout>
 				)}
@@ -619,7 +619,7 @@ class Doi extends Component<Props, State> {
 			<>
 				{pubData.doi && (
 					<p>
-						Pub DOI:{' '}
+						Article DOI:{' '}
 						<a className="doi-link" href={`https://doi.org/${pubData.doi}`}>
 							{pubData.doi}
 						</a>

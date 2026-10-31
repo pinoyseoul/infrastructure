@@ -169,7 +169,7 @@ export const sendCommunityBanUserEmail = ({
 
 			An administrator of the journal "${communityName}" on OpenScience.ph has removed you from their community. You are no longer able to post or interact within that community. ${reasonLine}
 
-			This action was taken by a community administrator based on their community guidelines and PubPub's Acceptable Use Policy (https://openscience.ph/legal/aup). You may still use PubPub and participate in other communities.
+			This action was taken by a journal administrator based on their journal guidelines and PubPub's Acceptable Use Policy (https://openscience.ph/legal/aup). You may still use PubPub and participate in other communities.
 
 			If you believe this is an error, you may:
 			- Contact us at admin@openscience.ph to request a review of this decision.

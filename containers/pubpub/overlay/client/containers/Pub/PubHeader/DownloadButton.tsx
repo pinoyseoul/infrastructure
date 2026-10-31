@@ -80,7 +80,7 @@ const DownloadButton = (props: Props) => {
 				<PopoverButton
 					component={() => <PopoverContent />}
 					className="pub-header-popover"
-					aria-label="Download this Pub"
+					aria-label="Download this Article"
 				>
 					{children}
 				</PopoverButton>

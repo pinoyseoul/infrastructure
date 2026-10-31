@@ -1,0 +1,165 @@
+import type { Collection, CollectionPub, PubWithCollections } from 'types';
+
+import React, { useState } from 'react';
+
+import { Button, Divider, Icon, Tooltip } from '@blueprintjs/core';
+
+import { PopoverButton, PrimaryCollectionExplanation } from 'components';
+import { MenuButton, MenuItem } from 'components/Menu';
+import { getPrimaryCollection } from 'utils/collections/primary';
+import { getSchemaForKind } from 'utils/collections/schemas';
+import { usePageContext } from 'utils/hooks';
+
+type Props = {
+	collection: Collection;
+	collectionPub: CollectionPub;
+	pub: PubWithCollections;
+	setCollectionPubContextHint: (c: CollectionPub, hint: null | string) => unknown;
+	setCollectionPubIsPrimary: (c: CollectionPub) => unknown;
+	removeCollectionPub: (c: CollectionPub) => unknown;
+};
+
+const ButtonWithRef = React.forwardRef((props: any, ref: any) => (
+	<Button {...props} elementRef={ref} />
+));
+
+const derivePrimaryCollection = (
+	collectionPub: CollectionPub,
+	pub: PubWithCollections,
+	collection: Collection,
+) => {
+	const { collectionPubs } = pub;
+	const linkedCollectionPub = { ...collectionPub, collection };
+	const collectionPubsPool =
+		collectionPubs.length > 0
+			? // Make sure to look at the most recent version of this CollectionPub
+				collectionPubs.map((cp) => (cp.id === collectionPub.id ? linkedCollectionPub : cp))
+			: // In truth there must be at least one CollectionPub (this one) even if it's not
+				// referenced in collectionPub.pub yet -- possibly it was recently created.
+				[linkedCollectionPub];
+	return getPrimaryCollection(collectionPubsPool);
+};
+
+const PubMenu = (props: Props) => {
+	const {
+		collectionPub,
+		collection,
+		setCollectionPubContextHint,
+		setCollectionPubIsPrimary,
+		removeCollectionPub,
+		pub,
+	} = props;
+	const [justSetPrimary, setJustSetPrimary] = useState(false);
+	const { scopeData } = usePageContext();
+	const { canManage } = scopeData.activePermissions;
+
+	if (!canManage) {
+		return null;
+	}
+
+	const collectionSchema = getSchemaForKind(collection.kind);
+	const primaryCollection = derivePrimaryCollection(collectionPub, pub, collection);
+	const isPrimary = justSetPrimary || primaryCollection?.id === collection.id;
+
+	const renderPrimaryCollectionButton = () => {
+		if (isPrimary) {
+			return (
+				<Tooltip
+					position="left"
+					content={
+						<>
+							<Icon icon="tick" /> This Article's Primary Issue
+						</>
+					}
+				>
+					<Button
+						aria-label="This Article's Primary Issue"
+						minimal
+						small
+						icon={<Icon icon="star" iconSize={14} />}
+					/>
+				</Tooltip>
+			);
+		}
+		return (
+			<PopoverButton
+				component={() => (
+					<div className="primary-collection-swap-popover">
+						{primaryCollection && (
+							<>
+								This Article's <PrimaryCollectionExplanation /> is currently{' '}
+								<i>{primaryCollection.title}</i>.
+								<Divider />
+							</>
+						)}
+						<Button
+							intent="primary"
+							onClick={() => {
+								setCollectionPubIsPrimary(collectionPub);
+								setJustSetPrimary(true);
+							}}
+						>
+							{primaryCollection
+								? 'Use this Issue instead'
+								: 'Use as Primary Issue'}
+						</Button>
+					</div>
+				)}
+				aria-label="Make this the Primary Issue for this Article"
+			>
+				<ButtonWithRef
+					minimal
+					small
+					icon={<Icon icon="star-empty" iconSize={14} />}
+					elementRef
+				/>
+			</PopoverButton>
+		);
+	};
+
+	const renderNonTagButtons = () => {
+		return (
+			<>
+				{renderPrimaryCollectionButton()}
+				<MenuButton
+					aria-label="Issue context hint"
+					buttonProps={{
+						small: true,
+						minimal: true,
+						icon: <Icon icon="properties" iconSize={14} />,
+					}}
+					placement="bottom-end"
+				>
+					<MenuItem
+						text={<i>(No label)</i>}
+						icon={!collectionPub.contextHint ? 'tick' : 'blank'}
+						onClick={() => setCollectionPubContextHint(collectionPub, null)}
+					/>
+					{/* @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'. */}
+					{collectionSchema.contextHints.map((hint) => (
+						<MenuItem
+							key={hint.value}
+							text={hint.label}
+							icon={collectionPub.contextHint === hint.value ? 'tick' : 'blank'}
+							onClick={() => setCollectionPubContextHint(collectionPub, hint.value)}
+						/>
+					))}
+				</MenuButton>
+			</>
+		);
+	};
+
+	return (
+		<React.Fragment>
+			{collection.kind !== 'tag' && renderNonTagButtons()}
+			<Button
+				small
+				minimal
+				icon="cross"
+				aria-label="Remove this Article from issue"
+				onClick={() => removeCollectionPub(collectionPub)}
+			/>
+		</React.Fragment>
+	);
+};
+export default PubMenu;

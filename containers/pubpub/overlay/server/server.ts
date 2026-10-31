@@ -13,6 +13,9 @@ import { resolveAppCommit } from './utils/appCommit';
 
 const app = express();
 
+// Trust first-hop reverse proxy (Cloudflare Zero Trust / Traefik)
+app.set('trust proxy', 1);
+
 const appRouter = Router();
 
 import { getAppCommit, isDuqDuq, isProd, setAppCommit, setEnvironment } from 'utils/environment';
@@ -156,6 +159,8 @@ appRouter.use(
 			path: '/',
 			httpOnly: true,
 			secure: env.NODE_ENV === 'production',
+			domain: env.NODE_ENV === 'production' ? `.${process.env.BASE_DOMAIN || 'pinoyseoul.com'}` : undefined,
+			sameSite: 'lax',
 			maxAge:
 				env.NODE_ENV === 'production'
 					? 30 * 24 * 60 * 60 * 1000 // 30d prod + duqduq

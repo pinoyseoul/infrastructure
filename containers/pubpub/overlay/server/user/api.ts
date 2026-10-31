@@ -84,11 +84,12 @@ router.post('/api/users', async (req, res) => {
 		}
 		passport.authenticate('local')(req, res, () => {
 			const hashedUserId = getHashedUserId(newUser);
+			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
 			res.cookie('pp-lic', `pp-li-${hashedUserId}`, {
-				...(isProd() &&
-					req.hostname.indexOf('pubpub.org') > -1 && { domain: '.pubpub.org' }),
-				...(isDuqDuq() &&
-					req.hostname.indexOf('pubpub.org') > -1 && { domain: '.duqduq.org' }),
+				domain: isProd() ? `.${baseDomain}` : undefined,
+				path: '/',
+				sameSite: 'lax',
+				secure: isProd(),
 				maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days to match login cookies
 			});
 			return res.status(201).json(newUser);

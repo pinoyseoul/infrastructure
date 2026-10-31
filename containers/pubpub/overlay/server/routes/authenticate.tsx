@@ -182,7 +182,19 @@ router.get('/auth/orcid/callback', async (req: Request, res: Response, next: Nex
 		// Establish session
 		return (req as any).login(user, (err: any) => {
 			if (err) return next(err);
-			return res.redirect(destination);
+			const hashedUserId = crypto.createHash('sha256').update(user.id).digest('hex').slice(0, 16);
+			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+			res.cookie('pp-lic', `pp-li-${hashedUserId}`, {
+				domain: `.${baseDomain}`,
+				maxAge: 30 * 24 * 60 * 60 * 1000,
+				path: '/',
+				sameSite: 'lax',
+				secure: process.env.NODE_ENV === 'production',
+			});
+			return req.session.save((saveErr: any) => {
+				if (saveErr) console.error('Session save error:', saveErr);
+				return res.redirect(destination);
+			});
 		});
 	} catch (err) {
 		console.error('ORCID callback error:', err);

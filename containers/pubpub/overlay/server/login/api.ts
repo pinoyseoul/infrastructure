@@ -54,9 +54,12 @@ async function establishPubPubSession(req: any, res: any, user: types.UserWithPr
 	await logIn(user);
 	const hashedUserId = getHashedUserId(user);
 
+	const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
 	res.cookie('pp-lic', `pp-li-${hashedUserId}`, {
-		...(isProd() && req.hostname.indexOf('pubpub.org') > -1 && { domain: '.pubpub.org' }),
-		...(isDuqDuq() && req.hostname.indexOf('pubpub.org') > -1 && { domain: '.duqduq.org' }),
+		domain: isProd() ? `.${baseDomain}` : undefined,
+		path: '/',
+		sameSite: 'lax',
+		secure: isProd(),
 		maxAge: 30 * 24 * 60 * 60 * 1000,
 	});
 }

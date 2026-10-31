@@ -62,3 +62,9 @@ portainer/portainer-ee:latest | portainer-ee
 portainer/agent:latest | agent
 portainer/agent:latest | edge-agent
 ghcr.io/azuracast/azuracast:latest | azuracast
+
+# OpenScience Platform Dependencies
+chrislusf/seaweedfs:latest | seaweedfs
+postgres:14-alpine | postgres
+rabbitmq:3.13-alpine | rabbitmq
+solr:9 | solr

@@ -5,7 +5,7 @@ import 'firebase/database';
 import { getFirebaseConfig } from 'utils/editor/firebaseConfig';
 
 export const initFirebase = async (rootKey: string, authToken: string) => {
-	const firebaseAppName = App-;
+	const firebaseAppName = 'App-' + rootKey;
 	/* Check if we've already initialized an Firebase App with the */
 	/* same name in this local environment */
 	// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.

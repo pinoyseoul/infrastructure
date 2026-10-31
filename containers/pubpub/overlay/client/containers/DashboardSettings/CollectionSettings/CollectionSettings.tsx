@@ -132,7 +132,7 @@ const CollectionSettings = (props: Props) => {
 		collection.kind !== 'tag' && {
 			id: 'pub-settings',
 			title: 'Article settings',
-			pubPubIcon: 'pubDoc',
+			pubPubIcon: 'pub',
 			sections: [<CommunityOrCollectionLevelPubSettings />],
 		},
 		collection.kind !== 'tag' &&

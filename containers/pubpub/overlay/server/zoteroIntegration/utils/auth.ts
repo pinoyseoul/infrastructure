@@ -1,0 +1,61 @@
+import passportOAuth1 from 'passport-oauth1';
+
+import { env } from 'server/env';
+import { IntegrationDataOAuth1, User, ZoteroIntegration } from 'server/models';
+import { expect } from 'utils/assert';
+import { isDevelopment, isDuqDuq } from 'utils/environment';
+
+const baseRedirectUrl =
+	process.env.BASE_URL ||
+	(process.env.BASE_PORTAL_DOMAIN
+		? `https://${process.env.BASE_PORTAL_DOMAIN}`
+		: 'https://journal.pinoyseoul.com');
+
+export const zoteroAuthStrategy = () =>
+	new passportOAuth1.Strategy(
+		{
+			requestTokenURL: 'https://www.zotero.org/oauth/request',
+			accessTokenURL: 'https://www.zotero.org/oauth/access',
+			userAuthorizationURL: 'https://www.zotero.org/oauth/authorize',
+			consumerKey: env.ZOTERO_CLIENT_KEY,
+			consumerSecret: env.ZOTERO_CLIENT_SECRET,
+			callbackURL: `${baseRedirectUrl}/auth/zotero/redirect`,
+			signatureMethod: 'HMAC-SHA1',
+			passReqToCallback: true,
+		},
+		(req, accessToken, tokenSecret, params, profile, cb) => {
+			const userId = req.user.id;
+			const { username: zoteroUsername, userID: zoteroUserId } = params;
+			return User.findOne({
+				where: { id: userId },
+				include: {
+					model: ZoteroIntegration,
+					required: false,
+					include: [{ model: IntegrationDataOAuth1, required: false }],
+				},
+			})
+				.then((user) => {
+					if (!expect(user).zoteroIntegration) {
+						return IntegrationDataOAuth1.create({ accessToken }).then(
+							(integrationData) =>
+								ZoteroIntegration.create({
+									userId: expect(user).id,
+									zoteroUsername,
+									zoteroUserId,
+									integrationDataOAuth1Id: integrationData.id,
+								}),
+						);
+					}
+					const integration = expect(user).zoteroIntegration;
+					return IntegrationDataOAuth1.findOne({
+						where: { id: expect(integration).integrationDataOAuth1Id ?? undefined },
+					})
+						.then((oldData) => expect(oldData).update({ accessToken }))
+						.then(() => integration);
+				})
+				.then(() => {
+					cb(null, req.user);
+				})
+				.catch((err) => cb(err));
+		},
+	);

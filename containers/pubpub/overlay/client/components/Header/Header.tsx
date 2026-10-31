@@ -1,0 +1,228 @@
+import type { CommunityHeroButton } from 'types';
+
+import React from 'react';
+
+import { AnchorButton, Classes, Intent } from '@blueprintjs/core';
+import classNames from 'classnames';
+
+import { GlobalControls, GridWrapper } from 'components';
+import { usePageContext } from 'utils/hooks';
+import { getResizedUrl } from 'utils/images';
+
+import './header.scss';
+
+type OwnProps = {
+	previewContext?: any;
+};
+
+const defaultProps = {
+	previewContext: undefined,
+};
+
+type Props = OwnProps & typeof defaultProps;
+
+const Header = (props: Props) => {
+	const { locationData, communityData, loginData } = usePageContext(props.previewContext);
+
+	const calculateComponentClasses = (hideHero) => {
+		let dynamicComponentClasses = '';
+
+		const isLanding = locationData.path === '/';
+		const isBasePubPub = locationData.isBasePubPub;
+		const backgroundColorChange =
+			communityData.heroBackgroundColor &&
+			communityData.accentColorDark !== communityData.heroBackgroundColor;
+		const textColorChange =
+			communityData.heroTextColor &&
+			communityData.accentTextColor !== communityData.heroTextColor;
+
+		if ((!isBasePubPub && !backgroundColorChange) || !isLanding) {
+			dynamicComponentClasses += ' accent-background';
+		}
+		if ((!isBasePubPub && !textColorChange) || (!isBasePubPub && !isLanding)) {
+			dynamicComponentClasses += ' accent-color';
+		}
+		if (hideHero) {
+			return dynamicComponentClasses;
+		}
+		const heroTextColor = communityData.heroTextColor || communityData.accentTextColor;
+		if (heroTextColor === '#FFFFFF') {
+			dynamicComponentClasses += ` ${Classes.DARK}`;
+		}
+		return dynamicComponentClasses;
+	};
+
+	const calculateMainClasses = (hideHero) => {
+		let dynamicMainClasses = 'main';
+		if (hideHero) {
+			return dynamicMainClasses;
+		}
+		if (
+			!communityData.hideHero &&
+			communityData.useHeaderGradient &&
+			communityData.heroBackgroundImage
+		) {
+			dynamicMainClasses += ` gradient ${Classes.DARK}`;
+		}
+		return dynamicMainClasses;
+	};
+
+	const calculateHeroClasses = (hideHero) => {
+		let dynamicHeroClasses = 'hero';
+		if (hideHero) {
+			return dynamicHeroClasses;
+		}
+		if (communityData.heroAlign === 'center') {
+			dynamicHeroClasses += ' centered';
+		}
+		return dynamicHeroClasses;
+	};
+
+	const calculateBackgroundStyle = (hideHero) => {
+		const backgroundStyle = {};
+		if (locationData.isBasePubPub) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'boxShadow' does not exist on type '{}'.
+			backgroundStyle.boxShadow =
+				locationData.path === '/'
+					? ''
+					: '0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0), 0 1px 1px rgba(16, 22, 26, 0.2)';
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'backgroundColor' does not exist on type ... Remove this comment to see the full error message
+			backgroundStyle.backgroundColor = '#0a192f';
+			// @ts-expect-error ts-migrate(2339)
+			backgroundStyle.borderBottom = '1px solid rgba(255, 255, 255, 0.12)';
+		}
+
+		if (hideHero) {
+			return backgroundStyle;
+		}
+
+		if (communityData.heroBackgroundImage) {
+			const resizedBackgroundImage = getResizedUrl(
+				communityData.heroBackgroundImage,
+				'outside',
+				1500,
+				600,
+			);
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'backgroundImage' does not exist on type ... Remove this comment to see the full error message
+			backgroundStyle.backgroundImage = `url("${resizedBackgroundImage}")`;
+		}
+		const heroBackgroundColor =
+			communityData.heroBackgroundColor || communityData.accentColorDark;
+		if (heroBackgroundColor) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'backgroundColor' does not exist on type ... Remove this comment to see the full error message
+			backgroundStyle.backgroundColor = communityData.heroBackgroundColor;
+		}
+
+		return backgroundStyle;
+	};
+
+	const hideHero = locationData.path !== '/' || communityData.hideHero;
+	const hideHeaderLogo = !hideHero && communityData.hideHeaderLogo;
+	const componentClasses = calculateComponentClasses(hideHero);
+	const mainClasses = calculateMainClasses(hideHero);
+	const heroClasses = calculateHeroClasses(hideHero);
+	const backgroundStyle = calculateBackgroundStyle(hideHero);
+
+	const loggedIn = !!loginData.slug;
+	const isBasePubPub = locationData.isBasePubPub;
+
+	const resizedHeaderLogo = getResizedUrl(communityData.headerLogo, 'inside', undefined, 50);
+	const resizedHeroLogo = getResizedUrl(communityData.heroLogo, 'inside', undefined, 200);
+	const resizedHeroImage = getResizedUrl(communityData.heroImage, 'inside', 600);
+	const heroPrimaryButton: Partial<CommunityHeroButton> = communityData.heroPrimaryButton || {};
+	const heroSecondaryButton: Partial<CommunityHeroButton> =
+		communityData.heroSecondaryButton || {};
+	const isPreview = !!props.previewContext;
+
+	return (
+		<header
+			className={classNames([
+				'header-component',
+				componentClasses,
+				isPreview ? 'preview' : '',
+			])}
+			style={backgroundStyle}
+		>
+			<div className={mainClasses}>
+				<GridWrapper columnClassName="main-content">
+					<div className="logo-wrapper">
+						{!hideHeaderLogo && (
+							isBasePubPub ? (
+								<div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+									<a href="/" aria-label="OpenScience.ph" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', gap: '8px' }}>
+										<img
+											alt="OpenScience.ph"
+											style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+											src="/static/openscience_navbar_logo.png"
+										/>
+										<span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '18px', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em' }}>
+											OpenScience.ph
+										</span>
+										<span className="os-beta-badge" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', height: '18px', lineHeight: '1', backgroundColor: '#d97706', color: '#ffffff', fontSize: '10.5px', padding: '2px 7px', borderRadius: '4px', fontWeight: 700, marginLeft: '8px', letterSpacing: '0.04em' }}>
+											BETA
+										</span>
+									</a>
+								</div>
+							) : (
+								<a href="/" aria-label={communityData.title}>
+									{communityData.headerLogo && (
+										<img
+											alt=""
+											src={resizedHeaderLogo}
+										/>
+									)}
+									{!communityData.headerLogo && <span>{communityData.title}</span>}
+								</a>
+							)
+						)}
+					</div>
+					<GlobalControls isBasePubPub={locationData.isBasePubPub} loggedIn={loggedIn} />
+				</GridWrapper>
+			</div>
+			{!hideHero && (
+				<div className={heroClasses}>
+					<GridWrapper columnClassName="hero-content">
+						<div className="hero-copy">
+							{communityData.heroLogo && (
+								<div className="hero-logo">
+									<img alt={communityData.title} src={resizedHeroLogo} />
+								</div>
+							)}
+							{communityData.heroTitle && (
+								<div className="hero-title">{communityData.heroTitle}</div>
+							)}
+							{communityData.heroText && (
+								<div className="hero-text">{communityData.heroText}</div>
+							)}
+							<div className="hero-button">
+								{heroPrimaryButton.title && (
+									<AnchorButton
+										intent={Intent.PRIMARY}
+										large={true}
+										text={heroPrimaryButton.title}
+										href={heroPrimaryButton.url}
+									/>
+								)}
+								{heroSecondaryButton.title && (
+									<AnchorButton
+										large={true}
+										minimal={true}
+										text={heroSecondaryButton.title}
+										href={heroSecondaryButton.url}
+									/>
+								)}
+							</div>
+						</div>
+						{communityData.heroImage && (
+							<div className="hero-image">
+								<img alt="Community banner" src={resizedHeroImage} />
+							</div>
+						)}
+					</GridWrapper>
+				</div>
+			)}
+		</header>
+	);
+};
+Header.defaultProps = defaultProps;
+export default Header;

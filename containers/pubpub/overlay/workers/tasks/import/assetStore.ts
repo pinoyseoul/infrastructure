@@ -1,0 +1,51 @@
+import fs from 'fs';
+
+import { assetsClient } from 'server/utils/s3';
+import { isProd } from 'utils/environment';
+import { generateHash } from 'utils/hashes';
+import { sleep } from 'utils/promises';
+
+import { extensionFor } from './util';
+
+export const getUrlForAssetKey = (assetKey: string) => `${(process.env.S3_PUBLIC_URL || 'https://storage.pinoyseoul.com/journal-assets').replace(/\/+$/, '')}/${assetKey}`;
+
+export const generateAssetKeyForFile = (filePath: string) => {
+	const fileExtension = extensionFor(filePath);
+	const folderName = isProd() ? generateHash(8) : '_testing';
+	const randomness = Math.floor(Math.random() * 8);
+	const now = new Date().getTime();
+	return `${folderName}/${randomness}${now}.${fileExtension}`;
+};
+
+const blockForAssetFile = (assetKey: string) =>
+	new Promise<void>(async (resolve, reject) => {
+		for (let i = 0; i < 5; i++) {
+			// biome-ignore lint/performance/noAwaitInLoops: shhhhhh
+			// biome-ignore lint/performance/noAwaitInLoops: <explanation>
+			const exists = await assetsClient.checkIfFileExists(assetKey);
+			if (exists) {
+				return resolve();
+			}
+			// biome-ignore lint/performance/noAwaitInLoops: shhhhhh
+			await sleep(1000);
+		}
+		return reject();
+	});
+
+export const downloadFileFromAssetStore = (assetKey: string, filePath: string) =>
+	new Promise(async (resolve, reject) => {
+		await blockForAssetFile(assetKey);
+		const writeStream = fs.createWriteStream(filePath);
+		const fileStream = await assetsClient.downloadFile(assetKey);
+		fileStream
+			.pipe(writeStream)
+			.on('error', (error) => reject(error))
+			.on('close', () => resolve(filePath));
+	});
+
+export const uploadFileToAssetStore = async (filePath: string, givenAssetKey?: string) => {
+	const assetKey = givenAssetKey || generateAssetKeyForFile(filePath);
+	const readStream = fs.createReadStream(filePath);
+	await assetsClient.uploadFile(assetKey, readStream);
+	return assetKey;
+};

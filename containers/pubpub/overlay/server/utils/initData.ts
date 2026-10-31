@@ -1,0 +1,243 @@
+import type * as types from 'types';
+
+import queryString from 'query-string';
+
+import { env } from 'server/env';
+import { getFeatureFlagsForUserAndCommunity } from 'server/featureFlag/queries';
+import { isUserMemberOfScope } from 'server/member/queries';
+import { UserNotification } from 'server/models';
+import { isUserSuperAdmin } from 'server/user/queries';
+import { getDismissedUserDismissables } from 'server/userDismissable/queries';
+import { isAuthBypassPath, isCmsGated } from 'utils/cms';
+import { getAppCommit, isDuqDuq, isProd, isQubQub, shouldForceBasePubPub } from 'utils/environment';
+
+import { PubPubError } from './errors';
+import { getCommunity, getScope, sanitizeCommunity } from './queryHelpers';
+import { ARCHIVE_COMMUNITY_ID } from './systemEntities';
+
+const getNotificationData = async (
+	userId: null | string,
+): Promise<types.InitialNotificationsData> => {
+	if (userId) {
+		const userNotifications: Pick<types.UserNotification, 'id' | 'isRead'>[] =
+			await UserNotification.findAll({
+				where: { userId },
+				attributes: ['id', 'isRead'],
+			});
+		const hasUnreadNotifications = userNotifications.some((n) => !n.isRead);
+		return {
+			hasNotifications: userNotifications.length > 0,
+			hasUnreadNotifications,
+		};
+	}
+	return { hasNotifications: false, hasUnreadNotifications: false };
+};
+
+type GetInitialDataOptions = {
+	isDashboard?: boolean;
+	includeFacets?: boolean;
+};
+
+export const getInitialData = async (
+	req,
+	options: GetInitialDataOptions = {},
+): Promise<types.InitialData> => {
+	if (req.initialData) {
+		return req.initialData;
+	}
+	let hostname = req.hostname;
+	if (hostname === 'localhost') {
+		hostname = 'demo.duqduq.org';
+	}
+
+	const { isDashboard = false, includeFacets = isDashboard } = options;
+	/* Gather user data */
+	const user = req.user || {};
+	const loginData = {
+		id: user.id || null,
+		initials: user.initials,
+		slug: user.slug,
+		fullName: user.fullName,
+		firstName: user.firstName,
+		lastName: user.lastName,
+		avatar: user.avatar,
+		title: user.title,
+		gdprConsent: user.gdprConsent,
+		isSuperAdmin: user.isSuperAdmin,
+	};
+
+	/* Gather location data */
+	const locationData = {
+		hostname: req.hostname,
+		path: req.path,
+		params: req.params,
+		query: req.query,
+		queryString: req.query ? `?${queryString.stringify(req.query)}` : '',
+		isDashboard,
+		isBasePubPub: shouldForceBasePubPub() || ['www.pubpub.org', 'journal.pinoyseoul.com', 'journals.openscience.ph', process.env.BASE_PORTAL_DOMAIN].filter(Boolean).includes(hostname),
+		isProd: isProd(),
+		isDuqDuq: isDuqDuq(),
+		isQubQub: isQubQub(),
+		appCommit: getAppCommit(),
+	};
+
+	/* If basePubPub - return fixed data */
+	if (locationData.isBasePubPub) {
+		const [featureFlags, initialNotificationsData, dismissedUserDismissables] =
+			await Promise.all([
+				getFeatureFlagsForUserAndCommunity(loginData.id, null),
+				getNotificationData(user.id),
+				getDismissedUserDismissables(user.id),
+			]);
+
+		return {
+			communityData: {
+				title: 'OpenScience.ph Journals',
+				description: 'An open scholarship publishing commons stewarded by OBRA Incorporated in collaboration with Philippine higher education institutions.',
+				favicon: '/static/favicon.png',
+				avatar: '/static/openscience_navbar_logo.png',
+				headerLogo:
+					locationData.path === '/' ? '/static/logo.png' : '/static/logoBlack.svg',
+				hideHero: true,
+				accentColorLight: '#ffffff',
+				accentColorDark: '#0a192f',
+				headerColorType: 'dark',
+				hideCreatePubButton: true,
+				headerLinks: [
+					{ title: 'About', url: '/about' },
+					{ title: 'Pricing', url: '/pricing' },
+					{ title: 'Search', url: '/search' },
+					{ title: 'Contact', url: 'mailto:admin@openscience.ph', external: true },
+				],
+				collections: [],
+				analyticsSettings: process.env.GA_TRACKING_ID
+					? {
+							type: 'google-analytics',
+							credentials: process.env.GA_TRACKING_ID,
+					  }
+					: null,
+				isArchiveCommunity: false,
+			} as any,
+			loginData,
+			locationData,
+			featureFlags,
+			scopeData: { activePermissions: {} } as types.ScopeData,
+			initialNotificationsData,
+			dismissedUserDismissables,
+		};
+	}
+
+	/* If we have a community to find, search, and then return */
+	const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+	const isPubPubSub = hostname.indexOf('.pubpub.org') > -1;
+	const isPlatformSub = (hostname.endsWith(`.${baseDomain}`) || hostname.endsWith('.openscience.ph')) && !['journal.pinoyseoul.com', 'journals.openscience.ph'].includes(hostname);
+
+	const whereQuery = isPubPubSub
+		? { subdomain: hostname.replace('.pubpub.org', '') }
+		: isPlatformSub
+		? { subdomain: hostname.replace(`.${baseDomain}`, '').replace('.openscience.ph', '') }
+		: { domain: hostname };
+	const communityData = await getCommunity(locationData, whereQuery);
+
+	/* A spam-flagged community is hidden from everyone but its own members, with
+	   no way to opt a visitor back in -- so this gate needs nothing from the
+	   scope and stays here, ahead of the work below. The CMS-mode gate is the
+	   opposite (sharing links must keep working) and runs after getScope. */
+	const isSpamGated =
+		communityData.spamTag &&
+		communityData.spamTag.status !== 'confirmed-not-spam' &&
+		!isAuthBypassPath(req.path);
+	if (isSpamGated) {
+		const [isMemberOfCommunity, isSuperadmin] = await Promise.all([
+			isUserMemberOfScope({
+				userId: loginData.id,
+				scope: { communityId: communityData.id },
+			}),
+			isUserSuperAdmin({ userId: loginData.id }),
+		]);
+		if (!isMemberOfCommunity && !isSuperadmin) {
+			throw new PubPubError.CommunityIsSpamError();
+		}
+	}
+
+	if (
+		(communityData.domain &&
+			communityData.domain !== hostname &&
+			whereQuery.subdomain &&
+			env.NODE_ENV === 'production' &&
+			isProd()) ||
+		(communityData.domain &&
+			communityData.domain === 'duqduqdomaintest.underlay.org' &&
+			whereQuery.subdomain &&
+			isDuqDuq())
+	) {
+		throw new Error(`UseCustomDomain:${communityData.domain}`);
+	}
+	if (req.headers.localhost) {
+		communityData.domain = req.headers.localhost;
+	}
+
+	const [scopeData, featureFlags, initialNotificationsData, dismissedUserDismissables] =
+		await Promise.all([
+			await getScope({
+				communityId: communityData.id,
+				pubSlug: locationData.params.pubSlug,
+				collectionSlug:
+					locationData.params.collectionSlug || locationData.query.collectionSlug,
+				accessHash: locationData.query.access,
+				loginId: loginData.id,
+				isDashboard,
+				includeFacets,
+			}),
+			await getFeatureFlagsForUserAndCommunity(loginData.id, communityData.id),
+			await getNotificationData(user.id),
+			await getDismissedUserDismissables(user.id),
+		]);
+
+	/**
+	 * A CMS-mode community is invisible to the public, but a sharing link has to
+	 * keep working: authors review their proofs through one, and requiring
+	 * membership puts an account-provisioning step in front of every proof.
+	 *
+	 * `canView` is exactly the predicate we want. getScope raises it only for
+	 * members of the community/collection/pub, superadmins, and holders of an
+	 * access hash matching something in *this* URL. Neither public permissions
+	 * nor a pub being released raise it -- released pubs are visible because
+	 * `releases.length` is non-zero, a separate path -- so the community stays
+	 * hidden from the public while `?access=` links resolve normally.
+	 *
+	 * This has to run after getScope, which is where the access hash is
+	 * resolved; the spam gate above needs no scope and stays ahead of it.
+	 */
+	if (
+		isCmsGated({
+			cmsMode: communityData.cmsMode,
+			path: req.path,
+			canView: scopeData.activePermissions.canView,
+		})
+	) {
+		throw new PubPubError.CommunityIsPrivateError();
+	}
+
+	const cleanedCommunityData = sanitizeCommunity(
+		communityData,
+		locationData,
+		loginData,
+		scopeData,
+	);
+
+	const result = {
+		communityData: {
+			...cleanedCommunityData,
+			isArchiveCommunity: cleanedCommunityData.id === ARCHIVE_COMMUNITY_ID,
+		},
+		loginData,
+		locationData,
+		scopeData,
+		featureFlags,
+		initialNotificationsData,
+		dismissedUserDismissables,
+	};
+
+	return result;
+};

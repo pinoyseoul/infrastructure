@@ -1,0 +1,164 @@
+import type * as types from 'types';
+
+import React, { useEffect, useState } from 'react';
+
+import { AnchorButton, Button, Card, Switch } from '@blueprintjs/core';
+
+import { apiFetch } from 'client/utils/apiFetch';
+import { getGdprConsentElection, updateGdprConsent } from 'client/utils/legal/gdprConsent';
+import AccountSecuritySettings from 'components/AccountSecuritySettings';
+import UserNotificationPreferences from 'components/UserNotifications/UserNotificationPreferences';
+import { usePageContext } from 'utils/hooks';
+
+import AuthTokensCard from './AuthTokensCard';
+import DeleteAccount from './DeleteAccount';
+import ExportAccountData from './ExportAccountData';
+
+type PrivacySettingsProps = {
+	integrations: types.Integration[];
+	userEmail: string;
+	accountUrl: string;
+	isLoggedIn: boolean;
+	accountExports?: {
+		id: string;
+		createdAt: string;
+		isProcessing: boolean;
+		output: string | null;
+		error: string | null;
+	}[];
+	adminCommunities?: { id: string; title: string; subdomain: string }[];
+	userNotificationPreferences?: types.UserNotificationPreferences;
+	onUpdateUserNotificationPreferences: (
+		preferences: Partial<types.UserNotificationPreferences>,
+	) => void;
+};
+
+const possibleIntegrations = [
+	{
+		title: 'Zotero',
+		name: 'zotero',
+		authUrl: '/auth/zotero',
+	},
+];
+
+// TODO: Replace this with text mentioning other services that can be used
+const ThirdPartyAnalyticsCard = () => {
+	const { loginData, setGdprConsent } = usePageContext();
+	const [hasUsedToggle, setHasUsedToggle] = useState(false);
+	const [isEnabled, setIsEnabled] = useState(null);
+
+	// We start with a null isEnabled value and only set it in a useEffect in order to avoid having
+	// to check a cookie on the server side, which our SSR framework isn't set up to do.
+	useEffect(() => {
+		if (isEnabled === null) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'boolean' is not assignable to pa... Remove this comment to see the full error message
+			setIsEnabled(!!getGdprConsentElection(loginData));
+		}
+		if (hasUsedToggle) {
+			updateGdprConsent(loginData, isEnabled, setGdprConsent);
+		}
+	}, [hasUsedToggle, isEnabled, loginData, setGdprConsent]);
+
+	return (
+		<Card>
+			<h5>Third-party analytics</h5>
+			<p>
+				OpenScience.ph allows Third Party Publishers to use Google Analytics to store, aggregate and
+				summarize information about user behavior on our platform. We do this to help
+				communities who use our service to measure the performance of their content. We do
+				not share any personally identifiable information with communities on OpenScience.ph or any
+				other third parties.
+			</p>
+			<p>
+				If you allow us to enable Google Analytics on behalf of other communities while you
+				browse, we'll send requests to their servers containing things like the URL of the
+				current page, your browser version, and your IP address. We'll never send Google
+				Analytics any identifying information such as your name, affiliation, or email
+				address.
+			</p>
+			<Switch
+				checked={!!isEnabled}
+				onChange={() => {
+					setHasUsedToggle(true);
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'true' is not assignable to param... Remove this comment to see the full error message
+					setIsEnabled(!isEnabled);
+				}}
+				label={'Third party analytics is ' + (isEnabled ? 'enabled' : 'disabled')}
+			/>
+		</Card>
+	);
+};
+
+const PrivacySettings = (props: PrivacySettingsProps) => {
+	const {
+		isLoggedIn,
+		integrations,
+		userNotificationPreferences,
+		onUpdateUserNotificationPreferences,
+	} = props;
+	const initialActiveIntegration = integrations.map(({ name }) => name);
+	const [unusedIntegrations, setUnusedIntegrations] = useState<string[]>(
+		possibleIntegrations
+			.map(({ name }) => name)
+			.filter((name) => !initialActiveIntegration.includes(name)),
+	);
+	const onDeleteIntegration = (integration: types.Integration) => () => {
+		apiFetch
+			.delete('/api/integrationDataOAuth1', { id: integration.integrationDataOAuth1Id })
+			.then(() => {
+				setUnusedIntegrations([...unusedIntegrations, integration.name]);
+			});
+	};
+
+	return (
+		<div className="privacy-settings">
+			<ThirdPartyAnalyticsCard />
+			{isLoggedIn && (
+				<React.Fragment>
+					<Card>
+						<h5>Data export</h5>
+						<ExportAccountData pastExports={props.accountExports} />
+					</Card>
+					{possibleIntegrations.map((i) => {
+						const integration = integrations.find(({ name }) => name === i.name);
+						return (
+							<Card key={i.name}>
+								<h5>{i.title} integration</h5>
+								<p>
+									Deleting the integration will purge your {i.name} credentials
+									from our database.
+								</p>
+								{!unusedIntegrations.includes(i.name) && integration ? (
+									<Button
+										intent="danger"
+										text="Remove"
+										onClick={onDeleteIntegration(integration)}
+									/>
+								) : (
+									<AnchorButton text="Activate" href={i.authUrl} />
+								)}
+							</Card>
+						);
+					})}
+					{userNotificationPreferences && (
+						<Card>
+							<h5 id="notification-preferences">Notification preferences</h5>
+							<UserNotificationPreferences
+								minimal
+								preferences={userNotificationPreferences}
+								onUpdatePreferences={onUpdateUserNotificationPreferences}
+							/>
+						</Card>
+					)}
+					<AuthTokensCard adminCommunities={props.adminCommunities} />
+					<AccountSecuritySettings
+						userEmail={props.userEmail}
+						accountUrl={props.accountUrl}
+					/>
+					<DeleteAccount />
+				</React.Fragment>
+			)}
+		</div>
+	);
+};
+export default PrivacySettings;

@@ -1,0 +1,122 @@
+import React from 'react';
+
+import { Classes, NonIdealState } from '@blueprintjs/core';
+
+import { GridWrapper, PubPreview } from 'components';
+import { usePageContext } from 'utils/hooks';
+
+import UserEdit from './UserEdit';
+import UserHeader from './UserHeader';
+import UserNav from './UserNav';
+
+import './user.scss';
+
+type Props = {
+	userData: any;
+	isHiddenForNonAdmins?: boolean;
+};
+
+const User = (props: Props) => {
+	const { userData, isHiddenForNonAdmins = false } = props;
+	const { locationData, communityData, loginData } = usePageContext();
+	const pubs = (userData.attributions || []).map((attribution) => {
+		return attribution.pub;
+	});
+
+	const selfProfile = !!loginData.id && userData.id === loginData.id;
+	const mode = locationData.params.mode;
+	const localCommunityId = communityData.id;
+	const communityPubs = pubs.filter((pub) => {
+		return !localCommunityId || pub.communityId === localCommunityId;
+	});
+	const externalPubs = pubs.filter((pub) => {
+		return localCommunityId && pub.communityId !== localCommunityId;
+	});
+	const authoredPubs = communityPubs.filter((pub) => {
+		const collaborators = pub.attributions || [];
+		const isAuthor = collaborators.some((collaborator) => {
+			const isCurrentProfileCollaborator = collaborator.user.id === userData.id;
+			return isCurrentProfileCollaborator && collaborator.isAuthor;
+		});
+		return isAuthor;
+	});
+	const pubsToRender = mode === 'authored' ? authoredPubs : communityPubs;
+
+	return (
+		<div id="user-container">
+			{mode === 'edit' && <UserEdit userData={userData} />}
+			{mode !== 'edit' && (
+				<div>
+					<GridWrapper containerClassName="narrow">
+						<UserHeader
+							userData={userData}
+							isUser={selfProfile}
+							isHiddenForNonAdmins={isHiddenForNonAdmins}
+						/>
+					</GridWrapper>
+
+					<GridWrapper containerClassName="narrow nav">
+						<UserNav
+							userSlug={userData.slug}
+							activeTab={mode}
+							allPubsCount={communityPubs.length}
+							authoredPubsCount={authoredPubs.length}
+						/>
+					</GridWrapper>
+					{!!externalPubs.length && (
+						<GridWrapper containerClassName="narrow nav">
+							<div className={`${Classes.CALLOUT} external-pubs-wrapper`}>
+								<a
+									href={`/user/${userData.slug}`}
+									className={`${Classes.BUTTON} ${Classes.INTENT_PRIMARY}`}
+								>
+									Go to Full Profile
+								</a>
+								<h5>
+									{externalPubs.length} article
+									{externalPubs.length === 1 ? '' : 's'} in other journals.
+								</h5>
+								<div>
+									{userData.firstName} has published in other OpenScience.ph journals.
+									Click to go to their full profile.
+								</div>
+							</div>
+						</GridWrapper>
+					)}
+					<div className="container narrow content">
+						{pubsToRender.map((pub) => {
+							return (
+								<div key={`pub-${pub.id}`} className="row">
+									<div className="col-12">
+										<PubPreview
+											pubData={pub}
+											communityData={
+												localCommunityId ? undefined : pub.community
+											}
+											size="medium"
+										/>
+									</div>
+								</div>
+							);
+						})}
+						{!pubsToRender.length && (
+							<NonIdealState
+								// @ts-expect-error ts-migrate(2322) FIXME: Type '{ visual: string; title: string; action: Ele... Remove this comment to see the full error message
+								visual="widget"
+								title="No Articles"
+								action={
+									selfProfile && !locationData.isBasePubPub ? (
+										<a href="/pub/create" className={Classes.BUTTON}>
+											Create New Article
+										</a>
+									) : undefined
+								}
+							/>
+						)}
+					</div>
+				</div>
+			)}
+		</div>
+	);
+};
+export default User;

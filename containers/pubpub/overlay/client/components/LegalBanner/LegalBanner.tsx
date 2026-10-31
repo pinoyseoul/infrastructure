@@ -1,0 +1,199 @@
+import type { Callback, PageContext } from 'types';
+
+import React, { useState } from 'react';
+
+import { AnchorButton, Button } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { useEffectOnce } from 'react-use';
+
+import { shouldShowGdprBanner, updateGdprConsent } from 'client/utils/legal/gdprConsent';
+import { markTosUpdateSeen, shouldShowTosUpdate } from 'client/utils/legal/tosUpdate';
+import { usePageContext } from 'utils/hooks';
+
+import { dismissUserDismissable } from '../../utils/userDismissable';
+
+import './legalBanner.scss';
+
+type Banner = {
+	title: React.ReactNode;
+	shouldShow: (context: PageContext) => boolean;
+	notice: () => React.ReactNode;
+	buttons: (context: PageContext, next: Callback) => React.ReactNode;
+};
+
+const banners: Banner[] = [
+	{
+		title: 'Terms of service',
+		shouldShow: () => shouldShowTosUpdate(),
+		notice: () => {
+			return (
+				<p>
+					We've updated OpenScience.ph's Terms of Service to clarify the relationship between
+					OpenScience.ph, third-party publishers, and users, and to further underscore our
+					commitment to the highest standards of user privacy.
+				</p>
+			);
+		},
+
+		buttons: (props, next) => {
+			return (
+				<>
+					<Button
+						large
+						onClick={() => {
+							markTosUpdateSeen();
+							next();
+						}}
+						intent="success"
+					>
+						{shouldShowGdprBanner(props) ? 'Next' : 'Close'}
+					</Button>
+					<Button
+						large
+						onClick={() => {
+							window.open('/legal/terms', '_blank');
+						}}
+					>
+						See terms
+					</Button>
+				</>
+			);
+		},
+	},
+	{
+		title: 'Cookies and data privacy',
+		shouldShow: (props) => shouldShowGdprBanner(props),
+		notice: () => {
+			return (
+				<p>
+					This community uses third-party cookies to understand which features and content
+					on their site are receiving traffic.{' '}
+					<b>
+						We don't allow communities to share personal data or sell or share this data
+						with anyone else.
+					</b>
+					. Visit your <a href="/legal/settings">privacy settings</a> to learn more.
+				</p>
+			);
+		},
+
+		buttons: ({ loginData, setGdprConsent }, next) => {
+			const closeWithConsent = (doesConsent) => {
+				updateGdprConsent(loginData, doesConsent, setGdprConsent);
+				next();
+			};
+			return (
+				<>
+					<Button large onClick={() => closeWithConsent(true)} intent="success">
+						Accept
+					</Button>
+					<Button large onClick={() => closeWithConsent(false)}>
+						Disable
+					</Button>
+				</>
+			);
+		},
+	},
+	{
+		title: 'Take our User Satisfaction Survey',
+		shouldShow: ({ dismissedUserDismissables, featureFlags, loginData }) => {
+			return (
+				!!loginData.id &&
+				!dismissedUserDismissables.surveySummer22 &&
+				featureFlags.surveySummer22
+			);
+		},
+		notice: () => {
+			return (
+				<p>
+					We'd like to understand who our users are, how they value OpenScience.ph, and how we can
+					better service publishing communities. This will directly inform our roadmap and
+					priorities. It should take less than 5 minutes to complete and can be filled out
+					anonymously.
+				</p>
+			);
+		},
+		buttons: (_, next) => {
+			const handleClick = () => {
+				dismissUserDismissable('surveySummer22');
+				next();
+			};
+
+			return (
+				<>
+					<AnchorButton
+						large
+						href="https://forms.gle/cecnRw7BDbeYyML4A"
+						target="_blank"
+						style={{ padding: '0 10px' }}
+						intent="primary"
+					>
+						Take the survey
+					</AnchorButton>
+					<Button large onClick={handleClick}>
+						Dismiss
+					</Button>
+				</>
+			);
+		},
+	},
+];
+
+const LegalBanner = () => {
+	const pageContext = usePageContext();
+	const [bannerIndex, setBannerIndex] = useState(-1);
+	const bannerToShow = banners[bannerIndex];
+	const [allBannersToShow] = useState(banners.filter((banner) => banner.shouldShow(pageContext)));
+
+	const findNextBannerToShow = () => {
+		let index = bannerIndex;
+		do {
+			++index;
+		} while (banners[index] && !banners[index].shouldShow(pageContext));
+		setBannerIndex(index);
+	};
+
+	// After the component mounts on the client, check to see whether it should be shown.
+	// (it uses cookies, so it causes SSR problems if we try to do this at first render)
+	useEffectOnce(findNextBannerToShow);
+
+	if (!bannerToShow) {
+		return null;
+	}
+
+	const renderNoticeSteps = () => {
+		return (
+			<div className="notice-steps">
+				{allBannersToShow.map((banner, index) => {
+					return (
+						<div
+							key={`${banner.title}-${index}`}
+							className={classNames(
+								'step',
+								banners.indexOf(banner) === bannerIndex && 'current',
+							)}
+						>
+							{banner.title}
+						</div>
+					);
+				})}
+			</div>
+		);
+	};
+
+	return (
+		<div className="legal-banner-component">
+			<div className="logo">
+				<img src="/static/logo.png" alt="" />
+			</div>
+			<div className="notice">
+				{renderNoticeSteps()}
+				{bannerToShow.notice()}
+			</div>
+			<div className="legal-buttons">
+				{bannerToShow.buttons(pageContext, findNextBannerToShow)}
+			</div>
+		</div>
+	);
+};
+export default LegalBanner;

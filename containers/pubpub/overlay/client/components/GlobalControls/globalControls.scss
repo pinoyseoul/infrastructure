@@ -1,0 +1,71 @@
+@use 'styles/vendor.scss';
+
+$bp: vendor.$bp-namespace;
+
+@mixin button-colors {
+	.#{$bp}-button.#{$bp}-minimal {
+		color: currentColor;
+		.#{$bp}-icon {
+			color: currentColor;
+		}
+	}
+}
+
+.global-controls-component {
+	@include button-colors;
+
+	display: flex;
+	align-items: center;
+
+	.#{$bp}-button {
+		padding: 0px 10px;
+	}
+}
+
+// AccentStyle.tsx provides a very specific color selector for buttons under .bp[#]-dark
+// so we need to be even more specific about overriding it here.
+.#{$bp}-dark {
+	.global-controls-component {
+		@include button-colors;
+	}
+}
+
+.bp3-menu-item.community-menu-item {
+	align-items: center;
+}
+.global-controls-component {
+	color: #ffffff !important;
+	.#{$bp}-button.#{$bp}-minimal {
+		color: #ffffff !important;
+		font-weight: 500;
+		&:hover {
+			color: #38bdf8 !important;
+			background-color: rgba(255, 255, 255, 0.08) !important;
+		}
+	}
+}
+
+/* High-Contrast User Initials & Preserved Avatar */
+.header-component .avatar-component {
+	background-color: #1e3a5f;
+	background-size: cover !important;
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+	border: 2px solid #38bdf8 !important;
+	color: #ffffff !important;
+	box-shadow: 0 0 10px rgba(56, 189, 248, 0.35) !important;
+	transition: all 0.2s ease !important;
+}
+
+.header-component button:hover .avatar-component {
+	border-color: #ffffff !important;
+	background-color: #2563eb;
+	box-shadow: 0 0 14px rgba(37, 99, 235, 0.6) !important;
+	transform: scale(1.05);
+}
+
+.header-component .avatar-component > div {
+	color: #ffffff !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.05em !important;
+}

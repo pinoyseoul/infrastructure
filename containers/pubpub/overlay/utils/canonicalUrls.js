@@ -1,0 +1,175 @@
+// @ts-check
+
+/** Utilities for providing canonical URLs for different entities */
+import queryString from 'query-string';
+
+import { isDuqDuq, isQubQub } from 'utils/environment';
+
+export const profileUrl = (userSlug) => `/user/${userSlug}`;
+
+export const isArchiving = () =>
+	'window' in globalThis &&
+	// @ts-expect-error - window.__pubpub_pageContextProps__ is not typed
+	window.__pubpub_pageContextProps__.locationData.queryString.includes('pubpubArchiveBot');
+
+/**
+ * Returns the canonical URL for a community.
+ * @param {Object} community - The community to get the URL for.
+ * @param {string} community.subdomain - The subdomain of the community.
+ * @param {string | null | undefined} [community.domain] - The domain of the community.
+ * @returns The canonical URL for the community.
+ */
+export const communityUrl = (community) => {
+	if (isArchiving()) {
+		return '/';
+	}
+	if (isDuqDuq()) {
+		return `https://${community.subdomain}.duqduq.org`;
+	}
+	if (community.domain) {
+		if (community.domain.includes('localhost:')) {
+			return `http://${community.domain}`;
+		}
+		return `https://${community.domain}`;
+	}
+	const baseDomain = (typeof window !== 'undefined' && window.location && window.location.hostname.includes('.')) ? window.location.hostname.split('.').slice(-2).join('.') : (process.env.BASE_DOMAIN || 'pinoyseoul.com');
+	return `https://${community.subdomain}.${baseDomain}`;
+};
+
+export const collectionUrl = (community, collection) => {
+	if (isArchiving()) {
+		return `/${collection.slug}`;
+	}
+	return `${communityUrl(community)}/${collection.slug}`;
+};
+
+/**
+ * @typedef {Pick<import('types').Pub, 'slug'>} PubForUrl
+ */
+
+
+
+/**
+ * @param {PubForUrl} pub
+ */
+export const pubShortUrl = (pub) => {
+	return isArchiving() ? `/pub/{pub.slug}` : `https://openscience.ph/pub/${pub.slug}`;
+};
+
+/**
+ * @param {import('types').Community | import('server/models').Community | null} community
+ * @param {PubForUrl} pub
+ * @param options
+ * @returns {string}
+ */
+export const pubUrl = (community, pub, options = {}) => {
+	const {
+		isDraft,
+		historyKey,
+		releaseNumber,
+		releaseId,
+		discussionId,
+		accessHash,
+		query,
+		download,
+		hash,
+		absolute,
+	} = options;
+
+	// Include the community in the URL if the absolute flag is set to true.
+	const skipCommunity = isArchiving() || (absolute ? false : community === null || isQubQub());
+	
+	const baseCommunityUrl = skipCommunity || !community ? '' : communityUrl(community);
+
+	let baseUrl = `${baseCommunityUrl}/pub/${pub.slug}`;
+
+	if (download) {
+		const downloadType = typeof download === 'string' ? `/${download}` : '';
+		baseUrl = `${baseUrl}/download${downloadType}`;
+	} else if (isDraft) {
+		const appendedHistoryKey = historyKey !== undefined ? `/${historyKey}` : '';
+		baseUrl = `${baseUrl}/draft${appendedHistoryKey}`;
+	} else if (releaseNumber !== undefined) {
+		baseUrl = `${baseUrl}/release/${releaseNumber}`;
+	} else if (releaseId) {
+		baseUrl = `${baseUrl}/release-id/${releaseId}`;
+	} else if (discussionId) {
+		baseUrl = `${baseUrl}/discussion-id/${discussionId}`;
+	}
+	const url = queryString.stringifyUrl(
+		{ url: baseUrl, query: { access: accessHash, ...query } },
+		{ skipNull: true },
+	);
+	if (hash) {
+		return `${url}#${hash}`;
+	}
+	return url;
+};
+
+/**
+ * @param {Object} data
+ * @param {PubForUrl} data.pubData
+ * @param {import('types').Community} data.communityData
+ * @param options
+ * @returns {string}
+ */
+export const bestPubUrl = ({ pubData, communityData }, options = {}) => {
+	if (communityData) {
+		return pubUrl(communityData, pubData, options);
+	}
+	return pubShortUrl(pubData);
+};
+
+/**
+ * The public canonical URL for a community. Unlike communityUrl, this honors
+ * canonicalBaseUrl for CMS-mode communities whose content is published on an
+ * external site. Use for content-facing URLs (canonical tags, citations,
+ * exports, deposits, feeds) — NOT for in-app navigation.
+ * @param {Object} community
+ * @param {string} community.subdomain
+ * @param {boolean} community.cmsMode
+ * @param {string | null | undefined} [community.domain]
+ * @param {string | null | undefined} [community.canonicalBaseUrl]
+ * @returns {string}
+ */
+export const canonicalCommunityUrl = (community) => {
+	if (community?.cmsMode && community.canonicalBaseUrl) {
+		return community.canonicalBaseUrl.replace(/\/+$/, '');
+	}
+	return communityUrl(community);
+};
+
+/**
+ * The public canonical URL for a collection. Honors canonicalBaseUrl for
+ * CMS-mode communities. Use for content-facing URLs — NOT for in-app
+ * navigation.
+ */
+export const canonicalCollectionUrl = (community, collection) => {
+	return `${canonicalCommunityUrl(community)}/${collection.slug}`;
+};
+
+/**
+ * The public canonical URL for a pub. Honors canonicalPubUrlTemplate and
+ * canonicalBaseUrl for CMS-mode communities. Use for content-facing URLs —
+ * NOT for in-app navigation.
+ * @param {import('types').Community | import('server/models').Community | null} community
+ * @param {PubForUrl} pub
+ * @param options
+ * @returns {string}
+ */
+export const canonicalPubUrl = (community, pub, options = {}) => {
+	if (community && community.canonicalPubUrlTemplate) {
+		return community.canonicalPubUrlTemplate.replace(/\{slug\}/g, pub.slug);
+	}
+	if (community && community.canonicalBaseUrl) {
+		const url = pubUrl(community, pub, { ...options, absolute: true });
+		return url.replace(communityUrl(community), canonicalCommunityUrl(community));
+	}
+	return pubUrl(community, pub, options);
+};
+
+export const doiUrl = (doi) => `https://doi.org/${doi}`;
+
+export const pageUrl = (community, page) => {
+	return isArchiving() ? `/${page.slug}` : `${communityUrl(community)}/${page.slug}`;
+};

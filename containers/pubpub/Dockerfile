@@ -1,7 +1,8 @@
 # ==============================================================================
 # OpenScience.ph Sovereign PubPub Container Build
-# Target: ghcr.io/pinoyseoul/pubpub:openscience-v1.0
-# Architecture: Multi-stage build applying OpenScience.ph patches to upstream PubPub v6.1.0
+# Target: ghcr.io/pinoyseoul/pubpub:openscience-v3.0
+# Architecture: Direct File Overlay (Dataverse parity, Zero patch math)
+# Upstream Commit Pin: 768c69cd7625f0f2da99d5ab5446bfcb368f173b
 # ==============================================================================
 
 # ---- Stage 1: Base image with system dependencies ----
@@ -36,30 +37,17 @@ RUN apt-get update \
  && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/*
 
-# ---- Stage 2: Upstream clone & patch application ----
+# ---- Stage 2: Upstream clone & direct file overlay ----
 FROM base AS patched-source
 WORKDIR /app
 
-# Shallow clone upstream PubPub main branch (v6.1.0)
-RUN git clone --depth 1 -b main https://github.com/pubpub/pubpub.git /app
+# Deterministic clone pinned to upstream commit 768c69cd7625f0f2da99d5ab5446bfcb368f173b
+RUN git clone https://github.com/pubpub/pubpub.git /app \
+ && cd /app \
+ && git checkout 768c69cd7625f0f2da99d5ab5446bfcb368f173b
 
-# Copy OpenScience patches into container
-COPY patches/ /app/openscience-patches/
-
-# Apply patches sequentially with whitespace tolerance
-RUN git apply --ignore-whitespace /app/openscience-patches/01-landing-route.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/02-domain-routing.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/03-header-branding.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/04-responsive-grid.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/05-footer-split.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/06-platform-localization.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/07-orcid-auth.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/08-ark-pid.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/09-storage-and-preservation.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/10-academic-indexing-and-sovereignty.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/11-avatar-preservation-and-header-controls.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/12-deep-localization-and-polish.patch && \
-    git apply --ignore-whitespace /app/openscience-patches/13-ark-resolver-and-platform-completion.patch
+# Apply direct sovereign overlay (Zero patch math, Dataverse-parity direct file replacement)
+COPY overlay/ /app/
 
 # Copy authentic OpenScience brand assets into static/
 COPY assets/* /app/static/

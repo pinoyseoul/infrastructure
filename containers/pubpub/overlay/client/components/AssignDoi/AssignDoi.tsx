@@ -1,0 +1,473 @@
+import { Callout } from '@blueprintjs/core';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
+
+import pickBy from 'lodash.pickby';
+
+import { apiFetch } from 'client/utils/apiFetch';
+import { InputField, MenuButton, MenuItem } from 'components';
+import {
+	getDepositRecordContentVersion,
+	getDepositRecordReviewRecommendation,
+	getDepositRecordReviewType,
+	getDepositTypeTitle,
+	isPeerReviewDeposit,
+	isPreprintDeposit,
+	isStandaloneComponentDeposit,
+	setDepositRecordContentVersion,
+	setDepositRecordReviewRecommendation,
+	setDepositRecordReviewType,
+} from 'utils/crossref/parseDeposit';
+
+import ReviewDepositCallout from '../Deposit/ReviewDepositCallout';
+import SubmitDepositButton from '../Deposit/SubmitDepositButton';
+import { SubmitDepositStatus } from '../Deposit/SubmitDepositStatus';
+import AssignDoiPreview from './AssignDoiPreview';
+
+import './assignDoi.scss';
+
+const noop = () => {};
+
+type OwnProps = {
+	communityData: any;
+	disabled?: boolean;
+	onDeposit?: (...args: any[]) => any;
+	onError?: (...args: any[]) => any;
+	onPreview?: (...args: any[]) => any;
+	pubData: any;
+	target: string;
+};
+
+const defaultProps = {
+	disabled: false,
+	onDeposit: noop,
+	onError: noop,
+	onPreview: noop,
+};
+
+const AssignDoiActionType = {
+	FetchPreview: 'fetch_preview',
+	FetchPreviewSuccess: 'fetch_preview_success',
+	UpdateContentVersion: 'update_content_version',
+	UpdateReviewType: 'update_review_type',
+	UpdateReviewRecommendation: 'update_review_recommendation',
+	FetchDeposit: 'fetch_deposit',
+	FetchDepositSuccess: 'fetch_deposit_success',
+	Error: 'error',
+};
+
+export function reducer(state, action) {
+	switch (action.type) {
+		case AssignDoiActionType.FetchPreview:
+			if (
+				!(
+					state.status === SubmitDepositStatus.Initial ||
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'Error' does not exist on type '{ Initial... Remove this comment to see the full error message
+					state.status === SubmitDepositStatus.Error ||
+					// re-fetch preview
+					state.status === SubmitDepositStatus.Previewed
+				)
+			) {
+				return state;
+			}
+
+			return {
+				...state,
+				status: SubmitDepositStatus.Previewing,
+				error: null,
+			};
+		case AssignDoiActionType.FetchPreviewSuccess:
+			if (state.status !== SubmitDepositStatus.Previewing) {
+				return state;
+			}
+
+			return {
+				...state,
+				status: SubmitDepositStatus.Previewed,
+				crossrefDepositRecord: action.payload,
+				error: null,
+			};
+		case AssignDoiActionType.UpdateContentVersion: {
+			if (state.status !== SubmitDepositStatus.Previewed) {
+				return state;
+			}
+
+			const crossrefDepositRecord = { ...state.crossrefDepositRecord };
+
+			// Not totally necessary here to create a full deep copy of the
+			// object since we're not using a change detection algorithm
+			// like `react-redux`, but this is technically a "Bad Practice":
+			setDepositRecordContentVersion(crossrefDepositRecord, action.payload);
+
+			return {
+				...state,
+				crossrefDepositRecord,
+			};
+		}
+		case AssignDoiActionType.UpdateReviewType: {
+			if (state.status !== SubmitDepositStatus.Previewed) {
+				return state;
+			}
+
+			const crossrefDepositRecord = { ...state.crossrefDepositRecord };
+
+			setDepositRecordReviewType(crossrefDepositRecord, action.payload);
+
+			return {
+				...state,
+				crossrefDepositRecord,
+			};
+		}
+		case AssignDoiActionType.UpdateReviewRecommendation: {
+			if (state.status !== SubmitDepositStatus.Previewed) {
+				return state;
+			}
+
+			const crossrefDepositRecord = { ...state.crossrefDepositRecord };
+
+			setDepositRecordReviewRecommendation(crossrefDepositRecord, action.payload);
+
+			return {
+				...state,
+				crossrefDepositRecord,
+			};
+		}
+		case AssignDoiActionType.FetchDeposit:
+			if (state.status !== SubmitDepositStatus.Previewed) {
+				return state;
+			}
+
+			return {
+				...state,
+				status: SubmitDepositStatus.Depositing,
+				error: null,
+			};
+		case AssignDoiActionType.FetchDepositSuccess:
+			if (state.status !== SubmitDepositStatus.Depositing) {
+				return state;
+			}
+
+			return {
+				...state,
+				status: SubmitDepositStatus.Deposited,
+				crossrefDepositRecord: action.payload,
+				error: null,
+			};
+		case AssignDoiActionType.Error:
+			return {
+				...state,
+				status: SubmitDepositStatus.Initial,
+				error: action.payload,
+			};
+		default:
+			return state;
+	}
+}
+
+const initialState = {
+	status: SubmitDepositStatus.Initial,
+	preview: null,
+	crossrefDepositRecord: null,
+	error: null,
+};
+
+const contentVersionItems = [
+	{ title: '(None)', key: 'none' },
+	{ title: 'Preprint', key: 'preprint' },
+	{ title: 'Advance Manuscript', key: 'am' },
+	{ title: 'Version of Record', key: 'vor' },
+];
+
+const reviewTypeItems = [
+	{ title: '(None)', key: 'none' },
+	{ title: 'Referee Report', key: 'referee-report' },
+	{ title: 'Editor Report', key: 'editor-report' },
+	{ title: 'Author Comment', key: 'author-comment' },
+	{ title: 'Community Comment', key: 'community-comment' },
+	{ title: 'Aggregate', key: 'aggregate' },
+	{ title: 'Recommendation', key: 'recommendation' },
+];
+
+const reviewRecommendationItems = [
+	{ title: '(None)', key: 'none' },
+	{ title: 'Major Revision', key: 'major-revision' },
+	{ title: 'Minor Revision', key: 'minor-revision' },
+	{ title: 'Reject', key: 'reject' },
+	{ title: 'Reject with Resubmit', key: 'reject-with-resubmit' },
+	{ title: 'Accept', key: 'accept' },
+	{ title: 'Accept with Reservation', key: 'accept-with-reservation' },
+];
+
+const pickNonNullValues = (obj) => pickBy(obj, (value) => value !== null && value !== undefined);
+
+type Props = OwnProps & typeof defaultProps;
+
+function AssignDoi(props: Props) {
+	const { communityData, disabled, pubData, onPreview, onDeposit, onError, target } = props;
+	const [state, dispatch] = useReducer(reducer, {
+		...initialState,
+		crossrefDepositRecord: pubData.crossrefDepositRecord,
+	});
+	const { status, crossrefDepositRecord, error } = state;
+
+	const reviewType = getDepositRecordReviewType(crossrefDepositRecord);
+	const reviewRecommendation = getDepositRecordReviewRecommendation(crossrefDepositRecord);
+
+	let contentVersion = getDepositRecordContentVersion(crossrefDepositRecord);
+
+	// Assume preprint if no content version is present and body consists of posted_content.
+	if (!contentVersion && isPreprintDeposit(crossrefDepositRecord)) {
+		contentVersion = 'preprint';
+	}
+
+	const activeContentVersionKey = contentVersion || 'none';
+	const activeContentVersionItem = contentVersionItems.find(
+		(item) => item.key === activeContentVersionKey,
+	);
+
+	const activeReviewTypeKey = reviewType || 'none';
+	const activeReviewTypeItem = reviewTypeItems.find((item) => item.key === activeReviewTypeKey);
+
+	const activeReviewRecommendationKey = reviewRecommendation || 'none';
+	const activeReviewRecommendationItem = reviewRecommendationItems.find(
+		(item) => item.key === activeReviewRecommendationKey,
+	);
+
+	const requestBody = useMemo(
+		() => ({
+			target,
+			pubId: pubData.id,
+			communityId: communityData.id,
+			contentVersion,
+			reviewType,
+			reviewRecommendation,
+		}),
+		[target, pubData, communityData, contentVersion, reviewType, reviewRecommendation],
+	);
+
+	const fetchPreview = useCallback(
+		async (nextParams) => {
+			dispatch({ type: AssignDoiActionType.FetchPreview });
+
+			try {
+				const params = new URLSearchParams(
+					pickNonNullValues({
+						...requestBody,
+						...nextParams,
+					}),
+				);
+				const preview = await apiFetch(`/api/doiPreview?${params.toString()}`);
+
+				onPreview(preview);
+
+				dispatch({
+					type: AssignDoiActionType.FetchPreviewSuccess,
+					payload: preview,
+				});
+			} catch (err) {
+				const errorMessage =
+					err instanceof Error
+						? err.message
+						: ((err as { error?: string })?.error ??
+							'There was an error generating the preview.');
+				dispatch({ type: AssignDoiActionType.Error, payload: errorMessage });
+				onError(err instanceof Error ? err : new Error(errorMessage));
+			}
+		},
+		[requestBody, onPreview, onError],
+	);
+
+	const fetchDeposit = async () => {
+		dispatch({ type: AssignDoiActionType.FetchDeposit });
+
+		// Sovereign ARK Pathway (Direct DB update when no commercial Crossref credentials exist)
+		if (!communityData.crossrefUsername && !communityData.crossrefPassword) {
+			try {
+				const arkIdentifier = `ark:/14373/j1${pubData.slug}`;
+				await apiFetch('/api/pubs', {
+					method: 'PUT',
+					body: JSON.stringify({ pubId: pubData.id, communityId: communityData.id, doi: arkIdentifier }),
+				});
+				dispatch({ type: AssignDoiActionType.FetchDepositSuccess, payload: { depositJson: {} } });
+				onDeposit(arkIdentifier);
+				return;
+			} catch (err: any) {
+				dispatch({ type: AssignDoiActionType.Error, payload: err.message });
+				onError(err);
+				return;
+			}
+		}
+
+		try {
+			const body = JSON.stringify(pickNonNullValues(requestBody));
+			const response = await apiFetch('/api/doi', {
+				method: 'POST',
+				body,
+			});
+			dispatch({
+				type: AssignDoiActionType.FetchDepositSuccess,
+				payload: { depositJson: response },
+			});
+
+			onDeposit(response.dois[target]);
+		} catch (err) {
+			const errorMessage =
+				err instanceof Error
+					? err.message
+					: ((err as { error?: string })?.error ??
+						'There was an error depositing the work.');
+			dispatch({ type: AssignDoiActionType.Error, payload: errorMessage });
+			onError(err instanceof Error ? err : new Error(errorMessage));
+		}
+	};
+
+	// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
+	const handlePreviewClick = () => fetchPreview();
+	const handleDepositClick = () => fetchDeposit();
+	const handleContentVersionItemSelect = ({ key }) => {
+		const nextContentVersion = key === 'none' ? null : key;
+
+		dispatch({
+			type: AssignDoiActionType.UpdateContentVersion,
+			payload: nextContentVersion,
+		});
+
+		// Immediately load preview with next content version.
+		fetchPreview({ contentVersion: nextContentVersion });
+	};
+	const handleReviewTypeItemSelect = ({ key }) => {
+		const nextReviewType = key === 'none' ? null : key;
+
+		dispatch({
+			type: AssignDoiActionType.UpdateReviewType,
+			payload: nextReviewType,
+		});
+
+		// Immediately load preview with next review type.
+		fetchPreview({ reviewType: nextReviewType });
+	};
+	const handleReviewRecommendationItemSelect = ({ key }) => {
+		const nextReviewRecommendation = key === 'none' ? null : key;
+
+		dispatch({
+			type: AssignDoiActionType.UpdateReviewRecommendation,
+			payload: nextReviewRecommendation,
+		});
+
+		// Immediately load preview with next review recommendation.
+		fetchPreview({ reviewRecommendation: nextReviewRecommendation });
+	};
+
+	const isArkMode = !communityData.crossrefUsername && !communityData.crossrefPassword;
+
+	let handleButtonClick;
+
+	if (status === SubmitDepositStatus.Initial) {
+		handleButtonClick = isArkMode ? handleDepositClick : handlePreviewClick;
+	} else if (status === SubmitDepositStatus.Previewed) {
+		handleButtonClick = handleDepositClick;
+	}
+
+	const priorPubDoi = useRef(pubData.doi);
+
+	// Re-load the preview when the Pub's DOI changes.
+	useEffect(() => {
+		if (priorPubDoi.current !== pubData.doi && status === SubmitDepositStatus.Previewed) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
+			fetchPreview();
+		}
+		priorPubDoi.current = pubData.doi;
+	}, [pubData.doi, status, fetchPreview]);
+
+	return (
+		<div className="assign-doi-component">
+			{isArkMode && !pubData.doi && (
+				<Callout intent="primary" className="ark-callout" style={{ marginBottom: '15px' }}>
+					<p style={{ margin: 0 }}>This publication will be assigned a permanent persistent identifier under OBRA Incorporated&apos;s registered authority (NAAN 14373).</p>
+					<p style={{ margin: '6px 0 2px 0' }}><strong>Target Identifier:</strong> <code>{`ark:/14373/j1${pubData.slug}`}</code></p>
+					<p style={{ margin: '2px 0 0 0' }}><strong>Global Resolver:</strong> <code>{`https://n2t.net/ark:/14373/j1${pubData.slug}`}</code></p>
+				</Callout>
+			)}
+			{(status === SubmitDepositStatus.Previewed ||
+				status === SubmitDepositStatus.Previewing) && (
+				<>
+					<ReviewDepositCallout
+						depositTypeTitle={getDepositTypeTitle(crossrefDepositRecord)}
+						depositTargetServiceName="Crossref"
+					/>
+					{!isStandaloneComponentDeposit(crossrefDepositRecord) && (
+						<InputField label="Content Version">
+							<MenuButton
+								// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
+								buttonContent={activeContentVersionItem.title}
+								buttonProps={{ rightIcon: 'caret-down' }}
+								aria-label="content-version"
+							>
+								{contentVersionItems.map((item) => (
+									<MenuItem
+										key={item.key}
+										active={item === activeContentVersionItem}
+										onClick={() => handleContentVersionItemSelect(item)}
+										text={item.title}
+									/>
+								))}
+							</MenuButton>
+						</InputField>
+					)}
+
+					{isPeerReviewDeposit(crossrefDepositRecord) && (
+						<div className="dropdowns">
+							<InputField label="Review Type">
+								<MenuButton
+									// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
+									buttonContent={activeReviewTypeItem.title}
+									buttonProps={{ rightIcon: 'caret-down' }}
+									aria-label="review-type"
+								>
+									{reviewTypeItems.map((item) => (
+										<MenuItem
+											key={item.key}
+											active={item === activeReviewTypeItem}
+											onClick={() => handleReviewTypeItemSelect(item)}
+											text={<span>{item.title}</span>}
+										/>
+									))}
+								</MenuButton>
+							</InputField>
+							<InputField label="Review Recommendation">
+								<MenuButton
+									// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
+									buttonContent={activeReviewRecommendationItem.title}
+									buttonProps={{ rightIcon: 'caret-down' }}
+									aria-label="review-type"
+								>
+									{reviewRecommendationItems.map((item) => (
+										<MenuItem
+											key={item.key}
+											active={item === activeReviewRecommendationItem}
+											onClick={() =>
+												handleReviewRecommendationItemSelect(item)
+											}
+											text={<span>{item.title}</span>}
+										/>
+									))}
+								</MenuButton>
+							</InputField>
+						</div>
+					)}
+				</>
+			)}
+			{status === SubmitDepositStatus.Previewed && (
+				<AssignDoiPreview crossrefDepositRecord={crossrefDepositRecord} />
+			)}
+			<SubmitDepositButton
+				disabled={status === SubmitDepositStatus.Previewed ? disabled : false}
+				onClick={handleButtonClick}
+				status={status}
+				depositRecord={pubData.crossrefDepositRecord}
+				error={error}
+			/>
+		</div>
+	);
+}
+AssignDoi.defaultProps = defaultProps;
+export default AssignDoi;

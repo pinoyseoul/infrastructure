@@ -21,9 +21,10 @@ const Login = () => {
 	const altchaRef = useRef<AltchaRef>(null);
 	const { locationData, loginData, communityData } = usePageContext();
 
+	const redirectPath = locationData.query && locationData.query.redirect ? (locationData.query.redirect.startsWith('/') ? locationData.query.redirect : `/${locationData.query.redirect}`) : '/';
 	const orcidReturnTo = typeof window !== 'undefined'
-		? `${window.location.origin}${locationData.query && locationData.query.redirect ? (locationData.query.redirect.startsWith('/') ? locationData.query.redirect : `/${locationData.query.redirect}`) : '/'}`
-		: (locationData.query && locationData.query.redirect ? locationData.query.redirect : '/');
+		? `${window.location.origin}${redirectPath}`
+		: (locationData.hostname ? `https://${locationData.hostname}${redirectPath}` : redirectPath);
 
 	const onLoginSubmit = (evt) => {
 		evt.preventDefault();

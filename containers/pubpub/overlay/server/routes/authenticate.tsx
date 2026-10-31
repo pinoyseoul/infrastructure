@@ -47,9 +47,11 @@ router.get('/auth/orcid', (req: Request, res: Response) => {
 	
 	// Preserve full community origin or explicit return destination
 	let returnUrl = (req.query.returnTo || req.query.redirect) as string;
+	const requestHost = req.get('host') || 'journal.pinoyseoul.com';
 	if (!returnUrl) {
-		const requestHost = req.get('host');
-		returnUrl = requestHost ? `https://${requestHost}/` : '/';
+		returnUrl = `https://${requestHost}/`;
+	} else if (returnUrl.startsWith('/')) {
+		returnUrl = `https://${requestHost}${returnUrl}`;
 	}
 	const state = Buffer.from(returnUrl).toString('base64url');
 	const orcidUrl = `https://orcid.org/oauth/authorize?client_id=${clientId}&response_type=code&scope=/authenticate&redirect_uri=${redirectUri}&state=${encodeURIComponent(state)}`;
@@ -112,7 +114,19 @@ router.get('/auth/orcid/callback', async (req: Request, res: Response, next: Nex
 		// Safe Case 1: Active user session -> link ORCID
 		if (req.user) {
 			await User.update({ orcid: orcidId }, { where: { id: (req.user as any).id } });
-			return res.redirect(destination !== '/' ? destination : `/user/${(req.user as any).slug}`);
+			const hashedUserId = crypto.createHash('sha256').update((req.user as any).id).digest('hex').slice(0, 16);
+			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+			res.cookie('pp-lic', `pp-li-${hashedUserId}`, {
+				domain: `.${baseDomain}`,
+				maxAge: 30 * 24 * 60 * 60 * 1000,
+				path: '/',
+				sameSite: 'lax',
+				secure: process.env.NODE_ENV === 'production',
+			});
+			return req.session.save((saveErr: any) => {
+				if (saveErr) console.error('Session save error:', saveErr);
+				return res.redirect(destination !== '/' ? destination : `/user/${(req.user as any).slug}`);
+			});
 		}
 
 		// Safe Case 2: Existing user matched by ORCID ID

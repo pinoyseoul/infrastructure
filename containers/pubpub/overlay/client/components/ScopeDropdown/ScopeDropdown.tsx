@@ -93,8 +93,8 @@ const ScopeDropdown = (props: Props) => {
 			iconSize: 12,
 			title: pageData.title,
 			avatar: pageData.avatar,
-			slugs: { pageSlug: pageData.slug || 'home' },
-			href: getDashUrl({ mode: 'pages', subMode: pageData.slug || 'home' }),
+			slugs: { pageSlug: pageData.slug || '' },
+			href: getDashUrl({ mode: 'pages', subMode: pageData.slug || undefined }),
 			showSettings: canManageCommunity,
 		});
 	}
@@ -226,9 +226,7 @@ const ScopeDropdown = (props: Props) => {
 								{scope.showSettings && scope.type === 'Page' && (
 									<div className="settings">
 										<a
-											href={`/${
-												(scope.slugs && scope.slugs.pageSlug) || '/'
-											}`}
+											href={scope.slugs?.pageSlug ? `/${scope.slugs.pageSlug}` : '/'}
 										>
 											<Tooltip content="Home">
 												<Icon icon="globe" iconSize={12} />

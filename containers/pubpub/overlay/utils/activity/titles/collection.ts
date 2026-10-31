@@ -1,0 +1,50 @@
+import type {
+	CollectionActivityItem,
+	FacetsActivityItem,
+	MemberActivityItem,
+	SubmissionActivityItem,
+} from 'types';
+
+import type { TitleRenderer } from '../../../client/utils/activity/types';
+
+import { getDashUrl } from 'utils/dashboard';
+
+import { getCollectionFromContext } from './util';
+
+type AcceptedItem =
+	| CollectionActivityItem
+	| SubmissionActivityItem
+	| (MemberActivityItem & { collectionId: string })
+	| (FacetsActivityItem & { collectionId: string });
+
+const prefix = 'the Issue';
+
+export const collectionTitle: TitleRenderer<AcceptedItem> = (item, context) => {
+	const isInCollectionScope =
+		'collectionId' in context.scope && context.scope.collectionId === item.collectionId;
+
+	if (isInCollectionScope) {
+		return {
+			title: 'this Issue',
+		};
+	}
+
+	const collectionFromContext = getCollectionFromContext(item.collectionId, context);
+	if (collectionFromContext) {
+		return {
+			prefix,
+			title: collectionFromContext.title,
+			href: getDashUrl({ collectionSlug: collectionFromContext.slug }),
+		};
+	}
+	if ('collection' in item.payload) {
+		return {
+			prefix,
+			title: item.payload.collection.title,
+		};
+	}
+	return {
+		prefix,
+		title: 'an unknown Issue',
+	};
+};

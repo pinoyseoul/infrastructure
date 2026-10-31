@@ -409,7 +409,7 @@ const DashboardImpact = () => {
 		if (!data) return;
 		downloadCsv(
 			'top-pubs.csv',
-			['Title', 'URL', 'Pub ID', 'Views', 'Downloads'],
+			['Title', 'URL', 'Article ID', 'Views', 'Downloads'],
 			data.topPubs.map((p) => [
 				p.pubTitle,
 				p.pubSlug ? `/pub/${p.pubSlug}` : '',
@@ -437,7 +437,7 @@ const DashboardImpact = () => {
 		if (!data) return;
 		downloadCsv(
 			'top-collections.csv',
-			['Collection Title', 'URL', 'Collection ID', 'Pageviews'],
+			['Issue Title', 'URL', 'Issue ID', 'Pageviews'],
 			data.topCollections.map((c) => [
 				c.collectionTitle,
 				c.collectionSlug ? `/${c.collectionSlug}` : '',
@@ -483,7 +483,7 @@ const DashboardImpact = () => {
 				className="dashboard-impact-container"
 				// details={`Learn more about who your ${activeTargetName} is reaching.`}
 			>
-				<p>Login or ask the community administrator for access to impact data.</p>
+				<p>Login or ask the journal administrator for access to impact data.</p>
 			</DashboardFrame>
 		);
 	}
@@ -684,7 +684,7 @@ const DashboardImpact = () => {
 					{/* ── Row 2: Top Pubs (2/3) | Countries (1/3) ── */}
 					<div className="row-pubs-countries">
 						<CompactTable
-							title="Top Pubs"
+							title="Top Articles"
 							onExport={exportTopPubs}
 							rows={data.topPubs}
 							columns={[
@@ -708,7 +708,7 @@ const DashboardImpact = () => {
 									render: (v: number) => fmt(v),
 								},
 							]}
-							emptyMessage="No pub data for this period."
+							emptyMessage="No article data for this period."
 						/>
 						<CompactTable
 							title="Countries"
@@ -756,7 +756,7 @@ const DashboardImpact = () => {
 							emptyMessage="No page data for this period."
 						/>
 						<CompactTable
-							title="Top Collections"
+							title="Top Issues"
 							onExport={exportTopCollections}
 							rows={data.topCollections}
 							columns={[
@@ -777,7 +777,7 @@ const DashboardImpact = () => {
 									render: (v: number) => fmt(v),
 								},
 							]}
-							emptyMessage="No collection data for this period."
+							emptyMessage="No issue data for this period."
 						/>
 					</div>
 

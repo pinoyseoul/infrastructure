@@ -77,7 +77,7 @@ const CollectionControls = (props: Props) => {
 			)}
 			{isPublic && (
 				<MenuButton
-					aria-label="Make this collection private"
+					aria-label="Make this issue private"
 					buttonContent="Public"
 					buttonProps={{
 						icon: 'tick',

@@ -156,13 +156,13 @@ const DashboardMembers = (props: Props) => {
 					{!!membersByType.collection.length && activeTargetType !== 'collection' && (
 						<InheritedMembersBlock
 							members={membersByType.collection}
-							scope="Collection"
+							scope="Issue"
 						/>
 					)}
 					{!!membersByType.community.length && activeTargetType !== 'community' && (
 						<InheritedMembersBlock
 							members={membersByType.community}
-							scope="Community"
+							scope="Journal"
 						/>
 					)}
 				</SettingsSection>

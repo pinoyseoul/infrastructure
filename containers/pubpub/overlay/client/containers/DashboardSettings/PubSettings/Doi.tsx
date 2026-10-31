@@ -337,7 +337,7 @@ class Doi extends Component<Props, State> {
 			const schema = getSchemaForKind(collection.kind)!;
 			return (
 				<p>
-					This Pub will be cited as a member of the {schema.label.singular},{' '}
+					This Article will be cited as a member of the {schema.label.singular},{' '}
 					<b>{collection.title}</b>. You can change this by updating the{' '}
 					<em>Primary Issue</em> of the Article from the Issues tab.
 				</p>

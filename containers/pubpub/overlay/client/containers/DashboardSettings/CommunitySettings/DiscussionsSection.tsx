@@ -38,7 +38,7 @@ export default function DiscussionsSection(props: Props) {
 
 	return (
 		<SettingsSection title="Discussions">
-			<p>Who can create new discussions on Pubs?</p>
+			<p>Who can create new discussions on Articles?</p>
 			<RadioGroup
 				selectedValue={discussionCreationAccess}
 				onChange={(e) => {
@@ -51,7 +51,7 @@ export default function DiscussionsSection(props: Props) {
 					Members of the Community, Collection the Pub is in, or the Pub itself &
 					Contributors to the Collection the Pub is in, or the Pub itself
 				</Radio>
-				<Radio value="disabled">Disabled (except for Admins of your Community)</Radio>
+				<Radio value="disabled">Disabled (except for Admins of your Journal)</Radio>
 			</RadioGroup>
 
 			<Callout intent="warning">

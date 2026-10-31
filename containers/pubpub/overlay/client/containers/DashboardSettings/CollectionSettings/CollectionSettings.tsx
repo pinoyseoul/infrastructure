@@ -1,0 +1,191 @@
+import type { AttributionWithUser, DepositTarget } from 'types';
+
+import React, { useState } from 'react';
+
+import { useUpdateEffect } from 'react-use';
+
+import Deposit from 'client/components/Deposit/Deposit';
+import { CollectionAttributionEditor, SettingsSection } from 'components';
+import { pruneFalsyValues } from 'utils/arrays';
+import { getDashUrl } from 'utils/dashboard';
+import { usePageContext } from 'utils/hooks';
+
+import { useCollectionState } from '../../DashboardOverview/CollectionOverview/collectionState';
+import CommunityOrCollectionLevelPubSettings from '../CommunitySettings/CommunityOrCollectionLevelPubSettings';
+import DashboardSettingsFrame, { type Subtab } from '../DashboardSettingsFrame';
+import CollectionDetailsEditor from './CollectionDetailsEditor';
+import CollectionMetadataEditor from './CollectionMetadataEditor';
+import { ExportCollectionButton } from './ExportCollectionButton';
+
+type PastExport = {
+	id: string;
+	createdAt: string;
+	isProcessing: boolean;
+	output: { downloadUrl: string; ftpUploaded: boolean } | null;
+	error: string | null;
+};
+
+type FtpTargetOption = {
+	id: string;
+	host: string;
+	name: string | null;
+	filePath: string | null;
+	ftpType: string;
+};
+
+type Props = {
+	settingsData: {
+		depositTarget?: DepositTarget | null;
+		collectionExports?: PastExport[] | null;
+		ftpTargets?: FtpTargetOption[] | null;
+	};
+};
+
+const CollectionSettings = (props: Props) => {
+	const {
+		settingsData: { depositTarget, collectionExports, ftpTargets },
+	} = props;
+	const {
+		communityData,
+		scopeData: {
+			elements: { activeCollection },
+		},
+	} = usePageContext();
+	const {
+		collection,
+		updateCollection,
+		deleteCollection,
+		slugStatus,
+		hasChanges,
+		persistCollection,
+	} = useCollectionState(activeCollection!);
+	const [collectionAttributions, setCollectionAttributions] = useState<AttributionWithUser[]>(
+		collection.attributions as AttributionWithUser[],
+	);
+
+	useUpdateEffect(() => {
+		if (!hasChanges) {
+			window.history.replaceState(
+				{},
+				'',
+				getDashUrl({ collectionSlug: collection.slug, mode: 'settings' }),
+			);
+		}
+	}, [collection.slug, hasChanges]);
+
+	const isCommunityApproved =
+		!communityData.spamTag || communityData.spamTag.status === 'confirmed-not-spam';
+
+	const tabs: Subtab[] = pruneFalsyValues([
+		{
+			id: 'details',
+			title: 'Details',
+			icon: 'settings',
+			sections: [
+				<CollectionDetailsEditor
+					slugStatus={slugStatus}
+					communityData={communityData}
+					collection={collection}
+					onUpdateCollection={updateCollection}
+					onDeleteCollection={() =>
+						deleteCollection().then(() => {
+							window.location.href = getDashUrl({});
+						})
+					}
+				/>,
+			],
+		},
+		collection.kind !== 'tag' && {
+			id: 'metadata',
+			title: 'Metadata',
+			icon: 'heat-grid',
+			sections: [
+				<SettingsSection title="Metadata" id="metadata" showTitle={false}>
+					<CollectionMetadataEditor
+						collection={collection}
+						communityData={communityData}
+						onUpdateCollection={updateCollection}
+						allowUpdateDoi={
+							depositTarget?.service !== 'datacite' && isCommunityApproved
+						}
+					/>
+				</SettingsSection>,
+			],
+		},
+		collection.kind !== 'tag' && {
+			id: 'contributors',
+			title: 'Contributors',
+			pubPubIcon: 'contributor',
+			hideSaveButton: true,
+			sections: [
+				<SettingsSection title="Attribution" id="attribution" showTitle={false}>
+					<CollectionAttributionEditor
+						canEdit
+						attributions={collectionAttributions!}
+						onUpdateAttributions={setCollectionAttributions}
+						collectionId={collection.id}
+						communityId={communityData.id}
+					/>
+				</SettingsSection>,
+			],
+		},
+		collection.kind !== 'tag' && {
+			id: 'pub-settings',
+			title: 'Article settings',
+			pubPubIcon: 'pubDoc',
+			sections: [<CommunityOrCollectionLevelPubSettings />],
+		},
+		collection.kind !== 'tag' &&
+			depositTarget?.service === 'datacite' && {
+				id: 'doi',
+				title: 'DOI',
+				icon: 'barcode',
+				sections: [
+					<Deposit
+						depositTarget={depositTarget}
+						canIssueDoi
+						collection={collection}
+						communityData={communityData}
+						updateCollection={() => {}}
+					/>,
+				],
+			},
+		{
+			id: 'export',
+			title: 'Export',
+			icon: 'export',
+			hideSaveButton: true,
+			sections: [
+				<SettingsSection title="Export Issue" id="export-collection">
+					<p>
+						Creates a zip export for the issue containing the PDF and JATS files
+						for each Article in the issue.
+						{ftpTargets && (
+							<span>
+								{` `}If an FTP target is selected, the zip file will be uploaded to
+								that target.
+							</span>
+						)}
+					</p>
+
+					<ExportCollectionButton
+						pastExports={collectionExports ?? []}
+						ftpTargets={ftpTargets ?? []}
+					/>
+				</SettingsSection>,
+			],
+		},
+	]);
+
+	return (
+		<DashboardSettingsFrame
+			id="collection-settings"
+			className="collection-settings-component"
+			tabs={tabs}
+			hasChanges={hasChanges}
+			persist={persistCollection}
+		/>
+	);
+};
+
+export default CollectionSettings;

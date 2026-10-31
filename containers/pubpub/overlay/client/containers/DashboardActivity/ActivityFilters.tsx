@@ -22,7 +22,7 @@ type FilterLabel = {
 };
 
 const filterLabels: Record<ActivityFilter, FilterLabel> = {
-	community: { label: 'Community', icon: 'office' },
+	community: { label: 'Journal', icon: 'office' },
 	collection: { label: 'Issues', icon: 'collection' },
 	pub: { label: 'Articles', icon: 'pubDoc' },
 	page: { label: 'Pages', icon: 'page-layout' },

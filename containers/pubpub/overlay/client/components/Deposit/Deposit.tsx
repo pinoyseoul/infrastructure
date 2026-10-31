@@ -189,7 +189,7 @@ export default function Deposit(props: Props) {
 					)}
 					{resource && isSupplementTo(resource) && (
 						<Callout intent="warning">
-							The DOI for this Pub is not editable because it is a{' '}
+							The DOI for this Article is not editable because it is a{' '}
 							<strong>Supplement</strong> to another Article.
 						</Callout>
 					)}

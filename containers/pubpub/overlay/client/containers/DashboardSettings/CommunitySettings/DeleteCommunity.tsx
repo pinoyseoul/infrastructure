@@ -67,10 +67,10 @@ const DeleteCommunity = (props: Props) => {
 
 	return (
 		<div>
-			<h5>Delete community</h5>
+			<h5>Delete journal</h5>
 			<Callout intent="danger" icon="warning-sign">
 				<p>
-					<b>Deleting a community is permanent and cannot be undone.</b>
+					<b>Deleting a journal is permanent and cannot be undone.</b>
 				</p>
 				{isLoadingAudit && <Spinner size={20} />}
 				{audit && (
@@ -85,7 +85,7 @@ const DeleteCommunity = (props: Props) => {
 									<Tag intent="warning" minimal>
 										{audit.pubsWithDoi}
 									</Tag>{' '}
-									pub{audit.pubsWithDoi !== 1 ? 's' : ''} with DOIs will be{' '}
+									article{audit.pubsWithDoi !== 1 ? 's' : ''} with DOIs will be{' '}
 									<b>preserved in the OpenScience.ph permanent archive</b> to preserve the scholarly
 									record. Their discussions, releases, drafts, and attributions
 									will be preserved.
@@ -96,7 +96,7 @@ const DeleteCommunity = (props: Props) => {
 									<Tag intent="danger" minimal>
 										{audit.pubsWithoutDoi}
 									</Tag>{' '}
-									pub{audit.pubsWithoutDoi !== 1 ? 's' : ''} without DOIs will be{' '}
+									article{audit.pubsWithoutDoi !== 1 ? 's' : ''} without DOIs will be{' '}
 									<b>permanently deleted</b> along with all their discussions,
 									releases, and metadata.
 								</li>
@@ -112,7 +112,7 @@ const DeleteCommunity = (props: Props) => {
 					Please type <b>{communityData.title}</b> below to confirm.
 				</p>
 				<InputField
-					label={<b>Confirm community title</b>}
+					label={<b>Confirm journal title</b>}
 					value={confirmationTitle}
 					onChange={(evt) => setConfirmationTitle(evt.target.value)}
 				/>
@@ -123,7 +123,7 @@ const DeleteCommunity = (props: Props) => {
 				)}
 				<Button
 					intent="danger"
-					text="Delete community"
+					text="Delete journal"
 					loading={isDeleting}
 					onClick={handleDelete}
 					disabled={!canDelete}

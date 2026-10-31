@@ -31,7 +31,7 @@ const PubTimeline = (props: Props) => {
 
 	const draftLastEditedNotice = latestKeyAt
 		? `Last edited ${formatDate(latestKeyAt, { includeTime: true })}`
-		: 'Get started by editing the Pub draft.';
+		: 'Get started by editing the Article draft.';
 
 	const draftItem = (canView || canViewDraft) && (
 		<TimelineItem

@@ -211,7 +211,7 @@ const DashboardImpact2 = () => {
 				className="dashboard-impact2-container"
 				// details={`Learn more about who your ${activeTargetName} is reaching.`}
 			>
-				<p>Login or ask the community administrator for access to impact data.</p>
+				<p>Login or ask the journal administrator for access to impact data.</p>
 			</DashboardFrame>
 		);
 	}
@@ -311,7 +311,7 @@ const DashboardImpact2 = () => {
 			{notConfigured && (
 				<NonIdealState
 					icon="chart"
-					title="Community Impact Metrics not available"
+					title="Journal Impact Metrics not available"
 					description="Analytics have not been configured for this instance. Contact your administrator to enable Cloudflare analytics."
 				/>
 			)}

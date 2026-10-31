@@ -279,7 +279,7 @@ const DashboardCollectionOverview = (props: Props) => {
 
 	const submissionBanner =
 		hasEnabledSubmissionWorkflow && canManage
-			? renderBanner('Submissions are now open for this collection!')
+			? renderBanner('Submissions are now open for this issue!')
 			: null;
 
 	return (

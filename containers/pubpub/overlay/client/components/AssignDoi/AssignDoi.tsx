@@ -378,6 +378,18 @@ function AssignDoi(props: Props) {
 		priorPubDoi.current = pubData.doi;
 	}, [pubData.doi, status, fetchPreview]);
 
+	const onButtonClick = () => {
+		if (pubData.doi && isArkMode) {
+			const confirmed = window.confirm(
+				`This article already has an identifier (${pubData.doi}). Are you sure you want to replace it with a platform persistent identifier?`
+			);
+			if (!confirmed) {
+				return;
+			}
+		}
+		handleButtonClick();
+	};
+
 	return (
 		<div className="assign-doi-component">
 			{isArkMode && !pubData.doi && (
@@ -461,7 +473,7 @@ function AssignDoi(props: Props) {
 			)}
 			<SubmitDepositButton
 				disabled={status === SubmitDepositStatus.Previewed ? disabled : false}
-				onClick={handleButtonClick}
+				onClick={onButtonClick}
 				status={status}
 				depositRecord={pubData.crossrefDepositRecord}
 				error={error}

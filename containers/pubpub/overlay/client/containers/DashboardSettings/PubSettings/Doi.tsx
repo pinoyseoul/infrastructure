@@ -378,7 +378,7 @@ class Doi extends Component<Props, State> {
 					</Callout>
 				)}
 				{pubData.doi &&
-					!isArk &&
+					hasCrossref && !isArk &&
 					!pubData.crossrefDepositRecordId &&
 					!this.disabledDueToNoReleases() &&
 					!this.disabledDueToUnmanagedPrefix() && (
@@ -494,7 +494,7 @@ class Doi extends Component<Props, State> {
 		return (
 			<FormGroup
 				helperText={
-					pubData.doi &&
+					hasCrossref && pubData.doi &&
 					!justSetDoi && (
 						<>
 							If you&apos;ve changed aspects of this pub and wish to update its DOI
@@ -544,37 +544,40 @@ class Doi extends Component<Props, State> {
 						))
 					}
 				/>
-				{!hasCrossref && !pubData.doi && (
+				{!hasCrossref && (
 					<div style={{ marginTop: '16px', borderTop: '1px solid #e1e4e8', paddingTop: '12px' }}>
 						<Button
 							minimal={true}
 							small={true}
 							icon={this.state.isLinkingExternal ? 'chevron-down' : 'chevron-right'}
 							onClick={() => this.setState({ isLinkingExternal: !this.state.isLinkingExternal })}
-							text="Link an existing identifier (DOI, Handle, ARK, or repository URL)"
+							text={pubData.doi ? "Change linked identifier (DOI, Handle, ARK, or repository URL)" : "Link an existing identifier (DOI, Handle, ARK, or repository URL)"}
 						/>
 						<Collapse isOpen={this.state.isLinkingExternal}>
 							<div style={{ marginTop: '10px', padding: '12px', background: 'rgba(0,0,0,0.02)', borderRadius: '6px' }}>
 								<FormGroup
-									label="Existing Identifier"
-									helperText="If this article was previously published elsewhere, enter its existing persistent identifier or permanent repository URL."
+									label="Canonical Scholarly Identifier"
+									helperText="If this article was previously published or indexed elsewhere (e.g. SSRN, arXiv, DSpace Handle, or an institutional repository), enter its DOI, Handle, or permanent URL."
 								>
 									<InputGroup
 										placeholder="e.g. 10.xxxx/..., hdl:..., ark:/..., or URL"
-										value={this.state.customIdentifier}
+										value={this.state.customIdentifier !== undefined ? this.state.customIdentifier : (pubData.doi || '')}
 										onChange={(e) => this.setState({ customIdentifier: e.target.value })}
 										style={{ marginBottom: '8px' }}
 									/>
 									<Button
 										intent="success"
-										text="Save Existing Identifier"
-										disabled={!this.state.customIdentifier.trim()}
+										text="Save Identifier"
 										loading={this.state.updating}
-										onClick={() => {
-										const raw = this.state.customIdentifier.trim();
-										const clean = raw.replace(/^(https?:\/\/)?(dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '');
-										this.updateDoi(clean, 'updating', '');
-									}}
+										disabled={!(this.state.customIdentifier !== undefined ? this.state.customIdentifier : (pubData.doi || '')).trim()}
+										onClick={async () => {
+											const raw = (this.state.customIdentifier !== undefined ? this.state.customIdentifier : (pubData.doi || '')).trim();
+											if (raw) {
+												const clean = raw.replace(/^(https?:\/\/)?(dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '');
+												await this.updateDoi(clean, 'updating', '');
+												this.setState({ isLinkingExternal: false });
+											}
+										}}
 									/>
 								</FormGroup>
 							</div>

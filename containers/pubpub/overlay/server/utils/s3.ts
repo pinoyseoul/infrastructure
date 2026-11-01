@@ -71,6 +71,8 @@ export const createPubPubS3Client = (config: PubPubS3ClientConfig): PubPubS3Clie
 
 	const s3Client = new S3Client({
 		region: 'us-east-1',
+		...(env.S3_ENDPOINT && { endpoint: env.S3_ENDPOINT }),
+		...(env.S3_FORCE_PATH_STYLE !== undefined && { forcePathStyle: !!env.S3_FORCE_PATH_STYLE }),
 		credentials: {
 			accessKeyId,
 			secretAccessKey,

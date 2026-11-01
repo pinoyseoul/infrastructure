@@ -36,7 +36,7 @@ const GlobalControls = (props: Props) => {
 	const renderJournals = () => {
 		return (
 			<GlobalControlsButton
-				href="https://journal.pinoyseoul.com"
+				href="https://journals.openscience.ph"
 				aria-label="Journals"
 				desktop={{ text: 'Journals' }}
 				mobile={{ text: 'Journals' }}
@@ -46,7 +46,7 @@ const GlobalControls = (props: Props) => {
 
 	const renderRepositories = () => {
 		const repoUrl =
-			'https://openscience.pinoyseoul.com/dataverse/root?q=&fq1=dvCategory%3A%22Organization+or+Institution%22';
+			'https://openscience.ph/dataverse/root?q=&fq1=dvCategory%3A%22Organization+or+Institution%22';
 		return (
 			<GlobalControlsButton
 				href={repoUrl}

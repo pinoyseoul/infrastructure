@@ -84,7 +84,7 @@ router.post('/api/users', async (req, res) => {
 		}
 		passport.authenticate('local')(req, res, () => {
 			const hashedUserId = getHashedUserId(newUser);
-			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+			const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 			res.cookie('pp-lic', `pp-li-${hashedUserId}`, {
 				domain: isProd() ? `.${baseDomain}` : undefined,
 				path: '/',

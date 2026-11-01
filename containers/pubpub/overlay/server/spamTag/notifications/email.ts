@@ -82,7 +82,7 @@ export const sendNewSpamTagDevEmail = ({
 	userName: string;
 	reason?: UserSpamTagFields;
 }) => {
-	const reviewUrl = `https://pinoyseoul.com${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userEmail)}`;
+	const reviewUrl = `https://journals.openscience.ph${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userEmail)}`;
 	const reasonText = buildReasonText(reason);
 	return sendEmail({
 		to: [DEV_TEAM_EMAIL],
@@ -135,7 +135,7 @@ export const sendLiftDevEmail = ({
 	userEmail: string;
 	userName: string;
 }) => {
-	const reviewUrl = `https://pinoyseoul.com${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userEmail)}`;
+	const reviewUrl = `https://journals.openscience.ph${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userEmail)}`;
 	return sendEmail({
 		to: [DEV_TEAM_EMAIL],
 		subject: `Restriction lifted: ${userName} (${userEmail})`,
@@ -199,12 +199,12 @@ export const sendCommunityFlagDevEmail = ({
 	flagReason: BanReason;
 	flagReasonText?: string | null;
 }) => {
-	const reviewUrl = `https://pinoyseoul.com${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userName)}`;
+	const reviewUrl = `https://journals.openscience.ph${getSuperAdminTabUrl('spamUsers')}?q=${encodeURIComponent(userName)}`;
 	return sendEmail({
 		to: [DEV_TEAM_EMAIL],
 		subject: `Community flag: ${userName || 'Unknown'} flagged for ${flagReason}`,
 		text: stripIndent(`
-			A community admin (${actorFullName} (https://pinoyseoul.com/user/${actorSlug})) has flagged ${userName} (https://pinoyseoul.com/user/${userSlug}) for "${flagReason}" in community https://${communitySubdomain}.openscience.ph.
+			A community admin (${actorFullName} (https://journals.openscience.ph/user/${actorSlug})) has flagged ${userName} (https://journals.openscience.ph/user/${userSlug}) for "${flagReason}" in community https://${communitySubdomain}.openscience.ph.
 
 			${flagReasonText ? `Reason: ${flagReasonText}` : ''}
 

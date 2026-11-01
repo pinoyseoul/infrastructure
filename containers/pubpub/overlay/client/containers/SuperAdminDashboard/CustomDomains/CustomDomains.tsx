@@ -15,7 +15,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 import './customDomains.scss';
 
-const CNAME_TARGET = 'custom-domain.pinoyseoul.com';
+const CNAME_TARGET = 'custom-domain.openscience.ph';
 
 type CommunityDomain = {
 	id: string;
@@ -113,7 +113,7 @@ const CustomDomains = (props: Props) => {
 			)}
 			{props.cloudflareConfigured && (
 				<Callout intent={Intent.SUCCESS} icon="tick-circle" style={{ marginBottom: 20 }}>
-					Cloudflare Custom Hostnames Active (Zone: <code>pinoyseoul.com</code>). Custom domains are automatically registered with Cloudflare Edge SSL.
+					Cloudflare Custom Hostnames Active (Zone: <code>openscience.ph</code>). Custom domains are automatically registered with Cloudflare Edge SSL.
 				</Callout>
 			)}
 

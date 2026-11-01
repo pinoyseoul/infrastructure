@@ -31,7 +31,7 @@ const getIntentForSpamScore = (spamScore: number): Intent => {
 const DiscussionItem = ({ discussion }: { discussion: RecentDiscussion }) => {
 	const url =
 		discussion.communitySubdomain && discussion.pubSlug
-			? `https://${discussion.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}/pub/${discussion.pubSlug}`
+			? `https://${discussion.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}/pub/${discussion.pubSlug}`
 			: null;
 
 	return (
@@ -226,7 +226,7 @@ const UserSpamEntry = (props: Props) => {
 					{communitySubdomains.slice(0, 5).map((subdomain, index) => (
 						<a
 							key={subdomain}
-							href={`https://${subdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}`}
+							href={`https://${subdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}`}
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -321,7 +321,7 @@ const UserSpamEntry = (props: Props) => {
 											<p className="flag-detail-comment-context">
 												On{' '}
 												<a
-													href={`https://${ban.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}/pub/${ban.sourceCommentPubSlug}`}
+													href={`https://${ban.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}/pub/${ban.sourceCommentPubSlug}`}
 													target="_blank"
 													rel="noopener noreferrer"
 												>
@@ -329,7 +329,7 @@ const UserSpamEntry = (props: Props) => {
 												</a>{' '}
 												in{' '}
 												<a
-													href={`https://${ban.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}`}
+													href={`https://${ban.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}`}
 													target="_blank"
 													rel="noopener noreferrer"
 												>

@@ -34,7 +34,7 @@ const PubCard = ({
 	pub: ContentSearchPub;
 	showCommunity?: boolean;
 }) => {
-	const pubUrl = `https://${pub.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}/pub/${pub.slug}`;
+	const pubUrl = `https://${pub.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}/pub/${pub.slug}`;
 	return (
 		<div className="cs-pub-card">
 			<a
@@ -95,7 +95,7 @@ const CommunityGroup = ({
 					{pubs.length}
 				</Tag>
 				<a
-					href={`https://${subdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}`}
+					href={`https://${subdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}`}
 					target="_blank"
 					rel="noopener noreferrer"
 					className="cs-community-group-link"

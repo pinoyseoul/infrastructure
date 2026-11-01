@@ -159,7 +159,7 @@ export const uploadRouteImplementation: AppRouteOptions<typeof contract.upload.f
 								});
 						}
 
-						const basePublicUrl = (env.S3_PUBLIC_URL || 'https://storage.pinoyseoul.com/journal-assets').replace(/\/+$/, '');
+						const basePublicUrl = (env.S3_PUBLIC_URL || 'https://storage.openscience.ph/journal-assets').replace(/\/+$/, '');
 						resolve({ url: `${basePublicUrl}/${key}`, size, key });
 					} catch (err: any) {
 						reject(err);

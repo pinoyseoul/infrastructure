@@ -298,7 +298,7 @@ const CommunityTemplates = (props: Props) => {
 					<FormGroup label="Community URL" labelFor="clone-community-url">
 						<InputGroup
 							id="clone-community-url"
-							placeholder="e.g. my-community.journal.pinoyseoul.com"
+							placeholder="e.g. my-community.journals.openscience.ph"
 							value={cloneCommunityUrl}
 							onChange={(e) => setCloneCommunityUrl(e.target.value)}
 						/>

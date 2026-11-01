@@ -54,7 +54,7 @@ async function establishPubPubSession(req: any, res: any, user: types.UserWithPr
 	await logIn(user);
 	const hashedUserId = getHashedUserId(user);
 
-	const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+	const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 	res.cookie('pp-lic', `pp-li-${hashedUserId}`, {
 		domain: isProd() ? `.${baseDomain}` : undefined,
 		path: '/',

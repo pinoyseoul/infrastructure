@@ -7,7 +7,7 @@ import { sleep } from 'utils/promises';
 
 import { extensionFor } from './util';
 
-export const getUrlForAssetKey = (assetKey: string) => `${(process.env.S3_PUBLIC_URL || 'https://storage.pinoyseoul.com/journal-assets').replace(/\/+$/, '')}/${assetKey}`;
+export const getUrlForAssetKey = (assetKey: string) => `${(process.env.S3_PUBLIC_URL || 'https://storage.openscience.ph/journal-assets').replace(/\/+$/, '')}/${assetKey}`;
 
 export const generateAssetKeyForFile = (filePath: string) => {
 	const fileExtension = extensionFor(filePath);

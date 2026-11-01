@@ -132,7 +132,7 @@ const Footer = (props: Props) => {
 							<p style={{ color: '#94a3b8', fontSize: '13px', lineHeight: 1.6, marginBottom: '14px' }}>
 								For university partnerships, library onboarding, or collection inquiries:
 							</p>
-							<a href="https://openscience.pinoyseoul.com/contact.xhtml" style={{ display: 'inline-block', background: '#d97706', color: '#ffffff', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>Contact Us &rarr;</a>
+							<a href="https://openscience.ph/contact.xhtml" style={{ display: 'inline-block', background: '#d97706', color: '#ffffff', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>Contact Us &rarr;</a>
 						</div>
 					</div>
 					<div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', fontSize: '12px', color: '#64748b' }}>

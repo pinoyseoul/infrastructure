@@ -141,7 +141,7 @@ appRouter.use('/api/health', (req, res) => {
 // Purge legacy host-only and domain cookies to prevent RFC 6265 cookie shadowing
 appRouter.use((req, res, next) => {
 	if (req.cookies && req.cookies['connect.sid']) {
-		const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+		const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 		res.clearCookie('connect.sid', { path: '/' });
 		res.clearCookie('connect.sid', { path: '/', domain: '.' + baseDomain });
 	}
@@ -170,7 +170,7 @@ appRouter.use(
 			path: '/',
 			httpOnly: true,
 			secure: env.NODE_ENV === 'production',
-			domain: env.NODE_ENV === 'production' ? `.${process.env.BASE_DOMAIN || 'pinoyseoul.com'}` : undefined,
+			domain: env.NODE_ENV === 'production' ? `.${process.env.BASE_DOMAIN || 'openscience.ph'}` : undefined,
 			sameSite: 'lax',
 			maxAge:
 				env.NODE_ENV === 'production'
@@ -185,7 +185,7 @@ appRouter.use((req, res, next) => {
 	/* across all subdomains to maintain login across communities. */
 	const rawHostname = req.headers.communityhostname || req.hostname;
 	const hostname = (Array.isArray(rawHostname) ? rawHostname[0] : (rawHostname || '')) as string;
-	const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+	const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 	const isBaseDomain =
 		hostname.endsWith(`.${baseDomain}`) || hostname === baseDomain;
 	const onPlatformDomain =

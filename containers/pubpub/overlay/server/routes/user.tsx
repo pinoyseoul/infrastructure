@@ -118,7 +118,7 @@ router.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 					title: `${userData.fullName} · OpenScience.ph`,
 					description: userData.bio,
 					image: userData.avatar,
-					canonicalUrl: `https://${process.env.BASE_DOMAIN || 'pinoyseoul.com'}/user/${userData.slug}`,
+					canonicalUrl: `https://${process.env.BASE_DOMAIN || 'openscience.ph'}/user/${userData.slug}`,
 					unlisted: isNewishUser,
 				})}
 			/>,

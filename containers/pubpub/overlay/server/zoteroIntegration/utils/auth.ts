@@ -9,7 +9,7 @@ const baseRedirectUrl =
 	process.env.BASE_URL ||
 	(process.env.BASE_PORTAL_DOMAIN
 		? `https://${process.env.BASE_PORTAL_DOMAIN}`
-		: 'https://journal.pinoyseoul.com');
+		: 'https://journals.openscience.ph');
 
 export const zoteroAuthStrategy = () =>
 	new passportOAuth1.Strategy(

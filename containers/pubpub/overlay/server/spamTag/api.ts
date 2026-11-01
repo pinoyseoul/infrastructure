@@ -85,8 +85,8 @@ router.post(
 			attributes: ['fullName', 'email', 'slug'],
 		});
 
-		const communityUrl = `https://${community.subdomain}.${process.env.BASE_DOMAIN || 'pinoyseoul.com'}`;
-		const reviewUrl = `https://${process.env.BASE_DOMAIN || 'pinoyseoul.com'}${getSuperAdminTabUrl('spam')}?q=${encodeURIComponent(community.subdomain)}`;
+		const communityUrl = `https://${community.subdomain}.${process.env.BASE_DOMAIN || 'openscience.ph'}`;
+		const reviewUrl = `https://${process.env.BASE_DOMAIN || 'openscience.ph'}${getSuperAdminTabUrl('spam')}?q=${encodeURIComponent(community.subdomain)}`;
 		const requesterName = user?.fullName ?? 'Unknown';
 		const requesterEmail = user?.email ?? 'unknown';
 
@@ -205,7 +205,7 @@ router.put(
 		const communitySubdomains = communities.get(userId)?.communitySubdomains;
 		if (communitySubdomains) {
 			for (const communitySubdomain of communitySubdomains) {
-				schedulePurge(`${communitySubdomain}.${process.env.BASE_DOMAIN || 'pinoyseoul.com'}`);
+				schedulePurge(`${communitySubdomain}.${process.env.BASE_DOMAIN || 'openscience.ph'}`);
 			}
 		}
 

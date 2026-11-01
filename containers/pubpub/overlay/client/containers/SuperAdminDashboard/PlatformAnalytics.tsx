@@ -430,7 +430,7 @@ const PeriodExplorer = ({ showSpam }: { showSpam: boolean }) => {
 											<td>{c.title}</td>
 											<td>
 												<a
-													href={`https://${c.subdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}`}
+													href={`https://${c.subdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}`}
 													target="_blank"
 													rel="noopener noreferrer"
 												>

@@ -87,7 +87,7 @@ export const envSchema = z.object({
 	AWS_SECRET_ACCESS_KEY: z.string().min(1).describe('AWS secret key for S3 uploads'),
 	S3_ENDPOINT: z.string().url().optional().describe('S3-compatible custom endpoint for asset uploads'),
 	S3_BUCKET: z.string().default('journal-assets').describe('S3 bucket name for uploads'),
-	S3_PUBLIC_URL: z.string().url().optional().describe('Public base URL for uploaded assets (e.g. https://storage.pinoyseoul.com/journal-assets)'),
+	S3_PUBLIC_URL: z.string().url().optional().describe('Public base URL for uploaded assets (e.g. https://storage.openscience.ph/journal-assets)'),
 	S3_FORCE_PATH_STYLE: booleanish.describe('Force path-style S3 URLs (required for MinIO/SeaweedFS)'),
 
 	// ── Backup ─────────────────────────────────────────────────────────

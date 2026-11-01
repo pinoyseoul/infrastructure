@@ -32,7 +32,7 @@ export const communityUrl = (community) => {
 		}
 		return `https://${community.domain}`;
 	}
-	const baseDomain = (typeof window !== 'undefined' && window.location && window.location.hostname.includes('.')) ? window.location.hostname.split('.').slice(-2).join('.') : (process.env.BASE_DOMAIN || 'pinoyseoul.com');
+	const baseDomain = (typeof window !== 'undefined' && window.location && window.location.hostname.includes('.')) ? window.location.hostname.split('.').slice(-2).join('.') : (process.env.BASE_DOMAIN || 'openscience.ph');
 	return `https://${community.subdomain}.${baseDomain}`;
 };
 

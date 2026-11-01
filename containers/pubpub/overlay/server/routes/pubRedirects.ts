@@ -40,7 +40,7 @@ router.get('/pub/:slug', async (req, res, next) => {
 			include: [{ model: Community, as: 'community', attributes: ['subdomain', 'domain'] }],
 		})) as DefinitelyHas<Pub, 'community'>;
 		if (pubData) {
-			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+			const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 			const newDomain = pubData.community.domain
 				? pubData.community.domain
 				: `${pubData.community.subdomain}.${baseDomain}`;
@@ -98,7 +98,7 @@ router.get(/^\/ark:(\/)?([0-9]+)\/([a-zA-Z0-9_\-\.]+)/i, async (req, res, next) 
 			include: [{ model: Community, as: 'community', attributes: ['subdomain', 'domain'] }],
 		})) as DefinitelyHas<Pub, 'community'>;
 		if (pubData) {
-			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+			const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 			const targetDomain = pubData.community.domain
 				? pubData.community.domain
 				: `${pubData.community.subdomain}.${baseDomain}`;

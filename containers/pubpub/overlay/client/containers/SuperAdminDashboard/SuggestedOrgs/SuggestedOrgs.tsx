@@ -181,14 +181,14 @@ const CommunityCard = ({ comm }: { comm: EduCommunity }) => {
 				)}
 				<div className="edu-comm-info">
 					<a
-						href={`https://${comm.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}`}
+						href={`https://${comm.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}`}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="edu-comm-title"
 					>
 						{comm.communityTitle}
 					</a>
-					<span className="edu-comm-sub">{comm.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}</span>
+					<span className="edu-comm-sub">{comm.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}</span>
 				</div>
 				<div className="edu-comm-nums">
 					<Tag minimal>{plural(comm.pubCount, 'pub')}</Tag>
@@ -521,7 +521,7 @@ const OverviewTab = ({ group }: { group: EduDomainGroup }) => {
 									/>
 								)}
 								<a
-									href={`https://${c.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}`}
+									href={`https://${c.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}`}
 									target="_blank"
 									rel="noopener noreferrer"
 									className="edu-overview-name"
@@ -966,7 +966,7 @@ const ActivityTab = ({ domain }: { domain: string }) => {
 					<tbody>
 						{filtered.map((ev, i) => {
 							const meta = EVENT_META[ev.kind as ActivityKind] || EVENT_META.release;
-							const communityUrl = `https://${ev.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'pinoyseoul.com'}`;
+							const communityUrl = `https://${ev.communitySubdomain}.${typeof window !== 'undefined' && window.location.hostname.includes('.') ? window.location.hostname.split('.').slice(-2).join('.') : 'openscience.ph'}`;
 							const pubUrl = ev.pubSlug ? `${communityUrl}/pub/${ev.pubSlug}` : null;
 							return (
 								<tr key={`${ev.kind}-${ev.timestamp}-${i}`}>

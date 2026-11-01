@@ -78,7 +78,7 @@ const getCommunityUrl = (community: UserCommunity, locationData: { isDuqDuq: boo
 	if (community.domain) return `https://${community.domain}`;
 	const base = (typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com'))
 		? 'pinoyseoul.com'
-		: 'openscience.ph';
+		: (typeof window !== 'undefined' && window.location.hostname.endsWith('openscience.ph') ? 'journals.openscience.ph' : 'openscience.ph');
 	return `https://${community.subdomain}.${base}`;
 };
 
@@ -86,7 +86,7 @@ const getCommunityDisplayUrl = (community: UserCommunity) => {
 	if (community.domain) return community.domain;
 	const base = (typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com'))
 		? 'pinoyseoul.com'
-		: 'openscience.ph';
+		: (typeof window !== 'undefined' && window.location.hostname.endsWith('openscience.ph') ? 'journals.openscience.ph' : 'openscience.ph');
 	return `${community.subdomain}.${base}`;
 };
 

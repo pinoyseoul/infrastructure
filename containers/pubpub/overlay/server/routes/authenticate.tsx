@@ -42,12 +42,12 @@ router.get('/auth/orcid', (req: Request, res: Response) => {
 		console.error('ORCID_CLIENT_ID is not configured');
 		return res.redirect('/login?error=orcid_not_configured');
 	}
-	const canonicalHost = process.env.BASE_PORTAL_DOMAIN || req.get('host') || 'journal.pinoyseoul.com';
+	const canonicalHost = process.env.BASE_PORTAL_DOMAIN || req.get('host') || 'journals.openscience.ph';
 	const redirectUri = encodeURIComponent(`https://${canonicalHost}/auth/orcid/callback`);
 	
 	// Preserve full community origin or explicit return destination
 	let returnUrl = (req.query.returnTo || req.query.redirect) as string;
-	const requestHost = req.get('host') || 'journal.pinoyseoul.com';
+	const requestHost = req.get('host') || 'journals.openscience.ph';
 	if (!returnUrl) {
 		returnUrl = `https://${requestHost}/`;
 	} else if (returnUrl.startsWith('/')) {
@@ -71,7 +71,7 @@ router.get('/auth/orcid/callback', async (req: Request, res: Response, next: Nex
 			console.error('ORCID credentials are not configured in environment');
 			return res.redirect('/login?error=orcid_not_configured');
 		}
-		const canonicalHost = process.env.BASE_PORTAL_DOMAIN || req.get('host') || 'journal.pinoyseoul.com';
+		const canonicalHost = process.env.BASE_PORTAL_DOMAIN || req.get('host') || 'journals.openscience.ph';
 		const redirectUri = `https://${canonicalHost}/auth/orcid/callback`;
 
 		const tokenRes = await fetch('https://orcid.org/oauth/token', {
@@ -115,7 +115,7 @@ router.get('/auth/orcid/callback', async (req: Request, res: Response, next: Nex
 		if (req.user) {
 			await User.update({ orcid: orcidId }, { where: { id: (req.user as any).id } });
 			const hashedUserId = crypto.createHash('sha256').update((req.user as any).id).digest('hex').slice(0, 16);
-			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+			const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 			res.cookie('pp-lic', `pp-li-${hashedUserId}`, {
 				domain: `.${baseDomain}`,
 				maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -197,7 +197,7 @@ router.get('/auth/orcid/callback', async (req: Request, res: Response, next: Nex
 		return (req as any).login(user, (err: any) => {
 			if (err) return next(err);
 			const hashedUserId = crypto.createHash('sha256').update(user.id).digest('hex').slice(0, 16);
-			const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+			const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 			res.cookie('pp-lic', `pp-li-${hashedUserId}`, {
 				domain: `.${baseDomain}`,
 				maxAge: 30 * 24 * 60 * 60 * 1000,

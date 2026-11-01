@@ -140,7 +140,7 @@ router.get(
 			}
 		}
 
-		// Base platform portal sitemap (e.g. journal.pinoyseoul.com)
+		// Base platform portal sitemap (e.g. journals.openscience.ph)
 		try {
 			const xml = await buildPortalSitemapXml(req.hostname);
 			res.header('Content-Type', 'application/xml');

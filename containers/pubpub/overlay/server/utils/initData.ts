@@ -128,7 +128,7 @@ export const getInitialData = async (
 	}
 
 	/* If we have a community to find, search, and then return */
-	const baseDomain = process.env.BASE_DOMAIN || 'pinoyseoul.com';
+	const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 	const isPubPubSub = hostname.indexOf('.pubpub.org') > -1;
 	const isPlatformSub = (hostname.endsWith(`.${baseDomain}`) || hostname.endsWith('.openscience.ph')) && !['journal.pinoyseoul.com', 'journals.openscience.ph'].includes(hostname);
 

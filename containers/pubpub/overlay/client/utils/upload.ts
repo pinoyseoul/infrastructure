@@ -85,8 +85,8 @@ export const getAssetPublicUrl = (key: string): string => {
 	const base =
 		(typeof window !== 'undefined' &&
 			(window as any).__pubpub_pageContextProps__?.locationData?.s3PublicUrl) ||
-		(typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com')
-			? 'https://storage.pinoyseoul.com/journal-assets'
+		(typeof window !== 'undefined' && window.location.hostname.includes('openscience.ph')
+			? 'https://storage.openscience.ph/journal-assets'
 			: 'https://storage.openscience.ph/journal-assets');
 	return `${base.replace(/\/+$/, '')}/${key.replace(/^\/+/, '')}`;
 };
@@ -96,8 +96,8 @@ const getBaseUrlForBucket = (bucket: string, uploadUrl?: string) => {
 	const base =
 		(typeof window !== 'undefined' &&
 			(window as any).__pubpub_pageContextProps__?.locationData?.s3PublicUrl) ||
-		(typeof window !== 'undefined' && window.location.hostname.includes('pinoyseoul.com')
-			? 'https://storage.pinoyseoul.com/journal-assets'
+		(typeof window !== 'undefined' && window.location.hostname.includes('openscience.ph')
+			? 'https://storage.openscience.ph/journal-assets'
 			: 'https://storage.openscience.ph/journal-assets');
 	return base;
 };

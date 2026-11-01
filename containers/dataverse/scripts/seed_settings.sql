@@ -4,9 +4,9 @@
 -- ==============================================================================
 
 INSERT INTO setting (name, lang, content) VALUES
-(':GuidesBaseUrl', '', 'https://journal.pinoyseoul.com'),
-(':NavbarAboutUrl', '', 'https://obra.pinoyseoul.com'),
-(':NavbarGuidesUrl', '', 'https://journal.pinoyseoul.com'),
+(':GuidesBaseUrl', '', 'https://journals.openscience.ph'),
+(':NavbarAboutUrl', '', 'https://openscience.ph/about'),
+(':NavbarGuidesUrl', '', 'https://journals.openscience.ph'),
 (':NavbarSupportUrl', '', '/contact.xhtml'),
 (':InheritParentTheme', '', 'true'),
 (':SearchHighlighting', '', 'true'),

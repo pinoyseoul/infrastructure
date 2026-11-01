@@ -1,4 +1,4 @@
-﻿# OpenScience.ph (OBRA Incorporated) Crawler Optimization
+# OpenScience.ph (OBRA Incorporated) Crawler Optimization
 # Standards-compliant rules for Academic Search Engines & Harvesters
 
 User-agent: *
@@ -31,4 +31,4 @@ Allow: /dataset.xhtml
 Allow: /dataverse/
 Disallow: /api/
 
-Sitemap: https://openscience.pinoyseoul.com/sitemap/sitemap.xml
+Sitemap: https://openscience.ph/sitemap/sitemap.xml

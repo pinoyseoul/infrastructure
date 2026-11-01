@@ -102,9 +102,9 @@ router.get('/explore', (req, res, next) => {
 					}}
 					headerComponents={generateMetaComponents({
 						initialData,
-						title: 'Explore · OpenScience.ph',
+						title: 'Explore · OpenScience.ph Journals',
 						description:
-							'Discover journals, preprints, and research collections on OpenScience.ph — journals, books, conferences, and more.',
+							'Discover peer-reviewed journals, institutional repositories, and faculty research collections across OpenScience.ph.',
 					})}
 				/>,
 			);

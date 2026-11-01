@@ -144,15 +144,23 @@ const Explore = (props: Props) => {
 						<div className="explore-search">
 							<input
 								type="text"
-								placeholder="Search published journals, articles, or faculty scholarship..."
+								placeholder="Filter journals by title, discipline, or institution..."
 								value={searchTerm}
 								onChange={(e) => {
 									setSearchTerm(e.target.value);
 									setVisibleCount(PAGE_SIZE);
 								}}
-								aria-label="Search published journals, articles, or faculty scholarship..."
+								onKeyDown={(e) => {
+									if (e.key === 'Enter' && searchTerm.trim()) {
+										window.location.href = `/search?q=${encodeURIComponent(searchTerm.trim())}&mode=pubs`;
+									}
+								}}
+								aria-label="Filter journals by title, discipline, or institution..."
 							/>
 						</div>
+						<a href="/search" className="browse-all-articles-link">
+							Search Published Articles &rarr;
+						</a>
 						{searchTerm && (
 							<span className="explore-result-count">
 								{filtered.length} journal{filtered.length !== 1 ? 's' : ''}
@@ -181,9 +189,14 @@ const Explore = (props: Props) => {
 					{filtered.length === 0 && searchTerm && (
 						<div className="no-results">
 							<p>
-								No journals match &ldquo;{searchTerm}&rdquo;. Try a different
-								search.
+								No journals match &ldquo;{searchTerm}&rdquo;.
 							</p>
+							<a
+								className="search-articles-bridge-button"
+								href={`/search?q=${encodeURIComponent(searchTerm.trim())}&mode=pubs`}
+							>
+								Search all published articles for &ldquo;{searchTerm}&rdquo; &rarr;
+							</a>
 						</div>
 					)}
 				</div>

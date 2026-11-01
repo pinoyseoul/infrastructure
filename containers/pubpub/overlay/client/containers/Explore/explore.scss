@@ -78,6 +78,20 @@ $bgColorDark: #0a192f;
 
 	/* ---- Toolbar ---- */
 	.explore-toolbar {
+		.browse-all-articles-link {
+			color: #0284c7;
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 0.95rem;
+			white-space: nowrap;
+			transition: color 0.15s;
+
+			&:hover {
+				color: #0369a1;
+				text-decoration: underline;
+			}
+		}
+
 		display: flex;
 		align-items: center;
 		gap: 1em;
@@ -245,6 +259,24 @@ $bgColorDark: #0a192f;
 
 	/* ---- No Results ---- */
 	.no-results {
+		.search-articles-bridge-button {
+			display: inline-block;
+			margin-top: 1rem;
+			padding: 0.65rem 1.4rem;
+			background: #0284c7;
+			color: #ffffff;
+			text-decoration: none;
+			border-radius: 6px;
+			font-weight: 600;
+			font-size: 0.95rem;
+			transition: background 0.15s;
+
+			&:hover {
+				background: #0369a1;
+				text-decoration: none;
+			}
+		}
+
 		text-align: center;
 		padding: 4em 0;
 		color: #888;

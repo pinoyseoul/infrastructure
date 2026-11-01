@@ -209,7 +209,9 @@ appRouter.use(passport.initialize());
 appRouter.use(passport.session());
 
 passport.use(User.createStrategy());
-passport.use('zotero', zoteroAuthStrategy());
+if (env.ZOTERO_CLIENT_KEY && env.ZOTERO_CLIENT_SECRET) {
+	passport.use('zotero', zoteroAuthStrategy());
+}
 passport.use('bearer', bearerStrategy());
 
 passport.serializeUser(User.serializeUser());

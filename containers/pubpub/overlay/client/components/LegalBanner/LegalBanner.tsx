@@ -62,7 +62,7 @@ const banners: Banner[] = [
 	},
 	{
 		title: 'Cookies and data privacy',
-		shouldShow: (props) => shouldShowGdprBanner(props),
+		shouldShow: () => false,
 		notice: () => {
 			return (
 				<p>

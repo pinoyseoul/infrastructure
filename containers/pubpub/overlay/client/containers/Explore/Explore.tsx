@@ -158,9 +158,6 @@ const Explore = (props: Props) => {
 								aria-label="Filter journals by title, discipline, or institution..."
 							/>
 						</div>
-						<a href="/search" className="browse-all-articles-link">
-							Search Published Articles &rarr;
-						</a>
 						{searchTerm && (
 							<span className="explore-result-count">
 								{filtered.length} journal{filtered.length !== 1 ? 's' : ''}

@@ -287,3 +287,38 @@ $bgColorDark: #0a192f;
 
 /* ---- Responsive ---- */
 @media only screen and (max-width: 900px) {
+	#explore-container {
+		.community-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	#explore-container {
+		.explore-hero {
+			padding: 3em 0 2.5em;
+
+			h1 {
+				font-size: 1.8em;
+			}
+		}
+
+		.explore-toolbar {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.explore-search {
+			max-width: none;
+		}
+
+		.community-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.community-card {
+			min-height: 140px;
+		}
+	}
+}

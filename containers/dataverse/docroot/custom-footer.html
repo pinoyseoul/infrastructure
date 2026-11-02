@@ -85,6 +85,14 @@
     text-decoration: none !important;
     transform: translateY(-1px);
   }
+
+  /* Suppress legacy replication data helper button on dataset creation */
+  #datasetForm\:addReplicationData,
+  button[id*="addReplicationData"],
+  input[id*="addReplicationData"],
+  [id*="addReplicationData"] {
+    display: none !important;
+  }
 </style>
 
 <div class="os-footer-inner">

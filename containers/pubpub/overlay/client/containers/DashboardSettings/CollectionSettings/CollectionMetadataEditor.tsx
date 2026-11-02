@@ -95,8 +95,8 @@ class CollectionMetadataEditor extends React.Component<Props, State> {
 
 	handleAssignArk = async () => {
 		const { collection, communityData, onUpdateCollection } = this.props;
-		const sub = communityData?.subdomain ? `${communityData.subdomain}-` : '';
-		const ark = `ark:/14373/c1${sub}${collection.slug}`;
+		const imprint = communityData?.subdomain || communityData?.slug || 'journal';
+		const ark = `ark:/14373/c1.${imprint}.${collection.slug}`;
 		this.setState({ isGettingDoi: true, deposited: false, saved: false });
 		try {
 			await onUpdateCollection({ doi: ark });

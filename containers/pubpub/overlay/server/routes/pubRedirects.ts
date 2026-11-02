@@ -4,7 +4,7 @@ import { Router } from 'express';
 import queryString, { type ParsedQuery } from 'query-string';
 import { Op } from 'sequelize';
 
-import { Community, Pub, Release } from 'server/models';
+import { Collection, Community, Pub, Release } from 'server/models';
 import { handleErrors } from 'server/utils/errors';
 import { hostIsValid } from 'server/utils/routes';
 import { isDuqDuq } from 'utils/environment';
@@ -84,12 +84,14 @@ router.get('/pub/:slug', async (req, res, next) => {
 	}
 });
 
-/* Resolve Archival Resource Keys (e.g. /ark:/14373/j1ykzenf63 or .v1) */
+/* Resolve Archival Resource Keys (e.g. /ark:/14373/j1ykzenf63 or /ark:/14373/c1preprints) */
 router.get(/^\/ark:(\/)?([0-9]+)\/([a-zA-Z0-9_\-\.]+)/i, async (req, res, next) => {
 	try {
 		const naan = req.params[1];
 		const name = req.params[2];
 		const fullArk = `ark:/${naan}/${name}`.toLowerCase();
+		
+		/* 1. Try resolving an Article (Pub) */
 		const pubData = (await Pub.findOne({
 			where: {
 				doi: { [Op.iLike]: fullArk },
@@ -97,13 +99,35 @@ router.get(/^\/ark:(\/)?([0-9]+)\/([a-zA-Z0-9_\-\.]+)/i, async (req, res, next) 
 			attributes: ['id', 'slug'],
 			include: [{ model: Community, as: 'community', attributes: ['subdomain', 'domain'] }],
 		})) as DefinitelyHas<Pub, 'community'>;
+
+		const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
+
 		if (pubData) {
-			const baseDomain = process.env.BASE_DOMAIN || 'openscience.ph';
 			const targetDomain = pubData.community.domain
 				? pubData.community.domain
 				: `${pubData.community.subdomain}.${baseDomain}`;
 			return res.redirect(301, `https://${targetDomain}/pub/${pubData.slug}`);
 		}
+
+		/* 2. Try resolving a Collection / Issue */
+		const collectionData = (await Collection.findOne({
+			where: {
+				[Op.or]: [
+					{ doi: { [Op.iLike]: fullArk } },
+					{ 'metadata.doi': { [Op.iLike]: fullArk } },
+				],
+			},
+			attributes: ['id', 'slug'],
+			include: [{ model: Community, as: 'community', attributes: ['subdomain', 'domain'] }],
+		})) as DefinitelyHas<Collection, 'community'>;
+
+		if (collectionData) {
+			const targetDomain = collectionData.community.domain
+				? collectionData.community.domain
+				: `${collectionData.community.subdomain}.${baseDomain}`;
+			return res.redirect(301, `https://${targetDomain}/${collectionData.slug}`);
+		}
+
 		return next();
 	} catch (err) {
 		return handleErrors(req, res, next)(err);

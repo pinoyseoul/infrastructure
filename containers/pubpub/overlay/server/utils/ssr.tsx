@@ -369,7 +369,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		];
 	}
 
-	const finalDoi = doi || collection?.metadata?.doi;
+	const finalDoi = doi || collection?.doi || collection?.metadata?.doi;
 
 	if (finalDoi) {
 		if (finalDoi.startsWith('10.')) {

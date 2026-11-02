@@ -18,7 +18,13 @@ type Props = {
 
 const ScopeSummaryList = (props: Props) => {
 	const { scopeKind, scope } = props;
-	const { collections, pubs, submissions, discussions, reviews } = scope.scopeSummary;
+	const {
+		collections = 0,
+		pubs = 0,
+		submissions = 0,
+		discussions = 0,
+		reviews = 0,
+	} = scope.scopeSummary || {};
 
 	const renderIntroText = () => {
 		const createdDate = dateFormat(scope.createdAt, 'mmmm d, yyyy');
@@ -26,11 +32,12 @@ const ScopeSummaryList = (props: Props) => {
 			return <>This Journal was created on {createdDate} and contains:</>;
 		}
 		if (scopeKind === 'collection') {
-			const { label } = getSchemaForKind((scope as Collection).kind)!;
+			const schema = getSchemaForKind((scope as Collection).kind);
+			const singular = schema?.label?.singular || 'issue';
 			return (
 				<>
-					This Issue is {enIndefiniteArticle(label.singular)}{' '}
-					{capitalize(label.singular)}. It was created on {createdDate} and contains:
+					This Issue is {enIndefiniteArticle(singular)}{' '}
+					{capitalize(singular)}. It was created on {createdDate} and contains:
 				</>
 			);
 		}

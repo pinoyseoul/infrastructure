@@ -39,14 +39,15 @@ const Header = (props: Props) => {
 		if ((!isBasePubPub && !backgroundColorChange) || !isLanding) {
 			dynamicComponentClasses += ' accent-background';
 		}
-		if ((!isBasePubPub && !textColorChange) || (!isBasePubPub && !isLanding)) {
+		if ((!isBasePubPub && !textColorChange) || (!isBasePubPub && !isLanding) || hideHero) {
 			dynamicComponentClasses += ' accent-color';
 		}
-		if (hideHero) {
-			return dynamicComponentClasses;
-		}
-		const heroTextColor = communityData.heroTextColor || communityData.accentTextColor;
-		if (heroTextColor === '#FFFFFF') {
+
+		const isDarkHeader =
+			communityData.headerColorType === 'dark' ||
+			(!hideHero &&
+				(communityData.heroTextColor || communityData.accentTextColor) === '#FFFFFF');
+		if (isDarkHeader) {
 			dynamicComponentClasses += ` ${Classes.DARK}`;
 		}
 		return dynamicComponentClasses;

@@ -297,7 +297,22 @@ const Footer = (props: Props) => {
 					)}
 				</div>
 			</GridWrapper>
-			<div className="os-small-footer-bar" style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '14px 24px', margin: '16px auto 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '1240px', fontSize: '12px', color: '#64748b' }}>
+			<div
+				className="os-small-footer-bar"
+				style={{
+					borderTop: '1px solid currentColor',
+					opacity: 0.75,
+					padding: '16px 24px',
+					margin: '20px auto 0',
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+					width: '100%',
+					maxWidth: '1240px',
+					fontSize: '12px',
+					color: 'inherit',
+				}}
+			>
 				<div>&copy; 2026 OpenScience.ph. Works cataloged are stewarded under individual author licenses.</div>
 				<div style={{ textAlign: 'right', marginLeft: 'auto' }}>Powered by MIT PubPub</div>
 			</div>

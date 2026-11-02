@@ -139,6 +139,7 @@ const Header = (props: Props) => {
 			className={classNames([
 				'header-component',
 				componentClasses,
+				isBasePubPub ? 'base-pubpub' : '',
 				isPreview ? 'preview' : '',
 			])}
 			style={backgroundStyle}

@@ -19,49 +19,70 @@
             display: flex;
             flex-direction: column;
         }
-        .os-404-header {
+
+        /* 1. Authentic Platform Navbar */
+        .os-unified-navbar {
             background: #0a192f;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 14px 0;
+            padding: 10px 0;
         }
-        .os-404-brand {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffffff;
-            text-decoration: none;
+        .os-navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .os-brand-link {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            text-decoration: none !important;
         }
-        .os-404-brand:hover {
-            color: #f59e0b;
-            text-decoration: none;
+        .os-nav-logo {
+            height: 28px;
+            width: auto;
         }
-        .os-404-brand span {
-            color: #f59e0b;
+        .os-brand-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.01em;
         }
-        .os-404-nav-links {
+        .os-beta-pill {
+            font-size: 9px;
+            padding: 2px 6px;
+            margin-left: 2px;
+            background: #d97706;
+            color: #ffffff;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .os-nav-menu {
             list-style: none;
             margin: 0;
             padding: 0;
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 20px;
-            height: 100%;
+            gap: 24px;
         }
-        .os-404-nav-links a {
+        .os-nav-menu a {
             color: #cbd5e1;
             font-size: 14px;
             font-weight: 500;
             text-decoration: none;
             transition: color 0.15s ease;
         }
-        .os-404-nav-links a:hover {
+        .os-nav-menu a:hover {
             color: #ffffff;
+            text-decoration: none;
         }
+
+        /* 2. Main 404 Content */
         .os-404-main {
             flex: 1 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 60px 20px;
         }
         .os-404-card {
@@ -70,24 +91,26 @@
             border-radius: 12px;
             padding: 48px 36px;
             max-width: 680px;
+            width: 100%;
             margin: 0 auto;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             text-align: center;
         }
-        .os-404-code {
+        .os-404-badge {
             display: inline-block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
-            color: #d97706;
+            color: #b45309;
             background: #fef3c7;
             border: 1px solid #fde68a;
             padding: 4px 14px;
             border-radius: 20px;
             margin-bottom: 16px;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
         .os-404-title {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             color: #0f172a;
             margin: 0 0 12px 0;
@@ -97,11 +120,32 @@
             color: #64748b;
             line-height: 1.6;
             margin: 0 auto 28px auto;
-            max-width: 500px;
+            max-width: 520px;
         }
         .os-404-search-box {
             max-width: 460px;
             margin: 0 auto 30px auto;
+        }
+        .os-404-search-box .form-control {
+            height: 42px;
+            border-radius: 6px 0 0 6px;
+            border: 1px solid #cbd5e1;
+            box-shadow: none;
+            font-size: 13.5px;
+        }
+        .os-404-search-box .btn-search {
+            height: 42px;
+            background: #d97706;
+            border-color: #d97706;
+            color: #ffffff;
+            border-radius: 0 6px 6px 0;
+            font-weight: 600;
+            padding: 0 20px;
+            transition: background 0.15s ease;
+        }
+        .os-404-search-box .btn-search:hover {
+            background: #b45309;
+            border-color: #b45309;
         }
         .os-404-actions {
             display: flex;
@@ -110,104 +154,201 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .os-btn-primary {
+        .os-btn-navy {
             background: #0a192f;
             color: #ffffff !important;
-            padding: 10px 20px;
+            padding: 10px 22px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 600;
             text-decoration: none !important;
-            transition: all 0.15s ease;
             border: 1px solid #0a192f;
+            transition: background 0.15s ease;
         }
-        .os-btn-primary:hover {
+        .os-btn-navy:hover {
             background: #1e293b;
+            border-color: #1e293b;
         }
-        .os-btn-secondary {
+        .os-btn-outline {
             background: #ffffff;
             color: #0f172a !important;
-            padding: 10px 20px;
+            padding: 10px 22px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 600;
             text-decoration: none !important;
             border: 1px solid #cbd5e1;
             transition: all 0.15s ease;
         }
-        .os-btn-secondary:hover {
+        .os-btn-outline:hover {
             background: #f8fafc;
             border-color: #94a3b8;
         }
-        .os-404-footer {
+
+        /* 3. Authentic Platform 3-Column Footer */
+        .os-platform-footer {
             background: #0a192f;
             color: #94a3b8;
-            padding: 30px 0;
-            font-size: 13px;
+            padding: 48px 0 24px 0;
+            font-size: 13.5px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .os-footer-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+        }
+        .os-footer-lead {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .os-footer-mission {
+            color: #94a3b8;
+            font-size: 12.5px;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .os-footer-heading {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 14px 0;
+            letter-spacing: 0.02em;
+        }
+        .os-footer-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .os-footer-menu li {
+            padding: 4px 0;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+        .os-footer-text {
+            color: #cbd5e1;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            font-size: 13px;
+        }
+        .os-btn-inquiry {
+            display: inline-flex;
+            align-items: center;
+            background: #d97706;
+            color: #ffffff !important;
+            text-decoration: none !important;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.15s ease;
+        }
+        .os-btn-inquiry:hover {
+            background: #b45309;
+        }
+        .os-footer-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 36px 0 20px 0;
+        }
+        .os-footer-bottom {
+            font-size: 12px;
+            color: #64748b;
         }
     </style>
 </head>
 <body>
-    <header class="os-404-header">
-        <div class="container">
-            <div class="row" style="display: flex; align-items: center;">
-                <div class="col-xs-6">
-                    <a href="/dataverse/root" class="os-404-brand">
-                        OpenScience<span>.ph</span>
-                    </a>
-                </div>
-                <div class="col-xs-6 text-right">
-                    <ul class="os-404-nav-links">
-                        <li><a href="https://journals.openscience.ph" target="_blank" rel="noopener">Journals</a></li>
-                        <li><a href="/dataverse/root?q=&amp;fq1=dvCategory%3A%22Organization+or+Institution%22">Institutions</a></li>
-                        <li><a href="/contact.xhtml">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
+    <!-- 1. Authentic Platform Navbar -->
+    <header class="os-unified-navbar">
+        <div class="container os-navbar-container">
+            <a href="/dataverse/root" class="os-brand-link">
+                <img src="/logos/openscience_navbar_logo.png" alt="OpenScience.ph" class="os-nav-logo" />
+                <span class="os-brand-text">OpenScience.ph</span>
+                <span class="os-beta-pill">BETA</span>
+            </a>
+            <ul class="os-nav-menu">
+                <li><a href="https://journals.openscience.ph">Journals</a></li>
+                <li><a href="/dataverse/root">Repositories</a></li>
+                <li><a href="/contact.xhtml">Contact</a></li>
+            </ul>
         </div>
     </header>
 
+    <!-- 2. Main 404 Card -->
     <main class="os-404-main">
         <div class="container">
             <div class="os-404-card">
-                <span class="os-404-code">ERROR 404</span>
+                <span class="os-404-badge">ERROR 404</span>
                 <h1 class="os-404-title">Page Not Found</h1>
                 <p class="os-404-desc">
-                    The requested dataset, collection, or page could not be located or may have been relocated.
+                    The requested dataset, collection, or document could not be located or may have been relocated.
                 </p>
 
                 <div class="os-404-search-box">
                     <form onsubmit="window.location='/dataverse/root?q=' + encodeURIComponent(document.getElementById('searchQuery').value); return false;">
                         <div class="input-group">
-                            <input type="text" id="searchQuery" class="form-control" placeholder="Search datasets, preprints, and journals..." style="height: 42px; border-radius: 6px 0 0 6px;" />
+                            <input type="text" id="searchQuery" class="form-control" placeholder="Search publications, collections, or authors..." />
                             <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit" style="height: 42px; background: #d97706; border-color: #d97706; color: #ffffff; border-radius: 0 6px 6px 0; font-weight: 600; padding: 0 20px;">
-                                    Search
-                                </button>
+                                <button class="btn btn-search" type="submit">Search</button>
                             </span>
                         </div>
                     </form>
                 </div>
 
                 <div class="os-404-actions">
-                    <a href="/dataverse/root" class="os-btn-primary">Return to Repository Home</a>
-                    <a href="/dataverse/root?q=&amp;fq1=dvCategory%3A%22Organization+or+Institution%22" class="os-btn-secondary">Browse Institutions</a>
-                    <a href="/contact.xhtml" class="os-btn-secondary">Contact Us</a>
+                    <a href="/dataverse/root" class="os-btn-navy">Return to Repository Home</a>
+                    <a href="/dataverse/root?q=&amp;fq1=dvCategory%3A%22Organization+or+Institution%22" class="os-btn-outline">Browse Collections</a>
+                    <a href="/contact.xhtml" class="os-btn-outline">Contact Us</a>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="os-404-footer">
+    <!-- 3. Authentic 3-Column Footer -->
+    <footer class="os-platform-footer">
         <div class="container">
             <div class="row">
-                <div class="col-sm-8">
-                    <p style="margin: 0 0 6px 0; font-weight: 600; color: #cbd5e1;">OpenScience.ph</p>
-                    <p style="margin: 0;">An open scholarship repository and digital preservation commons stewarded by OBRA Incorporated.</p>
+                <div class="col-md-5 col-sm-12" style="margin-bottom: 24px;">
+                    <h4 class="os-footer-title">OpenScience.ph</h4>
+                    <p class="os-footer-lead">
+                        An open scholarship repository and digital preservation commons stewarded by 
+                        <strong>OBRA Incorporated</strong> in collaboration with Philippine higher education institutions.
+                    </p>
+                    <p class="os-footer-mission">
+                        Advancing institutional research discoverability, sovereign preservation, and permanent academic access.
+                    </p>
+                </div>
+
+                <div class="col-md-3 col-sm-4" style="margin-bottom: 24px;">
+                    <h5 class="os-footer-heading">Repository Standards</h5>
+                    <ul class="os-footer-menu">
+                        <li>Persistent Resolvable Identifiers</li>
+                        <li>Standardized Bibliographic Metadata</li>
+                        <li>FAIR Research Data Principles</li>
+                        <li>Diamond Open Access</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 col-sm-8" style="margin-bottom: 24px;">
+                    <h5 class="os-footer-heading">Institutional Inquiries</h5>
+                    <p class="os-footer-text">
+                        For university partnerships, library onboarding, or collection inquiries:
+                    </p>
+                    <a href="/contact.xhtml" class="os-btn-inquiry">
+                        Contact Us &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <div class="os-footer-divider"></div>
+
+            <div class="row os-footer-bottom">
+                <div class="col-sm-8 text-left">
+                    &copy; 2026 OpenScience.ph. Works cataloged are stewarded under individual author licenses.
                 </div>
                 <div class="col-sm-4 text-right">
-                    <p style="margin: 0; color: #64748b;">Powered by Harvard Dataverse</p>
+                    <span>Powered by Harvard Dataverse</span>
                 </div>
             </div>
         </div>

@@ -1528,17 +1528,35 @@ table[id$='resultsTable'] span.label-default {
   border-color: var(--os-slate-200) !important;
 }
 
-/* 8.10 Eliminating Clashing Collection Footer (#dataverseFooter) */
-#dataverseFooter,
-div#dataverseFooter,
-div[id$='dataverseFooter'],
-.dataverseFooterLogo,
-div[class*='dataverseFooterLogo'] {
+/* 8.10 Collection Footer (#dataverseFooter) - Suppress ONLY on Root, Style Cleanly on Sub-Pages */
+body.root #dataverseFooter,
+body.root div#dataverseFooter,
+body.root div[id$='dataverseFooter'] {
   display: none !important;
   height: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
   border: none !important;
+}
+
+#dataverseFooter {
+  display: block !important;
+  background: transparent !important;
+  padding: 24px 0 12px 0 !important;
+  border-top: 1px solid var(--os-slate-200) !important;
+  margin-top: 32px !important;
+}
+
+.dataverseFooterLogo {
+  display: block !important;
+  text-align: right !important;
+  padding: 10px 0 !important;
+}
+
+.dataverseFooterLogo img {
+  max-height: 70px !important;
+  width: auto !important;
+  object-fit: contain !important;
 }
 
 /* 8.11 Dataset & File Page Harmonization (Matching Clean Reference UI) */
@@ -1572,8 +1590,15 @@ div.citation-block div.preview-icon-block {
 div.citation-block div.preview-icon-block span[class^='icon'],
 div.citation-block div.preview-icon-block span[class^='glyphicon'] {
   color: var(--os-navy-800) !important;
-  opacity: 0.7 !important;
-  font-size: 3.5em !important;
+  opacity: 1 !important;
+  font-size: 4.8em !important;
+  line-height: 1 !important;
+}
+
+/* Tighten right-hand button stack to eliminate vertical blank void */
+#actionButtonBlock .btn,
+#actionButtonBlock .btn-group {
+  margin-bottom: 6px !important;
 }
 
 div.citation-block div.citation span a {

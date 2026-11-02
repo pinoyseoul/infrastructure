@@ -125,10 +125,17 @@ export const generateCitationHtml = async (
 		citationUrl = rawIdentifier;
 	}
 
+	// Only allow containerDoi to act as a DOI fallback if it is an actual 10. Crossref DOI
+	const rawContainerDoi = (commonData.containerDoi || '').trim();
+	const isContainerCrossrefDoi =
+		rawContainerDoi.startsWith('10.') || rawContainerDoi.includes('doi.org/10.');
+	const cleanContainerDoi = rawContainerDoi
+		.replace(/^(https?:\/\/)?(dx\.)?doi\.org\//i, '')
+		.replace(/^doi:\s*/i, '');
+
 	const pubCiteObject = await Cite.async({
 		...commonData,
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'containerDoi' does not exist on type '{ ... Remove this comment to see the full error message
-		DOI: isDoi ? cleanDoi : (commonData.containerDoi || null),
+		DOI: isDoi ? cleanDoi : (!isArk && isContainerCrossrefDoi ? cleanContainerDoi : null),
 		ISSN: isDoi ? communityData.issn : null,
 		issued: pubIssuedDate && [getDatePartsObject(pubIssuedDate)],
 		note: isArk ? `Archival Identifier: ${cleanArk}` : (isDoi ? `DOI: ${cleanDoi}` : (isHttpUrl ? `Identifier: ${rawIdentifier}` : pubLink)),

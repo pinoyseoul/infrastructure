@@ -5,7 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="description" content="OpenScience.ph - Philippine Research Data &amp; Open Access Commons" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/custom-stylesheet.css" />
     <style>
@@ -20,13 +19,14 @@
             flex-direction: column;
         }
 
-        /* 1. Authentic Platform Navbar */
+        /* Full-Width Platform Header */
         .os-unified-navbar {
             background: #0a192f;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 10px 0;
+            padding: 12px 0;
         }
-        .os-navbar-container {
+        .os-navbar-fluid {
+            padding: 0 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -34,7 +34,7 @@
         .os-brand-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none !important;
         }
         .os-nav-logo {
@@ -77,7 +77,7 @@
             text-decoration: none;
         }
 
-        /* 2. Main 404 Content */
+        /* 404 Content Card */
         .os-404-main {
             flex: 1 0 auto;
             display: flex;
@@ -185,7 +185,7 @@
             border-color: #94a3b8;
         }
 
-        /* 3. Authentic Platform 3-Column Footer */
+        /* Authentic 3-Column Footer */
         .os-platform-footer {
             background: #0a192f;
             color: #94a3b8;
@@ -259,11 +259,11 @@
     </style>
 </head>
 <body>
-    <!-- 1. Authentic Platform Navbar -->
+    <!-- Full-Width Platform Header -->
     <header class="os-unified-navbar">
-        <div class="container os-navbar-container">
-            <a href="/dataverse/root" class="os-brand-link">
-                <img src="/logos/openscience_navbar_logo.png" alt="OpenScience.ph" class="os-nav-logo" />
+        <div class="container-fluid os-navbar-fluid">
+            <a href="/" class="os-brand-link">
+                <img src="/logos/openscience_navbar_logo.png" alt="OpenScience.ph Logo" class="os-nav-logo" />
                 <span class="os-brand-text">OpenScience.ph</span>
                 <span class="os-beta-pill">BETA</span>
             </a>
@@ -275,7 +275,7 @@
         </div>
     </header>
 
-    <!-- 2. Main 404 Card -->
+    <!-- 404 Main Content Card -->
     <main class="os-404-main">
         <div class="container">
             <div class="os-404-card">
@@ -297,15 +297,15 @@
                 </div>
 
                 <div class="os-404-actions">
-                    <a href="/dataverse/root" class="os-btn-navy">Return to Repository Home</a>
-                    <a href="/dataverse/root?q=&amp;fq1=dvCategory%3A%22Organization+or+Institution%22" class="os-btn-outline">Browse Collections</a>
+                    <a href="/" class="os-btn-navy">Home</a>
+                    <a href="/dataverse/root" class="os-btn-outline">Browse Repositories</a>
                     <a href="/contact.xhtml" class="os-btn-outline">Contact Us</a>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- 3. Authentic 3-Column Footer -->
+    <!-- Authentic 3-Column Footer -->
     <footer class="os-platform-footer">
         <div class="container">
             <div class="row">

@@ -1382,7 +1382,8 @@ table[id$='resultsTable'] div.card-preview-icon-block span[class^='glyphicon'] {
 
 
 /* Citation Snippet */
-[id$='resultsTable'] .resultDatasetCitationBlock {
+[id$='resultsTable'] .resultDatasetCitationBlock,
+#div-card-results .resultDatasetCitationBlock {
   background: var(--os-slate-50) !important;
   border: 1px solid var(--os-slate-200) !important;
   border-left: 3px solid var(--os-navy-800) !important;
@@ -1394,13 +1395,15 @@ table[id$='resultsTable'] div.card-preview-icon-block span[class^='glyphicon'] {
   line-height: 1.45 !important;
 }
 
-[id$='resultsTable'] .resultDatasetCitationBlock a {
+[id$='resultsTable'] .resultDatasetCitationBlock a,
+#div-card-results .resultDatasetCitationBlock a {
   color: var(--os-navy-800) !important;
   font-weight: 600 !important;
   text-decoration: underline !important;
 }
 
-[id$='resultsTable'] .resultDatasetCitationBlock a:hover {
+[id$='resultsTable'] .resultDatasetCitationBlock a:hover,
+#div-card-results .resultDatasetCitationBlock a:hover {
   color: var(--os-amber-600) !important;
 }
 
@@ -1582,18 +1585,17 @@ div.citation-block .bg-citation-file {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
 }
 
-div.citation-block div.preview-icon-block {
-  min-height: 140px !important;
-  padding-right: 14px !important;
-  padding-bottom: 10px !important;
+/* Scoped strictly to the dataset page header — search and dashboard cards remain untouched */
+#datasetCitationActionSummaryBlock div.citation-block div.preview-icon-block {
+  min-height: auto !important;
+  padding: 0 16px 6px 0 !important;
 }
 
-div.citation-block div.preview-icon-block span[class^='icon'],
-div.citation-block div.preview-icon-block span[class^='glyphicon'] {
+#datasetCitationActionSummaryBlock div.citation-block div.preview-icon-block span[class^='icon'] {
   color: var(--os-navy-800) !important;
   opacity: 1 !important;
-  font-size: 7.5em !important;
-  line-height: 1.1 !important;
+  font-size: 4.8em !important;
+  line-height: 1 !important;
 }
 
 div.citation-block div.citation span a {
@@ -2034,19 +2036,6 @@ tr.ui-state-highlight a:not(.btn),
 
 #div-card-results span.text-muted a:hover {
   color: var(--os-amber-600) !important;
-}
-
-/* Citation Box inside Card */
-#div-card-results .resultDatasetCitationBlock {
-  background: var(--os-slate-50) !important;
-  border: 1px solid var(--os-slate-200) !important;
-  border-left: 3px solid var(--os-amber-600) !important;
-  border-radius: 4px !important;
-  padding: 10px 14px !important;
-  margin: 10px 0 !important;
-  font-size: 12px !important;
-  color: var(--os-slate-700) !important;
-  display: block !important;
 }
 
 /* Badges Harmonization (Draft, Unpublished, Admin, Roles) */

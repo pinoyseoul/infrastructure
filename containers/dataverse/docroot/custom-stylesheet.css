@@ -451,6 +451,43 @@ input[id*="addReplicationData"] {
 @media (max-width: 768px) {
   .os-grid-3 { grid-template-columns: 1fr; }
   .os-title { font-size: 32px !important; }
+
+  /* Vertically center the mobile hamburger toggle alongside brand logo */
+  #navbarFixed .navbar-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    height: 52px !important;
+  }
+
+  #navbarFixed .navbar-toggle {
+    margin: 0 15px 0 0 !important;
+    padding: 7px 10px !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-radius: 6px !important;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    float: none !important;
+  }
+
+  #navbarFixed .navbar-toggle .icon-bar {
+    background-color: #ffffff !important;
+    width: 20px !important;
+    height: 2px !important;
+  }
+
+  #navbarFixed .navbar-toggle .icon-bar + .icon-bar {
+    margin-top: 4px !important;
+  }
+
+  /* Hide hero search button on mobile; full-width input with Enter submission */
+  .os-btn-search {
+    display: none !important;
+  }
+
+  .os-search-box {
+    padding-right: 14px !important;
+  }
 }
 
 .os-commitment-card {

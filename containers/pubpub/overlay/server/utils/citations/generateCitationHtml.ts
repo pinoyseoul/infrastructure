@@ -126,7 +126,7 @@ export const generateCitationHtml = async (
 	}
 
 	// Only allow containerDoi to act as a DOI fallback if it is an actual 10. Crossref DOI
-	const rawContainerDoi = (commonData.containerDoi || '').trim();
+	const rawContainerDoi = (((commonData as any).containerDoi as string) || '').trim();
 	const isContainerCrossrefDoi =
 		rawContainerDoi.startsWith('10.') || rawContainerDoi.includes('doi.org/10.');
 	const cleanContainerDoi = rawContainerDoi

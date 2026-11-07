@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:body>
+        <ui:composition template="/dataverse_template.xhtml">
+            <ui:param name="pageTitle" value="Author and Researcher Guide - OpenScience.ph"/>
+            <ui:param name="showDataverseHeader" value="false"/>
+            <ui:define name="body">
+                <div class="container" style="max-width: 1140px; margin: 24px auto 60px auto;">
+
+                    <!-- Hero Banner -->
+                    <div style="background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0a192f 100%); color: #ffffff; padding: 42px 38px; border-radius: 12px; margin-bottom: 32px; box-shadow: 0 4px 20px rgba(10, 25, 47, 0.12);">
+                        <span style="display: inline-block; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #f59e0b; margin-bottom: 12px; letter-spacing: 0.02em;">
+                            Author and Researcher Guide
+                        </span>
+                        <h1 style="font-size: 30px; font-weight: 800; margin: 0 0 10px 0; color: #ffffff; letter-spacing: -0.02em;">
+                            How to Share and Discover Scholarship
+                        </h1>
+                        <p style="font-size: 15.5px; color: #cbd5e1; margin: 0; max-width: 780px; line-height: 1.6;">
+                            A welcoming guide for Filipino undergraduate students, graduate researchers, university faculty, and independent scholars sharing and discovering academic research on OpenScience.ph.
+                        </p>
+                    </div>
+
+                    <div class="row">
+                        <!-- Left Column: Guide Content -->
+                        <div class="col-md-8">
+
+                            <!-- Section: Welcome to OpenScience.ph -->
+                            <div id="welcome" class="panel panel-default" style="border-radius: 10px; border: 1px solid #e2e8f0; padding: 34px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <h2 style="font-size: 21px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; border-left: 4px solid #d97706; padding-left: 14px;">
+                                    Welcome to OpenScience.ph
+                                </h2>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    Every academic term, thousands of dedicated research projects are completed across Philippine colleges and universities. Inspiring undergraduate capstones, rigorous master's theses, and insightful faculty studies are presented before academic defense panels. Yet after graduation day, most of these papers end up filed away in physical library basements or stored on personal flash drives that can easily become corrupt or misplaced.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    OpenScience.ph was created to give Filipino scholarship a permanent digital home, connect local research to global audiences, and ensure authors receive the academic credit their hard work deserves.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 0;">
+                                    Whether you are a graduating college senior looking to preserve your thesis, a university professor publishing an annual conference proceeding, or an independent scholar sharing community fieldwork, this guide walks you through how OpenScience.ph works and how you can share your work with our curated academic commons.
+                                </p>
+                            </div>
+
+                            <!-- Section: Why Share Your Research on OpenScience.ph? -->
+                            <div id="why-share" class="panel panel-default" style="border-radius: 10px; border: 1px solid #e2e8f0; padding: 34px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <h2 style="font-size: 21px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; border-left: 4px solid #d97706; padding-left: 14px;">
+                                    Why Share Your Research on OpenScience.ph?
+                                </h2>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    Publishing your work on OpenScience.ph provides long-term visibility, institutional recognition, and real-world impact:
+                                </p>
+                                <ul style="padding-left: 24px; margin-bottom: 0; line-height: 1.75; font-size: 15px; color: #334155;">
+                                    <li style="margin-bottom: 12px;"><strong>A permanent link that never breaks:</strong> Every paper published on OpenScience.ph receives an Archival Resource Key. Unlike standard web links that fail when a university redesigns its website, your permanent identifier remains active and accessible forever.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Automatic indexing on Google Scholar:</strong> Our platform automatically attaches international bibliographic metadata tags to every accepted manuscript. Global academic search engines index newly approved papers within forty-eight to seventy-two hours, making your research discoverable to scholars worldwide.</li>
+                                    <li style="margin-bottom: 12px;"><strong>A permanent portfolio piece for your career:</strong> If you are a student preparing for graduation, having a permanent link to your thesis on your resume, LinkedIn profile, or graduate school application provides verified proof of your research skills. Prospective employers and scholarship committees anywhere in the world can read your approved manuscript with a single click.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Verified evidence for faculty promotion:</strong> If you are a university professor, publications and conference proceedings hosted on our journals portal provide official, timestamped documentation of research dissemination that satisfies faculty promotion criteria under DBM-CHED Joint Circular No. 3, series of 2022, for NBC 461.</li>
+                                    <li style="margin-bottom: 12px;"><strong>True Diamond Open Access:</strong> Our platform is completely free to read and completely free to publish. Authors never encounter submission fees or Article Processing Charges, and readers never encounter a paywall.</li>
+                                    <li style="margin-bottom: 0;"><strong>Complete copyright retention and patent protection:</strong> You and your university retain full ownership of your intellectual property. If your engineering, computer science, or pharmaceutical capstone contains an invention undergoing evaluation with the Intellectual Property Office of the Philippines (IPOPHL), you can place a temporary patent embargo of six to twenty-four months on the full text under Republic Act No. 8293, while keeping your abstract publicly visible to secure your scientific priority.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Section: Finding the Right Home for Your Work -->
+                            <div id="spaces" class="panel panel-default" style="border-radius: 10px; border: 1px solid #e2e8f0; padding: 34px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <h2 style="font-size: 21px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; border-left: 4px solid #d97706; padding-left: 14px;">
+                                    Finding the Right Home for Your Work
+                                </h2>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    To make navigation simple, OpenScience.ph organizes research into clear digital spaces:
+                                </p>
+
+                                <h3 style="font-size: 16.5px; font-weight: 700; margin: 22px 0 8px 0;">
+                                    <a href="https://openscience.ph" style="color: #0f172a; text-decoration: underline; text-decoration-color: #d97706; text-underline-offset: 4px;">The OpenScience Repository</a>
+                                </h3>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    This is the primary institutional archive for student and departmental research. It is the designated space for undergraduate capstones, master's theses, doctoral dissertations, research datasets, survey instruments, and institutional working papers.
+                                </p>
+
+                                <h3 style="font-size: 16.5px; font-weight: 700; margin: 22px 0 8px 0;">
+                                    <a href="https://journals.openscience.ph" target="_blank" rel="noopener" style="color: #0f172a; text-decoration: underline; text-decoration-color: #d97706; text-underline-offset: 4px;">OpenScience.ph Journals</a>
+                                </h3>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    This is the university publishing commons. It showcases peer-reviewed journals and academic conference proceedings published directly by participating Philippine universities. Each journal and conference series is managed directly by its university editorial committee.
+                                </p>
+
+                                <h3 style="font-size: 16.5px; font-weight: 700; margin: 22px 0 8px 0;">
+                                    <a href="https://press.openscience.ph" target="_blank" rel="noopener" style="color: #0f172a; text-decoration: underline; text-decoration-color: #d97706; text-underline-offset: 4px;">OBRA Incorporated Press</a>
+                                </h3>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 0;">
+                                    This is our specialized non-profit scholarly press, publishing peer-reviewed cultural monographs, academic book volumes, and visual ethnography under OBRA Incorporated.
+                                </p>
+                            </div>
+
+                            <!-- Section: Curated with Care: How Gatekeepers Protect the Commons -->
+                            <div id="gatekeepers" class="panel panel-default" style="border-radius: 10px; border: 1px solid #e2e8f0; padding: 34px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <h2 style="font-size: 21px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; border-left: 4px solid #d97706; padding-left: 14px;">
+                                    Curated with Care: How Gatekeepers Protect the Commons
+                                </h2>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    OpenScience.ph is built on academic trust and scholarly rigor. It is not an unmoderated social network or an open bulletin board where anyone can upload unverified files. Every single submission is carefully reviewed by real human gatekeepers before it appears publicly on the web.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    If you are a student or faculty member submitting work through a member university portal, your submission is reviewed directly by your campus library repository team or journal editorial board. The library gatekeepers confirm that you are an enrolled student or faculty researcher, verify that your thesis was formally approved by your defense panel, and ensure that personal phone numbers and home addresses have been redacted to protect your privacy.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    If you are publishing a paper in a university journal or conference series on <a href="https://journals.openscience.ph" target="_blank" rel="noopener" style="color: #d97706; font-weight: 600; text-decoration: underline;">OpenScience.ph Journals</a>, the university editorial board manages the peer-review process, works with you on revisions, and grants final publication approval.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    If you are an independent researcher, grassroots scholar, or submitting from an institution that does not yet have an active campus portal, your manuscript is reviewed directly by the OpenScience.ph curatorial team at OBRA Incorporated. Our editors verify that the submission represents legitimate academic inquiry, adheres to ethical standards, and is completely free of commercial advertising and spam.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 0;">
+                                    This careful curatorial review guarantees that every paper carrying an OpenScience.ph link represents trustworthy scholarship, protecting the integrity of the platform and ensuring that your work is respected by academic institutions worldwide.
+                                </p>
+                            </div>
+
+                            <!-- Section: Understanding Your Link: ARKs and DOIs Explained Simply (theOBRAwebsite Real Demo) -->
+                            <div id="citation-standards" class="panel panel-default" style="border-radius: 10px; border: 2px solid #d97706; padding: 34px; margin-bottom: 28px; box-shadow: 0 4px 16px rgba(217, 119, 6, 0.08);">
+                                <h2 style="font-size: 21px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; border-left: 4px solid #d97706; padding-left: 14px;">
+                                    Understanding Your Link: ARKs and DOIs Explained Simply
+                                </h2>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    When your research is published on OpenScience.ph, it receives a permanent identifier known as an <strong>Archival Resource Key (ARK)</strong>. On the web, it resolves directly to your work through an address such as <a href="https://n2t.net/ark:/14373/x3ALQVXI" target="_blank" rel="noopener" style="color: #d97706; font-weight: 600; text-decoration: underline;">https://n2t.net/ark:/14373/x3ALQVXI</a>.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    If you read international academic journals, you have likely encountered a <strong>Digital Object Identifier (DOI)</strong>. Authors occasionally ask: <em>Is an ARK different from a DOI, and is it just as legitimate?</em>
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    The answer is simple: <strong>both identifiers perform the exact same job</strong>. Both ARKs and DOIs are persistent identifiers created to eliminate broken web links. When you include an ARK or a DOI in a citation, anyone who clicks it will always be taken directly to your published paper, even decades from now.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    The difference lies in institutional philosophy:
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    DOIs were created primarily for commercial publishing companies. To register DOIs, universities must pay recurring organizational memberships and per-paper fees denominated in US dollars. For Philippine public institutions and student researchers, these foreign-currency expenses create unnecessary financial barriers and administrative delays.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    ARKs were created by public research institutions and national libraries, including the National Library of France, the Smithsonian Institution, the California Digital Library, and the Internet Archive. ARKs were designed specifically as a public-good identifier that provides permanent, reliable citation links without charging universities or scholars recurring dollar fees.
+                                </p>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 24px;">
+                                    ARKs resolve smoothly across all standard web browsers through the global Name-to-Thing network at <a href="https://n2t.net" target="_blank" rel="noopener" style="color: #d97706; font-weight: 600; text-decoration: underline;">n2t.net</a>, are fully recognized by Google Scholar, and format naturally across all major citation guidelines.
+                                </p>
+
+                                <h3 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 24px 0 10px 0; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                                    How to Cite Your OpenScience.ph Paper
+                                </h3>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    Citing a paper with an ARK is simple and follows standard citation conventions:
+                                </p>
+
+                                <!-- APA 7th (theOBRAwebsite real demo) -->
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px;">
+                                    <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #d97706; margin-bottom: 6px;">APA 7th Edition</div>
+                                    <div style="font-family: monospace; font-size: 12.5px; color: #1e293b; background: #ffffff; border: 1px solid #cbd5e1; padding: 10px; border-radius: 4px; word-break: break-all;">
+                                        Ang, N. (2007). <i>theOBRAwebsite: A digital cultural directory, community portal, and crisis response network</i>. OpenScience.ph. https://n2t.net/ark:/14373/x3ALQVXI
+                                    </div>
+                                </div>
+
+                                <!-- IEEE (theOBRAwebsite real demo) -->
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px;">
+                                    <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #d97706; margin-bottom: 6px;">IEEE Style</div>
+                                    <div style="font-family: monospace; font-size: 12.5px; color: #1e293b; background: #ffffff; border: 1px solid #cbd5e1; padding: 10px; border-radius: 4px; word-break: break-all;">
+                                        N. Ang, "theOBRAwebsite: A Digital Cultural Directory, Community Portal, and Crisis Response Network," OpenScience.ph, 2007, ark:/14373/x3ALQVXI. Available: https://n2t.net/ark:/14373/x3ALQVXI
+                                    </div>
+                                </div>
+
+                                <!-- Chicago (theOBRAwebsite real demo) -->
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+                                    <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #d97706; margin-bottom: 6px;">Chicago Manual of Style</div>
+                                    <div style="font-family: monospace; font-size: 12.5px; color: #1e293b; background: #ffffff; border: 1px solid #cbd5e1; padding: 10px; border-radius: 4px; word-break: break-all;">
+                                        Ang, Nash. "theOBRAwebsite: A Digital Cultural Directory, Community Portal, and Crisis Response Network." OpenScience.ph, 2007. https://n2t.net/ark:/14373/x3ALQVXI.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section: Depositing Your Thesis or Capstone -->
+                            <div id="depositing" class="panel panel-default" style="border-radius: 10px; border: 1px solid #e2e8f0; padding: 34px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <h2 style="font-size: 21px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; border-left: 4px solid #d97706; padding-left: 14px;">
+                                    Depositing Your Thesis or Capstone on OpenScience.ph
+                                </h2>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    Sharing your thesis or capstone takes only a few minutes:
+                                </p>
+                                <ol style="padding-left: 20px; line-height: 1.75; font-size: 15px; color: #334155;">
+                                    <li style="margin-bottom: 12px;"><strong>Locate Your Campus or Community Portal:</strong> Visit <a href="https://openscience.ph" style="color: #d97706; font-weight: 600; text-decoration: underline;">OpenScience.ph</a>. If your university is a consortium partner (such as Far Eastern University or Mapúa University), select your university portal. If your institution is not yet listed or you are an unaffiliated scholar, select the Independent Scholars Portal.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Log In to Your Account:</strong> Sign in using your university institutional email address or connect through your ORCID profile.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Describe Your Study:</strong> Click Add Submission and enter the essential details of your research: your title, author names, faculty adviser, a clear abstract, and four to six descriptive keywords.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Upload Your Defended Manuscript:</strong> Upload the final, approved copy of your thesis as a PDF. To comply with the Data Privacy Act of 2012 (Republic Act No. 10173), please redact personal mobile numbers, home addresses, and signatures from approval sheets before uploading. If you have survey spreadsheets or research datasets that accompany your paper, you can upload them as supplementary files.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Select Open Access or a Timed Embargo:</strong> Most authors choose Creative Commons Attribution (CC BY 4.0), allowing others to read and cite your work with attribution. If your project has patentable commercial potential under Republic Act No. 8293, simply check Request Timed Embargo for six, twelve, or twenty-four months. Your abstract will be indexed on Google Scholar to establish your discovery, while your full PDF remains protected until your patent application is filed.</li>
+                                    <li style="margin-bottom: 0;"><strong>Curatorial Review and Live Publication:</strong> Click Submit. Your university library team or our central curatorial desk reviews your submission. Once approved, your paper goes live, receives its permanent ARK, and enters the Google Scholar indexing queue.</li>
+                                </ol>
+                            </div>
+
+                            <!-- Section: Publishing in University Journals -->
+                            <div id="publishing" class="panel panel-default" style="border-radius: 10px; border: 1px solid #e2e8f0; padding: 34px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <h2 style="font-size: 21px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; border-left: 4px solid #d97706; padding-left: 14px;">
+                                    Publishing in University Journals on OpenScience.ph Journals
+                                </h2>
+                                <p style="font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 16px;">
+                                    If you are a faculty scholar, graduate student, or conference presenter submitting an article to an academic journal or conference proceeding:
+                                </p>
+                                <ol style="padding-left: 20px; line-height: 1.75; font-size: 15px; color: #334155;">
+                                    <li style="margin-bottom: 12px;"><strong>Browse the University Journal Directory:</strong> Visit <a href="https://journals.openscience.ph" target="_blank" rel="noopener" style="color: #d97706; font-weight: 600; text-decoration: underline;">journals.openscience.ph</a> to view the list of peer-reviewed journals and conference proceedings hosted by participating universities.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Review Submission Guidelines:</strong> Select your target publication to read its active Call for Papers, scope, author guidelines, and upcoming deadlines.</li>
+                                    <li style="margin-bottom: 12px;"><strong>Submit Your Manuscript:</strong> Click Submit Manuscript to submit your work directly to the journal's editorial team. Because each publication is operated directly by the university, you can also coordinate directly with the journal's editor-in-chief or conference secretariat.</li>
+                                    <li style="margin-bottom: 0;"><strong>Editorial Review and Publication:</strong> The university editorial board manages peer review and editorial revisions. Upon formal acceptance, your paper is published with mobile-friendly typography, a downloadable archival PDF, a permanent ARK, and automated Google Scholar metadata.</li>
+                                </ol>
+                            </div>
+
+                            <!-- Section: Frequently Asked Questions (Terminal Section) -->
+                            <div id="faq" class="panel panel-default" style="border-radius: 10px; border: 1px solid #e2e8f0; padding: 34px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <h2 style="font-size: 21px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 18px; border-left: 4px solid #d97706; padding-left: 14px;">
+                                    Frequently Asked Questions
+                                </h2>
+
+                                <div class="faq-item" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 16px;">
+                                    <div style="font-weight: 700; font-size: 15.5px; color: #0f172a; margin-bottom: 6px;">Who owns the copyright to my research?</div>
+                                    <div style="font-size: 14.5px; color: #64748b; line-height: 1.7;">You and your university retain full copyright and ownership of your intellectual property. OpenScience.ph never claims exclusive commercial rights or secondary ownership. Our sole role is open dissemination.</div>
+                                </div>
+
+                                <div class="faq-item" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 16px;">
+                                    <div style="font-weight: 700; font-size: 15.5px; color: #0f172a; margin-bottom: 6px;">Can independent scholars and community researchers upload their work?</div>
+                                    <div style="font-size: 14.5px; color: #64748b; line-height: 1.7;">Yes. OpenScience.ph welcomes contributions from independent researchers, non-governmental research organizations, and unaffiliated scholars. All independent submissions are reviewed by our central curatorial desk to verify academic validity and prevent spam before an identifier is assigned.</div>
+                                </div>
+
+                                <div class="faq-item" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 16px;">
+                                    <div style="font-weight: 700; font-size: 15.5px; color: #0f172a; margin-bottom: 6px;">How quickly will my research appear on Google Scholar?</div>
+                                    <div style="font-size: 14.5px; color: #64748b; line-height: 1.7;">Once your submission is approved by your campus library gatekeeper or our editorial desk, international bibliographic metadata is published immediately. Google Scholar indexing spiders typically pick up and list newly approved records within forty-eight to seventy-two hours.</div>
+                                </div>
+
+                                <div class="faq-item" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 16px;">
+                                    <div style="font-weight: 700; font-size: 15.5px; color: #0f172a; margin-bottom: 6px;">What if I need to correct an error after my paper is published?</div>
+                                    <div style="font-size: 14.5px; color: #64748b; line-height: 1.7;">OpenScience.ph supports formal academic versioning. If you discover a typo or need to add an updated dataset, you can submit a revised version through your account. The platform updates the public view while transparently preserving the earlier archived record.</div>
+                                </div>
+
+                                <div class="faq-item">
+                                    <div style="font-weight: 700; font-size: 15.5px; color: #0f172a; margin-bottom: 6px;">Where can I get help?</div>
+                                    <div style="font-size: 14.5px; color: #64748b; line-height: 1.7;">If you are affiliated with a partner university, reach out to your campus library repository coordinator. For independent submissions or technical questions, our support team is available at <a href="mailto:support@openscience.ph" style="color: #d97706; text-decoration: underline;">support@openscience.ph</a>.</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Right Column: Sidebar with Table of Contents Only -->
+                        <div class="col-md-4">
+                            <div class="panel panel-default" style="position: sticky; top: 76px; border-radius: 10px; border: 1px solid #e2e8f0; padding: 22px; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                                <h3 style="font-size: 15px; font-weight: 700; margin-top: 0; margin-bottom: 12px; color: #0f172a; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+                                    In this Guide
+                                </h3>
+                                <ul style="list-style: none; padding-left: 0; margin-bottom: 0; display: flex; flex-direction: column; gap: 8px;">
+                                    <li><a href="#welcome" style="color: #475569; font-size: 13.5px; text-decoration: none;">Welcome to OpenScience.ph</a></li>
+                                    <li><a href="#why-share" style="color: #475569; font-size: 13.5px; text-decoration: none;">Why Share Your Research?</a></li>
+                                    <li><a href="#spaces" style="color: #475569; font-size: 13.5px; text-decoration: none;">Finding the Right Home</a></li>
+                                    <li><a href="#gatekeepers" style="color: #475569; font-size: 13.5px; text-decoration: none;">Gatekeeper Curation</a></li>
+                                    <li><a href="#citation-standards" style="color: #d97706; font-weight: 600; font-size: 13.5px; text-decoration: none;">Citation Standards &amp; ARKs</a></li>
+                                    <li><a href="#depositing" style="color: #475569; font-size: 13.5px; text-decoration: none;">Depositing Your Thesis</a></li>
+                                    <li><a href="#publishing" style="color: #475569; font-size: 13.5px; text-decoration: none;">Publishing in Journals</a></li>
+                                    <li><a href="#faq" style="color: #475569; font-size: 13.5px; text-decoration: none;">Frequently Asked Questions</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

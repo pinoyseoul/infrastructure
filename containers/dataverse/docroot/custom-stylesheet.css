@@ -158,12 +158,12 @@ body {
 
 /* Sovereign top navbar styling handled natively via database settings */
 
-/* Site-wide clean navbar: suppress Guides, Support, and Contact links */
+/* Site-wide clean navbar: suppress stock Harvard vendor Guide and Support links */
 #navbarFixed li:has(a[href*="/user"]),
-#navbarFixed li:has(a[href*="guide"]),
+#navbarFixed li:has(a[href*="dataverse.org"]),
 #navbarFixed li:has(a[id*="headerSupportLink"]),
 #navbarFixed a[href*="/user"],
-#navbarFixed a[href*="guide"],
+#navbarFixed a[href*="dataverse.org"],
 #navbarFixed a[id*="headerSupportLink"],
 #navbarFixed form.navbar-form-link {
   display: none !important;

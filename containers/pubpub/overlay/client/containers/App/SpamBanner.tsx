@@ -154,7 +154,7 @@ const SpamBanner = (props: Props) => {
 				We have determined that your Community violates OpenScience.ph's{' '}
 				<a href="/legal/terms">Terms of Service</a>, and it is now hidden from visitors. If
 				you believe this judgement was made in error, please{' '}
-				<a href="mailto:admin@openscience.ph">contact us</a>.
+				<a href="mailto:support@openscience.ph">contact us</a>.
 			</div>
 		</div>
 	);

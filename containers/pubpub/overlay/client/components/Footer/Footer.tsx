@@ -157,7 +157,7 @@ const Footer = (props: Props) => {
 								<ul className="social-list">
 									<li>
 										<a
-											href="mailto:admin@openscience.ph?subject=Contact"
+											href="mailto:support@openscience.ph?subject=Contact"
 											aria-label="Contact via email"
 										>
 											<Icon icon="envelope" />

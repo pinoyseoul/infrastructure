@@ -8,6 +8,7 @@ export const sendPasswordResetEmail = ({ toEmail, resetUrl }) => {
 	// TODO: We should probably indicate the community somewhere.
 	// e.g. 'We've received a request to reset your PubPub account on Responsive Science.'
 	return sendEmail({
+		from: { name: 'OpenScience.ph Accounts', address: 'noreply@openscience.ph' },
 		to: [toEmail],
 		subject: 'Password Reset — OpenScience.ph',
 		text: stripIndent(`
@@ -18,6 +19,5 @@ export const sendPasswordResetEmail = ({ toEmail, resetUrl }) => {
 			Sincerely,
 			OpenScience.ph Support
 		`),
-		replyTo: 'admin@openscience.ph',
 	});
 };

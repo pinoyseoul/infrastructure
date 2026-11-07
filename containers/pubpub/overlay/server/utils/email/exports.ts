@@ -10,6 +10,7 @@ export const sendAccountExportReadyEmail = ({
 	downloadUrl: string;
 }) => {
 	return sendEmail({
+		from: { name: 'OpenScience.ph Notifications', address: 'noreply@openscience.ph' },
 		to: [toEmail],
 		subject: 'Your OpenScience.ph Data Export is Ready',
 		text: stripIndent(`
@@ -22,7 +23,6 @@ export const sendAccountExportReadyEmail = ({
 			Sincerely,
 			OpenScience.ph Support
 		`),
-		replyTo: 'admin@openscience.ph',
 	});
 };
 
@@ -36,6 +36,7 @@ export const sendCommunityExportReadyEmail = ({
 	downloadUrl: string;
 }) => {
 	return sendEmail({
+		from: { name: 'OpenScience.ph Notifications', address: 'noreply@openscience.ph' },
 		to: [toEmail],
 		subject: `Your OpenScience.ph Journal Export is Ready · ${communityTitle}`,
 		text: stripIndent(`
@@ -48,6 +49,5 @@ export const sendCommunityExportReadyEmail = ({
 			Sincerely,
 			OpenScience.ph Support
 		`),
-		replyTo: 'admin@openscience.ph',
 	});
 };

@@ -72,7 +72,7 @@ function mapEstablishError(err: Error): LoginResult | null {
 			: '';
 		return {
 			status: 403,
-			body: `Your account has been restricted due to activity identified as spam.${automatedNote} If you believe this is an error, please contact admin@openscience.ph.`,
+			body: `Your account has been restricted due to activity identified as spam.${automatedNote} If you believe this is an error, please contact support@openscience.ph.`,
 		} as const;
 	}
 	return null;

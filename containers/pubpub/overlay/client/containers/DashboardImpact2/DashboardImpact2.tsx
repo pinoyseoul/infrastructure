@@ -245,7 +245,7 @@ const DashboardImpact2 = () => {
 				Legacy analytics remain available <a href={legacyImpactUrl}>here</a>. We'll announce
 				more formal plans for the legacy analytics shortly. In the meantime, you can
 				continue to view and download any historical data you might need. Please feel free
-				to <a href="mailto:admin@openscience.ph?subject=Legacy%20Analytics">reach out</a> if you
+				to <a href="mailto:support@openscience.ph?subject=Legacy%20Analytics">reach out</a> if you
 				have any specific needs or feedback we should keep in mind.
 			</Callout>
 

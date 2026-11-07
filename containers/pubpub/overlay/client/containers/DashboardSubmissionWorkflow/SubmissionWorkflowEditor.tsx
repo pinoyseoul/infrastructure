@@ -82,7 +82,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 
 	const sharedEmailPreviewProps = {
 		community: communityData,
-		from: 'admin@openscience.ph',
+		from: 'noreply@openscience.ph',
 		to: 'submitter.name@place.org',
 		cc: workflow.targetEmailAddresses,
 	};

@@ -57,6 +57,17 @@ const GlobalControls = (props: Props) => {
 		);
 	};
 
+	const renderGuide = () => {
+		return (
+			<GlobalControlsButton
+				href="https://openscience.ph/guide.xhtml"
+				aria-label="Guide"
+				desktop={{ text: 'Guide' }}
+				mobile={{ text: 'Guide' }}
+			/>
+		);
+	};
+
 	const renderSearch = () => {
 		return (
 			<GlobalControlsButton
@@ -122,6 +133,8 @@ const GlobalControls = (props: Props) => {
 						/>
 					)}
 					{renderJournals()}
+					{renderRepositories()}
+					{renderGuide()}
 					{loginData.isSuperAdmin && (
 						<GlobalControlsButton
 							href="/superadmin"
@@ -129,7 +142,6 @@ const GlobalControls = (props: Props) => {
 						/>
 					)}
 					{canCreatePub && <CreatePubButton />}
-					{renderRepositories()}
 					{renderSearch()}
 					{canView && renderDashboardMenu()}
 					{renderNotificiations()}
@@ -163,6 +175,7 @@ const GlobalControls = (props: Props) => {
 					)}
 					{renderJournals()}
 					{renderRepositories()}
+					{renderGuide()}
 					{renderSearch()}
 				</>
 			);

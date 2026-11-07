@@ -42,7 +42,7 @@ export const sendSpamBanEmail = ({ toEmail, userName, reason, isAutomated }: Ban
 			As a result, your account has been suspended. You are no longer able to log in or use the platform. Your existing content may be hidden from public view.
 
 			If you believe this is an error, you may:
-			- Contact us at admin@openscience.ph to request an internal review of this decision.
+			- Contact us at support@openscience.ph to request an internal review of this decision.
 			- Seek resolution through an out-of-court dispute settlement body certified under the Digital Services Act.
 			- Pursue judicial redress in a court of competent jurisdiction.
 
@@ -172,7 +172,7 @@ export const sendCommunityBanUserEmail = ({
 			This action was taken by a journal administrator based on their journal guidelines and PubPub's Acceptable Use Policy (https://openscience.ph/legal/aup). You may still use PubPub and participate in other communities.
 
 			If you believe this is an error, you may:
-			- Contact us at admin@openscience.ph to request a review of this decision.
+			- Contact us at support@openscience.ph to request a review of this decision.
 			- Seek resolution through an out-of-court dispute settlement body certified under the Digital Services Act.
 			- Pursue judicial redress in a court of competent jurisdiction.
 
@@ -234,7 +234,7 @@ export const sendCommunityFlagResolvedEmail = ({
 
 			Thank you for flagging ${userName} in your community. We have reviewed the ban and the outcome is: ${resolution}.
 
-			If you have further concerns, please contact us at admin@openscience.ph.
+			If you have further concerns, please contact us at support@openscience.ph.
 
 			Sincerely,
 			OpenScience.ph Team

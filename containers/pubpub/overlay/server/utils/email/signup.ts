@@ -4,6 +4,7 @@ import { sendEmail } from './transport';
 
 export const sendSignupEmail = ({ toEmail, signupUrl }) => {
 	return sendEmail({
+		from: { name: 'OpenScience.ph Accounts', address: 'noreply@openscience.ph' },
 		to: [toEmail],
 		subject: 'Welcome to OpenScience.ph!',
 		text: stripIndent(`
@@ -16,6 +17,5 @@ export const sendSignupEmail = ({ toEmail, signupUrl }) => {
 			Sincerely,
 			OpenScience.ph Support
 		`),
-		replyTo: 'admin@openscience.ph',
 	});
 };

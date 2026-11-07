@@ -27,8 +27,8 @@ type SendEmailOptions = {
 } & Body;
 
 const defaultFrom: From = {
-	name: 'OpenScience.ph Team',
-	address: 'admin@openscience.ph',
+	name: 'OpenScience.ph',
+	address: 'noreply@openscience.ph',
 };
 
 export const sendEmail = async (options: SendEmailOptions): Promise<void> => {

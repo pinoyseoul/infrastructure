@@ -84,7 +84,7 @@ export const sendCommunityRejectedAsSpamEmail = async (ctx: CommunityEmailContex
 
 			If you have requested your community to be removed by us, don't worry, we just use this mechanism to do so.
 
-			If you believe this is an error, please contact us at admin@openscience.ph.
+			If you believe this is an error, please contact us at support@openscience.ph.
 
 			Sincerely,
 			OpenScience.ph Team

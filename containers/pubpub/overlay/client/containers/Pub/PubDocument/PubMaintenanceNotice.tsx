@@ -37,7 +37,7 @@ const PubMaintenanceNotice = (props: Props) => {
 	};
 
 	const renderAction = () => {
-		return <AnchorButton href="mailto:admin@openscience.ph">Contact us</AnchorButton>;
+		return <AnchorButton href="mailto:support@openscience.ph">Contact us</AnchorButton>;
 	};
 
 	return (

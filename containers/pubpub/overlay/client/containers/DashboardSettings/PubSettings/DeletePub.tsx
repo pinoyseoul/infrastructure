@@ -63,7 +63,7 @@ class DeletePub extends Component<Props, State> {
 					<p>
 						Articles with DOIs must be preserved for the scholarly record. If you believe
 						this article should be retracted or removed, please contact us at{' '}
-						<a href="mailto:admin@openscience.ph">admin@openscience.ph</a>.
+						<a href="mailto:support@openscience.ph">support@openscience.ph</a>.
 					</p>
 				</div>
 			);

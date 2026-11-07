@@ -16,7 +16,7 @@ import { createUser, getSuggestedEditsUserInfo, updateUser } from './queries';
 export const router = Router();
 
 const ACCOUNT_RESTRICTED_MESSAGE =
-	'Your account has been restricted. If you believe this is an error, please contact admin@openscience.ph.';
+	'Your account has been restricted. If you believe this is an error, please contact support@openscience.ph.';
 const FAST_HONEYPOT_WINDOW_MS = 5_000;
 
 const getFastHoneypotSignal = ({

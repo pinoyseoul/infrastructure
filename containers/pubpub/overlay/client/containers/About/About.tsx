@@ -70,8 +70,8 @@ const About = function () {
 				<h2>Technical Support</h2>
 				<p>
 					We offer forum-based, community support for all OpenScience.ph users. Feel free to reach out
-					to our administration team at <a href="mailto:admin@openscience.ph">admin@openscience.ph</a>
-					at any time for institutional support, partnerships, or training.
+					to our support team at <a href="mailto:support@openscience.ph">support@openscience.ph</a>
+					at any time for technical assistance or user guidance.
 				</p>
 				<p>
 					For groups that want personalized support, we offer production, training, and
@@ -86,8 +86,8 @@ const About = function () {
 				<h2>Roadmap &amp; Contribution</h2>
 				<p>
 					OpenScience.ph coordinates development and platform enhancements through OBRA Incorporated.
-					To suggest a feature, report an issue, or inquire about institutional onboarding,
-					contact <a href="mailto:admin@openscience.ph">admin@openscience.ph</a>.
+					To suggest a feature, report an issue, or ask questions,
+					contact <a href="mailto:support@openscience.ph">support@openscience.ph</a>.
 				</p>
 				<h2>Mission, Values, and Sustainability</h2>
 				<p>
@@ -134,10 +134,10 @@ const About = function () {
 						For general inquiries and academic partnership requests, contact our administration team.
 					</li>
 					<li>
-						If you have questions or are interested in collaborating, get in touch
+						If you have questions or need assistance, get in touch
 						directly at{' '}
-						<a href="mailto:admin@openscience.ph?subject=About+Page+Question">
-							admin@openscience.ph
+						<a href="mailto:support@openscience.ph?subject=About+Page+Question">
+							support@openscience.ph
 						</a>
 						.
 					</li>

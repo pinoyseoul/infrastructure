@@ -431,9 +431,37 @@ body {
 }
 
 /* Suppress legacy replication data helper button on dataset creation */
+#replicationDataButton,
+input[id*="replicationDataButton"],
+input[value*="Replication Data"],
+button[id*="replicationDataButton"],
 #datasetForm\:addReplicationData,
 button[id*="addReplicationData"],
 input[id*="addReplicationData"] {
+  display: none !important;
+}
+
+/* Suppress legacy organization theme footer white strip to ensure seamless canvas flow */
+#dataverseFooter,
+.dataverseFooter,
+div[id*="dataverseFooter"] {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: none !important;
+}
+
+/* Suppress legacy journal and social science metadata accordion panels on dataset creation */
+#datasetForm .panel:has(a[href*="journal"]),
+#datasetForm .panel:has(a[href*="socialscience"]),
+div[id*="journal_metadata"],
+div[id*="socialscience_metadata"] {
+  display: none !important;
+}
+
+/* Suppress legacy JOURNALS option from category selector */
+select[id*="dataverseCategory"] option[value="JOURNALS"] {
   display: none !important;
 }
 

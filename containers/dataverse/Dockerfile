@@ -11,6 +11,7 @@ USER root
 COPY docroot/contact.xhtml /opt/payara/deployments/dataverse/contact.xhtml
 COPY docroot/dataset.xhtml /opt/payara/deployments/dataverse/dataset.xhtml
 COPY docroot/loginpage.xhtml /opt/payara/deployments/dataverse/loginpage.xhtml
+COPY docroot/editFilesFragment.xhtml /opt/payara/deployments/dataverse/editFilesFragment.xhtml
 COPY docroot/search-include-fragment.xhtml /opt/payara/deployments/dataverse/search-include-fragment.xhtml
 COPY docroot/dataverse_header.xhtml /opt/payara/deployments/dataverse/dataverse_header.xhtml
 COPY docroot/404static.xhtml /opt/payara/deployments/dataverse/404static.xhtml

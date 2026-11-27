@@ -49,24 +49,17 @@
         </ul>
         <div class="ui-tabs-panels">
             <div aria-hidden="false" role="tabpanel" class="ui-tabs-panel ui-widget-content ui-corner-bottom" id="datasetForm:tabView:dataFilesTab">
-                <!-- Create dataset workflow info msg + user guide link -->
+                <!-- University Repository Document Upload Guidance -->
                 <ui:fragment>
                     <p class="help-block">
-                        <h:outputFormat value="#{bundle['dataset.message.uploadFilesSingle.message']}" escape="false"
-                                        rendered="#{settingsWrapper.uploadMethodsCount == 1}">
-                            <f:param value="#{systemConfig.guidesBaseUrl}"/>
-                            <f:param value="#{systemConfig.guidesVersion}"/>
-                        </h:outputFormat>
-                        
-                        <h:outputText value="#{bundle['dataset.message.uploadFilesMultiple.message']}" escape="false"
-                                        rendered="#{settingsWrapper.uploadMethodsCount > 1}"/>
+                        OpenScience.ph preserves research papers, preprints, university theses, dissertations, and scholarly documents (PDF, DOCX, XLSX, CSV, and archive packages). For publication standards and preservation policies, please consult our <a href="/guide.xhtml">Author Guide</a>.
                     </p>
                 </ui:fragment>
                 <!-- Upload -->
                 <div class="panel-group" role="tablist" aria-multiselectable="true"
                       id="fileUploadFragment" jsf:rendered="#{showFileUploadFragment}">
                     
-                    <div jsf:id="httpPanel" jsf:rendered="#{settingsWrapper.HTTPUpload}" class="panel panel-default">
+                    <div jsf:id="httpPanel" class="panel panel-default">
                         <div role="tab" id="headingHTTP" data-toggle="collapse" data-target="#panelCollapseHTTP" class="panel-heading text-info" aria-expanded="true" aria-controls="panelCollapseHTTP">
                             #{bundle['file.fromHTTP']} &#160;<span class="glyphicon glyphicon-chevron-up"/>
                         </div>

@@ -10,5 +10,6 @@ INSERT INTO setting (name, lang, content) VALUES
 (':NavbarSupportUrl', '', '/contact.xhtml'),
 (':InheritParentTheme', '', 'true'),
 (':SearchHighlighting', '', 'true'),
-(':FileFixityChecksumAlgorithm', '', 'SHA-512')
+(':FileFixityChecksumAlgorithm', '', 'SHA-512'),
+(':AllowCors', '', 'true')
 ON CONFLICT (name, lang) DO UPDATE SET content = EXCLUDED.content;

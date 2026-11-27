@@ -18,6 +18,7 @@ COPY docroot/citation-guide.xhtml /opt/payara/deployments/dataverse/citation-gui
 COPY docroot/guide.xhtml /opt/payara/deployments/dataverse/guide.xhtml
 COPY docroot/dataverse.xhtml /opt/payara/deployments/dataverse/dataverse.xhtml
 COPY docroot/datasetFieldForEditFragment.xhtml /opt/payara/deployments/dataverse/datasetFieldForEditFragment.xhtml
+COPY docroot/editFilesFragment.xhtml /opt/payara/deployments/dataverse/editFilesFragment.xhtml
 COPY docroot/robots.txt /opt/payara/deployments/dataverse/robots.txt
 
 # Bake in authentic OpenScience.ph favicons and PWA manifest

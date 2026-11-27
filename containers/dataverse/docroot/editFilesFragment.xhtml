@@ -14,8 +14,7 @@
 
 
     <!-- Create variables for frequently accessed values -->
-    <ui:param name="effectiveDataset" value="#{dataset != null ? dataset : (EditDatafilesPage.dataset != null ? EditDatafilesPage.dataset : null)}"/>
-    <ui:param name="useDirectUpload" value="#{effectiveDataset != null ? systemConfig.directUploadEnabled(effectiveDataset) : false}"/>
+    <ui:param name="useDirectUpload" value="#{systemConfig.directUploadEnabled(dataset)}"/>
     <ui:param name="checksumAlgName" value="#{systemConfig.getFileFixityChecksumAlgorithm().toString()}"/>
     <ui:param name="hasPackageFile" value="#{EditDatafilesPage.workingVersion.hasPackageFile}"/>
     <ui:param name="hasNonPackageFile" value="#{EditDatafilesPage.workingVersion.hasNonPackageFile}"/>
@@ -23,8 +22,8 @@
     <ui:param name="hasRsyncScript" value="#{EditDatafilesPage.isHasRsyncScript()}"/>
     <ui:param name="fileMetadatas" value="#{EditDatafilesPage.fileMetadatas}"/>
     <ui:param name="hasFileMetadatas" value="#{!empty fileMetadatas}"/>
-    <ui:param name="showFileUploadComponent" value="#{datasetPage ? true : EditDatafilesPage.showFileUploadComponent()}"/>
-    <ui:param name="showFileUploadFragment" value="#{datasetPage ? true : EditDatafilesPage.showFileUploadFragment()}"/>
+    <ui:param name="showFileUploadComponent" value="#{datasetPage || EditDatafilesPage.showFileUploadComponent()}"/>
+    <ui:param name="showFileUploadFragment" value="#{datasetPage || EditDatafilesPage.showFileUploadFragment()}"/>
     <ui:param name="isQuotaExceeded" value="#{EditDatafilesPage.isQuotaExceeded()}"/>
     <ui:param name="isFileUploadCountExceeded" value="#{EditDatafilesPage.isFileUploadCountExceeded()}"/>
     <ui:param name="maxFileUploadSize" value="#{EditDatafilesPage.getMaxFileUploadSizeInBytes()}"/>
@@ -57,10 +56,10 @@
                     </p>
                 </ui:fragment>
                 <!-- Upload -->
-                <ui:fragment id="fileUploadFragment" rendered="#{showFileUploadFragment}">
-                    <div class="panel-group" role="tablist" aria-multiselectable="true">
+                <div class="panel-group" role="tablist" aria-multiselectable="true"
+                      id="fileUploadFragment" jsf:rendered="#{showFileUploadFragment}">
                     
-                    <div jsf:id="httpPanel" class="panel panel-default">
+                    <div jsf:id="httpPanel" jsf:rendered="#{settingsWrapper.HTTPUpload}" class="panel panel-default">
                         <div role="tab" id="headingHTTP" data-toggle="collapse" data-target="#panelCollapseHTTP" class="panel-heading text-info" aria-expanded="true" aria-controls="panelCollapseHTTP">
                             #{bundle['file.fromHTTP']} &#160;<span class="glyphicon glyphicon-chevron-up"/>
                         </div>
@@ -174,8 +173,8 @@
                     <p:fileUpload id="fileUpload" 
                                   dragDropSupport="true"
                                   auto="#{!(systemConfig.directUploadEnabled(EditDatafilesPage.dataset))}"
-                                  multiple="#{datasetPage ? true : EditDatafilesPage.allowMultipleFileUpload()}"
-                                  disabled="#{lockedFromEdits || isQuotaExceeded || isFileUploadCountExceeded}"
+                                  multiple="#{datasetPage || EditDatafilesPage.allowMultipleFileUpload()}"
+                                  disabled="#{lockedFromEdits ||  !(showFileUploadComponent) || isQuotaExceeded || isFileUploadCountExceeded}"
                                   listener="#{EditDatafilesPage.handleFileUpload}" 
                                   process="filesTable" 
                                   update=":datasetForm:filesTable, @([id$=filesButtons])"
@@ -355,8 +354,7 @@
                     datasetForm:filesButtons 
                     ????? -->
                     
-                    </div>
-                </ui:fragment>
+                </div>
                 <!-- END: Upload -->
                 
                 <div jsf:id="filesCounts">

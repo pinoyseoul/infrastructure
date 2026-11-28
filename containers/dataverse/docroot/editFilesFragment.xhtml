@@ -96,30 +96,30 @@
                                         <f:param value="#{EditDatafilesPage.currentContainerStorageUse}"/>
                                     </h:outputFormat>
                                     <h:outputFormat value=" #{bundle['file.selectToAdd.tipMaxNumFiles']}" escape="false"
-                                                    rendered="#{EditDatafilesPage.maxNumberOfFiles > 0}">
+                                                    rendered="#{editDatafilesPage and EditDatafilesPage.maxNumberOfFiles > 0}">
                                         <f:param value="#{EditDatafilesPage.maxNumberOfFiles}"/>
                                     </h:outputFormat>
                                     <h:outputFormat value=" #{bundle['file.selectToAdd.tipMaxNumFilesUploadsAvailable']}" escape="false"
-                                                    rendered="#{EditDatafilesPage.fileUploadsAvailable > -1}">
+                                                    rendered="#{editDatafilesPage and EditDatafilesPage.fileUploadsAvailable > -1}">
                                         <f:param value="#{EditDatafilesPage.fileUploadsAvailable}"/>
                                     </h:outputFormat>
                                     <h:outputFormat value=" #{bundle['file.selectToAdd.tipLimit']}" escape="false"
-                                                    rendered="#{!EditDatafilesPage.isUnlimitedUploadFileSize()}">
+                                                    rendered="#{editDatafilesPage and !EditDatafilesPage.isUnlimitedUploadFileSize()}">
                                         <f:param value="#{EditDatafilesPage.getHumanMaxFileUploadSizeInBytes()}"/>
                                     </h:outputFormat>
                                     
                                     <h:outputFormat value=" #{bundle['file.selectToAdd.tipQuotaRemaining']}" escape="false" 
-                                                    rendered="#{EditDatafilesPage.isStorageQuotaEnforced()}">
+                                                    rendered="#{editDatafilesPage and EditDatafilesPage.isStorageQuotaEnforced()}">
                                         <f:param value="#{EditDatafilesPage.getHumanMaxTotalUploadSizeInBytes()}"/>
                                     </h:outputFormat>
                                     <h:outputFormat value=" #{bundle['file.selectToAdd.tipTabularLimit']}" escape="false"
-                                                    rendered="#{EditDatafilesPage.maxIngestSizeInBytes != -1}">
+                                                    rendered="#{editDatafilesPage and not empty EditDatafilesPage.maxIngestSizeInBytes and EditDatafilesPage.maxIngestSizeInBytes != -1}">
                                         <f:param value="#{systemConfig.guidesBaseUrl}"/>
                                         <f:param value="#{systemConfig.guidesVersion}"/>
                                         <f:param value="#{EditDatafilesPage.humanMaxIngestSizeInBytes}"/>
                                     </h:outputFormat>
                                     <h:outputFormat value=" #{bundle['file.selectToAdd.tipPerFileTabularLimit']}"
-                                                    rendered="#{not empty EditDatafilesPage.humanPerFormatTabularLimits}">
+                                                    rendered="#{editDatafilesPage and not empty EditDatafilesPage.humanPerFormatTabularLimits}">
                                         <f:param value="#{fn:replace(EditDatafilesPage.humanPerFormatTabularLimits, ' 1 B', ' disabled')}"/>
                                     </h:outputFormat>
                                 </p>
@@ -178,7 +178,7 @@
                                   disabled="#{lockedFromEdits ||  !(showFileUploadComponent) || isQuotaExceeded || isFileUploadCountExceeded}"
                                   listener="#{EditDatafilesPage.handleFileUpload}" 
                                   process="filesTable" 
-                                  update=":datasetForm:filesTable, @([id$=filesButtons])"
+                                  update="@([id$=filesTable]), @([id$=filesButtons])"
                                   label="#{bundle['file.selectToAddBtn']}"
                                   oncomplete="uploadFinished(PF('fileUploadWidget'));"
                                   onstart="javascript:uploadWidgetDropRemoveMsg();uploadStarted();"
@@ -340,11 +340,11 @@
                     
                     <p:message for="fileUpload" id="uploadMessage" display="text" escape="false"/>
                     
-                    <p:commandButton id="updateEditDataFilesButtonsForUpload" action="#{EditDatafilesPage.uploadFinished()}" update="datasetForm:editDataFilesButtons" rendered="#{showFileButtonUpdate}" style="display:none"/>
-                    <p:commandButton id="updateEditDataFilesButtonsForDelete" action="#{EditDatafilesPage.deleteFilesCompleted()}" update="datasetForm:editDataFilesButtons" rendered="#{showFileButtonUpdate}" style="display:none"/>
-                    <p:commandButton id="AllUploadsFinished" action="#{EditDatafilesPage.uploadFinished()}" update="@([id$=filesButtons]),datasetForm:contentOfHttpPanel,datasetForm:fileUpload,datasetForm:dropBoxUserButton,datasetForm:uploadMessage,datasetForm:rsyncPanel,datasetForm:filesCounts,datasetForm:filesTable" oncomplete="javascript:uploadWidgetDropMsg();" style="display:none"/> 
-                    <p:commandButton id="dropBoxUploadFinished" action="#{EditDatafilesPage.uploadFinished()}" update="@([id$=filesButtons]),datasetForm:fileUpload,datasetForm:dropBoxUserButton,datasetForm:dropBoxUploadMessage,datasetForm:rsyncPanel,datasetForm:filesCounts,datasetForm:filesTable" style="display:none"/>
-                    <p:commandButton id="allDeletesFinished" action="#{EditDatafilesPage.deleteFilesCompleted()}" update="@([id$=filesButtons]),datasetForm:fileUpload,datasetForm:dropBoxUserButton,datasetForm:uploadMessage,datasetForm:rsyncPanel,datasetForm:filesCounts,datasetForm:filesTable" oncomplete="javascript:uploadWidgetDropMsg();" style="display:none"/> 
+                    <p:commandButton id="updateEditDataFilesButtonsForUpload" action="#{EditDatafilesPage.uploadFinished()}" update="@([id$=editDataFilesButtons])" rendered="#{showFileButtonUpdate}" style="display:none"/>
+                    <p:commandButton id="updateEditDataFilesButtonsForDelete" action="#{EditDatafilesPage.deleteFilesCompleted()}" update="@([id$=editDataFilesButtons])" rendered="#{showFileButtonUpdate}" style="display:none"/>
+                    <p:commandButton id="AllUploadsFinished" action="#{EditDatafilesPage.uploadFinished()}" update="@([id$=filesButtons]), @([id$=contentOfHttpPanel]), @([id$=fileUpload]), @([id$=dropBoxUserButton]), @([id$=uploadMessage]), @([id$=rsyncPanel]), @([id$=filesCounts]), @([id$=filesTable])" oncomplete="javascript:uploadWidgetDropMsg();" style="display:none"/> 
+                    <p:commandButton id="dropBoxUploadFinished" action="#{EditDatafilesPage.uploadFinished()}" update="@([id$=filesButtons]), @([id$=fileUpload]), @([id$=dropBoxUserButton]), @([id$=dropBoxUploadMessage]), @([id$=rsyncPanel]), @([id$=filesCounts]), @([id$=filesTable])" style="display:none"/>
+                    <p:commandButton id="allDeletesFinished" action="#{EditDatafilesPage.deleteFilesCompleted()}" update="@([id$=filesButtons]), @([id$=fileUpload]), @([id$=dropBoxUserButton]), @([id$=uploadMessage]), @([id$=rsyncPanel]), @([id$=filesCounts]), @([id$=filesTable])" oncomplete="javascript:uploadWidgetDropMsg();" style="display:none"/> 
                     <!-- ????? TODO: How scalable are all these hidden update buttons ????? -->
                     <!-- ????? 
                     datasetForm:fileUpload,
@@ -366,8 +366,9 @@
                     <p:autoUpdate />
                     <p:outputPanel >
                         <p:dataTable id="filesTable" 
+                                     lazy="false"
                                      value="#{fileMetadatas}"
-                                     rendered="#{hasFileMetadatas or !EditDatafilesPage.showFileUploadFragment()}"
+                                     rendered="#{hasFileMetadatas or (editDatafilesPage and !EditDatafilesPage.showFileUploadFragment())}"
                                      rowIndexVar="rowNum" 
                                      rowKey="#{fileMetadata.dataFile.storageIdentifier}"
                                      selection="#{EditDatafilesPage.selectedFiles}" 
@@ -550,7 +551,7 @@
                                                 </p:commandLink>
                                             </li>
                                             <li class="#{DatasetPage.lockedFromEdits ? 'disabled' : ''}">
-                                                <p:commandLink update=":datasetForm,,:messagePanel" oncomplete="toggle_dropdown();" 
+                                                <p:commandLink update=":datasetForm, @([id$=messagePanel])" oncomplete="toggle_dropdown();" 
                                                                action="#{DatasetPage.restrictSelectedFiles(false)}">
                                                     <h:outputText value="#{bundle['file.unrestrict']}"/>
                                                 </p:commandLink>

@@ -22,13 +22,13 @@
     <ui:param name="hasRsyncScript" value="#{editDatafilesPage and !empty EditDatafilesPage.dataset ? EditDatafilesPage.isHasRsyncScript() : false}"/>
     <ui:param name="fileMetadatas" value="#{editDatafilesPage ? EditDatafilesPage.fileMetadatas : null}"/>
     <ui:param name="hasFileMetadatas" value="#{!empty fileMetadatas}"/>
-    <ui:param name="showFileUploadComponent" value="#{datasetPage || editDatafilesPage || EditDatafilesPage.showFileUploadComponent()}"/>
-    <ui:param name="showFileUploadFragment" value="#{datasetPage || editDatafilesPage || EditDatafilesPage.showFileUploadFragment()}"/>
-    <ui:param name="isQuotaExceeded" value="#{editDatafilesPage ? EditDatafilesPage.isQuotaExceeded() : false}"/>
-    <ui:param name="isFileUploadCountExceeded" value="#{editDatafilesPage ? EditDatafilesPage.isFileUploadCountExceeded() : false}"/>
-    <ui:param name="maxFileUploadSize" value="#{EditDatafilesPage.getMaxFileUploadSizeInBytes()}"/>
-    <ui:param name="maxNumberOfFiles" value="#{EditDatafilesPage.getMaxNumberOfFiles()}"/>
-    <ui:param name="fileUploadsAvailable" value="#{EditDatafilesPage.getFileUploadsAvailable()}"/>
+    <ui:param name="showFileUploadComponent" value="#{not lockedFromEdits}"/>
+    <ui:param name="showFileUploadFragment" value="#{true}"/>
+    <ui:param name="isQuotaExceeded" value="#{editDatafilesPage and !empty EditDatafilesPage.dataset ? EditDatafilesPage.isQuotaExceeded() : false}"/>
+    <ui:param name="isFileUploadCountExceeded" value="#{editDatafilesPage and !empty EditDatafilesPage.dataset ? EditDatafilesPage.isFileUploadCountExceeded() : false}"/>
+    <ui:param name="maxFileUploadSize" value="#{editDatafilesPage and !empty EditDatafilesPage.dataset ? EditDatafilesPage.getMaxFileUploadSizeInBytes() : 104857600}"/>
+    <ui:param name="maxNumberOfFiles" value="#{editDatafilesPage and !empty EditDatafilesPage.dataset ? EditDatafilesPage.getMaxNumberOfFiles() : 0}"/>
+    <ui:param name="fileUploadsAvailable" value="#{editDatafilesPage and !empty EditDatafilesPage.dataset ? EditDatafilesPage.getFileUploadsAvailable() : -1}"/>
     
     <h:outputScript name='js/fileupload.js?version=#{systemConfig.getVersion()}' />
     <ui:fragment rendered = '#{useDirectUpload}'>
@@ -57,9 +57,9 @@
                 </ui:fragment>
                 <!-- Upload -->
                 <div class="panel-group" role="tablist" aria-multiselectable="true"
-                      id="fileUploadFragment" jsf:rendered="#{showFileUploadFragment}">
+                      id="fileUploadFragment">
                     
-                    <div jsf:id="httpPanel" jsf:rendered="#{settingsWrapper.HTTPUpload}" class="panel panel-default">
+                    <div jsf:id="httpPanel" class="panel panel-default">
                         <div role="tab" id="headingHTTP" data-toggle="collapse" data-target="#panelCollapseHTTP" class="panel-heading text-info" aria-expanded="true" aria-controls="panelCollapseHTTP">
                             #{bundle['file.fromHTTP']} &#160;<span class="glyphicon glyphicon-chevron-up"/>
                         </div>
@@ -174,8 +174,8 @@
                     <p:fileUpload id="fileUpload" 
                                   dragDropSupport="true"
                                   auto="true"
-                                  multiple="#{datasetPage || EditDatafilesPage.allowMultipleFileUpload()}"
-                                  disabled="#{lockedFromEdits ||  !(showFileUploadComponent) || isQuotaExceeded || isFileUploadCountExceeded}"
+                                  multiple="#{datasetPage or (editDatafilesPage and EditDatafilesPage.allowMultipleFileUpload())}"
+                                  disabled="#{lockedFromEdits or isQuotaExceeded or isFileUploadCountExceeded}"
                                   listener="#{EditDatafilesPage.handleFileUpload}" 
                                   process="filesTable" 
                                   update="@([id$=filesTable]), @([id$=filesButtons])"
@@ -301,7 +301,7 @@
                                         </p>
                                     </ui:fragment>
                                     <!-- CAN'T DOWNLOAD RSYNC SCRIPT DUE to DCM BACKEND BROKEN. -->
-                                    <ui:fragment rendered="#{empty EditDatafilesPage.workingVersion.fileMetadatas and !hasRsyncScript}">
+                                    <ui:fragment rendered="#{editDatafilesPage and !empty EditDatafilesPage.workingVersion and empty EditDatafilesPage.workingVersion.fileMetadatas and !hasRsyncScript}">
                                         <p class="help-block">
                                             <span class="glyphicon glyphicon-exclamation-sign text-danger"></span>
                                             <h:outputFormat class="text-danger" value=" #{bundle['file.rsyncUpload.noScriptBroken']}" escape="false">
